@@ -1,0 +1,569 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo lk_block">
+
+        <header class="header position-relative js-header ">
+            <div class="m-0 p-0 w-100 header__container mt-0 mb-0 container max-width-lg">
+                <div class="header__logo">
+                    <a href="#0">
+                        <img src="{% static 'images/SizzeLogo.svg' %}" alt="" class="nav-logo">
+                    </a>
+                </div>
+
+                <button class="btn btn--subtle header__trigger js-header__trigger" aria-label="Toggle menu"
+                        aria-expanded="false" aria-controls="header-nav">
+                    <i class="header__trigger-icon" aria-hidden="true"></i>
+                    <span>Menu</span>
+                </button>
+
+                <nav class="header__nav js-header__nav" id="header-nav" role="navigation" aria-label="Main">
+                    <div class="header__nav-inner">
+                        <div class="header__label">Main menu</div>
+                        <ul class="header__list">
+                            <li class="header__item"><a href="#0" class="header__link">Settings</a></li>
+                            <li class="header__item"><a href="#0" class="header__link" aria-current="page">Settings</a>
+                            </li>
+                            <li class="header__item header__item--divider" aria-hidden="true"></li>
+                            <li class="header__item"><a href="#0" class="btn btn--primary btn--betta">Betta</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+
+        <div class="mt-5 filter-nav filter-nav--expanded js-filter-nav">
+            <button class="reset btn btn--subtle is-hidden js-filter-nav__control" aria-label="Select a filter option"
+                    aria-controls="filter-nav">
+                <span class="js-filter-nav__placeholder" aria-hidden="true">Project</span>
+
+                <svg class="icon icon--xxs margin-left-xxs" aria-hidden="true" viewBox="0 0 12 12">
+                    <polyline points="0.5 3.5 6 9.5 11.5 3.5" fill="none" stroke-width="1" stroke="currentColor"
+                              stroke-linecap="round" stroke-linejoin="round"></polyline>
+                </svg>
+            </button>
+
+            <div class="filter-nav__wrapper js-filter-nav__wrapper" id="filter-nav">
+                <nav class="filter-nav__nav justify-center js-filter-nav__nav">
+                    <ul class="filter-nav__list js-filter-nav__list" aria-controls="product-gallery">
+                        <li class="filter-nav__item">
+                            <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus" aria-current="true"
+                                    data-filter="*">Project
+                            </button>
+                        </li>
+
+                        <li class="filter-nav__item">
+                            <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus"
+                                    data-filter="coffee-mugs">Account Settigs
+                            </button>
+                        </li>
+
+                        <li class="filter-nav__item">
+                            <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus"
+                                    data-filter="tea-mugs">Plan
+                            </button>
+                        </li>
+                        <li class="filter-nav__marker js-filter-nav__marker" aria-hidden="true"></li>
+                    </ul>
+
+                    <button class="reset filter-nav__close-btn is-hidden js-filter-nav__close-btn js-tab-focus"
+                            aria-label="Close navigation">
+                        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                            <g stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round"
+                               stroke-linejoin="round" stroke-miterlimit="10">
+                                <line x1="13.5" y1="2.5" x2="2.5" y2="13.5"></line>
+                                <line x1="2.5" y1="2.5" x2="13.5" y2="13.5"></line>
+                            </g>
+                        </svg>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo lk_block">
+        <h1 class="poject_title">Projects</h1>
+
+
+        <div class="new_project">
+
+            <button href="create_project.html" class="btn btn--primary btn--preserve-width new_project_button">
+                <span class="btn__content-a"></span>
+
+                <span class="btn__content-b">
+    <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g stroke-width="1"
+                                                                                                        fill="currentColor"
+                                                                                                        stroke="currentColor"><path
+            d="M.5,8a7.5,7.5,0,1,1,1.91,5" fill="none" stroke="currentColor" stroke-linecap="round"
+            stroke-linejoin="round"></path></g></svg>
+  </span>
+            </button>
+
+        </div>
+
+
+        <ul class="grid-auto-md gap-sm">
+
+
+            <li>
+                <div class="card card--is-link">
+                    <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+                       aria-label="Description of the link ">
+                        <figure class="card__img">
+                            <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">
+                            <div class="card__link-icon" aria-hidden="true">
+                                <svg class="icon" viewBox="0 0 32 32">
+                                    <g stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                       stroke="currentColor" fill="none" stroke-miterlimit="10">
+                                        <path d="M21,5s-4.333-1.667-7,1L6,14c-2.667,2.667-1,7-1,7"></path>
+                                        <path d="M27,11s1.667,4.333-1,7l-8,8c-2.667,2.667-7,1-7,1"></path>
+                                        <line x1="12" y1="20" x2="4" y2="28"></line>
+                                        <line x1="28" y1="4" x2="20" y2="12"></line>
+                                    </g>
+                                </svg>
+                            </div>
+                        </figure>
+
+                        <div class="card__content">
+
+                            <div class="h4_group d-flex align-items-center">
+                                <img class="type_img_project " src="{% static "images/layers.svg" %}">
+
+
+                                <h4 class="flex_h4">Title of the Card </h4>
+
+                            </div>
+
+
+                            <button class="btn btn--primary else-button" aria-controls="menu-example1"></button>
+
+                            <menu id="menu-example1" class="menu js-menu display_normal">
+            <li role="menuitem">
+
+                <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M10.121.293a1,1,0,0,0-1.414,0L1,8,0,12l4-1,7.707-7.707a1,1,0,0,0,0-1.414Z"></path></svg>
+      <span>Edit</span>
+    </span>
+                </a>
+            </li>
+
+
+            <li role="menuitem">
+
+                <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 16 16"><path
+              d="M15,4H1C0.4,4,0,4.4,0,5v10c0,0.6,0.4,1,1,1h14c0.6,0,1-0.4,1-1V5C16,4.4,15.6,4,15,4z M14,14H2V6h12V14z"></path><rect
+              x="2" width="12" height="2"></rect></svg>
+      <span>Copy</span>
+    </span>
+                </a>
+            </li>
+
+            <li role="menuitem">
+
+
+                <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M8.354,3.646a.5.5,0,0,0-.708,0L6,5.293,4.354,3.646a.5.5,0,0,0-.708.708L5.293,6,3.646,7.646a.5.5,0,0,0,.708.708L6,6.707,7.646,8.354a.5.5,0,1,0,.708-.708L6.707,6,8.354,4.354A.5.5,0,0,0,8.354,3.646Z"></path><path
+              d="M6,0a6,6,0,1,0,6,6A6.006,6.006,0,0,0,6,0ZM6,10a4,4,0,1,1,4-4A4,4,0,0,1,6,10Z"></path></svg>
+      <span>Delete</span>
+    </span>
+                </a>
+
+
+            </li>
+
+            <li class="menu__separator" role="separator"></li>
+
+            <li class="menu__label">Link examples</li>
+
+            <li role="menuitem">
+                <a href="#0" class="menu__content js-menu__content">Link One</a>
+            </li>
+
+            <li role="menuitem">
+                <a href="#0" class="menu__content js-menu__content">Link Two</a>
+            </li>
+            </menu>
+
+    </div>
+    </a>
+    </div></li>
+
+
+
+
+
+
+
+    <li>
+        <div class="card card--is-link">
+            <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+               aria-label="Description of the link ">
+                <figure class="card__img">
+                    <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">
+                    <div class="card__link-icon" aria-hidden="true">
+                        <svg class="icon" viewBox="0 0 32 32">
+                            <g stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor"
+                               fill="none" stroke-miterlimit="10">
+                                <path d="M21,5s-4.333-1.667-7,1L6,14c-2.667,2.667-1,7-1,7"></path>
+                                <path d="M27,11s1.667,4.333-1,7l-8,8c-2.667,2.667-7,1-7,1"></path>
+                                <line x1="12" y1="20" x2="4" y2="28"></line>
+                                <line x1="28" y1="4" x2="20" y2="12"></line>
+                            </g>
+                        </svg>
+                    </div>
+                </figure>
+
+                <div class="card__content">
+
+                    <div class="h4_group d-flex align-items-center">
+                        <img class="type_img_project " src="{% static 'images/layers.svg' %}">
+
+                        <h4 class="flex_h4">Title of the Card </h4>
+
+                    </div>
+
+
+                    <button class="btn btn--primary else-button" aria-controls="menu-example2"></button>
+
+                    <menu id="menu-example2" class="menu js-menu display_normal">
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M10.121.293a1,1,0,0,0-1.414,0L1,8,0,12l4-1,7.707-7.707a1,1,0,0,0,0-1.414Z"></path></svg>
+      <span>Edit</span>
+    </span>
+        </a>
+    </li>
+
+
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 16 16"><path
+              d="M15,4H1C0.4,4,0,4.4,0,5v10c0,0.6,0.4,1,1,1h14c0.6,0,1-0.4,1-1V5C16,4.4,15.6,4,15,4z M14,14H2V6h12V14z"></path><rect
+              x="2" width="12" height="2"></rect></svg>
+      <span>Copy</span>
+    </span>
+        </a>
+    </li>
+
+    <li role="menuitem">
+
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M8.354,3.646a.5.5,0,0,0-.708,0L6,5.293,4.354,3.646a.5.5,0,0,0-.708.708L5.293,6,3.646,7.646a.5.5,0,0,0,.708.708L6,6.707,7.646,8.354a.5.5,0,1,0,.708-.708L6.707,6,8.354,4.354A.5.5,0,0,0,8.354,3.646Z"></path><path
+              d="M6,0a6,6,0,1,0,6,6A6.006,6.006,0,0,0,6,0ZM6,10a4,4,0,1,1,4-4A4,4,0,0,1,6,10Z"></path></svg>
+      <span>Delete</span>
+    </span>
+        </a>
+
+
+    </li>
+
+    <li class="menu__separator" role="separator"></li>
+
+    <li class="menu__label">Link examples</li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link One</a>
+    </li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link Two</a>
+    </li>
+    </menu>
+
+    </div>
+    </a>
+    </div></li>
+    <li>
+        <div class="card card--is-link">
+            <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+               aria-label="Description of the link ">
+                <figure class="card__img">
+                    <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">
+                    <div class="card__link-icon" aria-hidden="true">
+                        <svg class="icon" viewBox="0 0 32 32">
+                            <g stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor"
+                               fill="none" stroke-miterlimit="10">
+                                <path d="M21,5s-4.333-1.667-7,1L6,14c-2.667,2.667-1,7-1,7"></path>
+                                <path d="M27,11s1.667,4.333-1,7l-8,8c-2.667,2.667-7,1-7,1"></path>
+                                <line x1="12" y1="20" x2="4" y2="28"></line>
+                                <line x1="28" y1="4" x2="20" y2="12"></line>
+                            </g>
+                        </svg>
+                    </div>
+                </figure>
+
+                <div class="card__content">
+
+                    <div class="h4_group d-flex align-items-center">
+                        <img class="type_img_project " src={% static "images/layers.svg" %}>
+
+
+                        <h4 class="flex_h4">Title of the Card </h4>
+
+                    </div>
+
+
+                    <button class="btn btn--primary else-button" aria-controls="menu-example3"></button>
+
+                    <menu id="menu-example3" class="menu js-menu">
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M10.121.293a1,1,0,0,0-1.414,0L1,8,0,12l4-1,7.707-7.707a1,1,0,0,0,0-1.414Z"></path></svg>
+      <span>Edit</span>
+    </span>
+        </a>
+    </li>
+
+
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 16 16"><path
+              d="M15,4H1C0.4,4,0,4.4,0,5v10c0,0.6,0.4,1,1,1h14c0.6,0,1-0.4,1-1V5C16,4.4,15.6,4,15,4z M14,14H2V6h12V14z"></path><rect
+              x="2" width="12" height="2"></rect></svg>
+      <span>Copy</span>
+    </span>
+        </a>
+    </li>
+
+    <li role="menuitem">
+
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M8.354,3.646a.5.5,0,0,0-.708,0L6,5.293,4.354,3.646a.5.5,0,0,0-.708.708L5.293,6,3.646,7.646a.5.5,0,0,0,.708.708L6,6.707,7.646,8.354a.5.5,0,1,0,.708-.708L6.707,6,8.354,4.354A.5.5,0,0,0,8.354,3.646Z"></path><path
+              d="M6,0a6,6,0,1,0,6,6A6.006,6.006,0,0,0,6,0ZM6,10a4,4,0,1,1,4-4A4,4,0,0,1,6,10Z"></path></svg>
+      <span>Delete</span>
+    </span>
+        </a>
+
+
+    </li>
+
+    <li class="menu__separator" role="separator"></li>
+
+    <li class="menu__label">Link examples</li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link One</a>
+    </li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link Two</a>
+    </li>
+    </menu>
+
+    </div>
+    </a>
+    </div></li>
+    <li>
+        <div class="card card--is-link">
+            <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+               aria-label="Description of the link ">
+                <figure class="card__img">
+                    <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">
+                    <div class="card__link-icon" aria-hidden="true">
+                        <svg class="icon" viewBox="0 0 32 32">
+                            <g stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor"
+                               fill="none" stroke-miterlimit="10">
+                                <path d="M21,5s-4.333-1.667-7,1L6,14c-2.667,2.667-1,7-1,7"></path>
+                                <path d="M27,11s1.667,4.333-1,7l-8,8c-2.667,2.667-7,1-7,1"></path>
+                                <line x1="12" y1="20" x2="4" y2="28"></line>
+                                <line x1="28" y1="4" x2="20" y2="12"></line>
+                            </g>
+                        </svg>
+                    </div>
+                </figure>
+
+                <div class="card__content">
+
+                    <div class="h4_group d-flex align-items-center">
+                        <img class="type_img_project " src="{% static "images/layers.svg" %}">
+
+
+                        <h4 class="flex_h4">Title of the Card </h4>
+
+                    </div>
+
+
+                    <button class="btn btn--primary else-button" aria-controls="menu-example4"></button>
+
+                    <menu id="menu-example4" class="menu js-menu">
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M10.121.293a1,1,0,0,0-1.414,0L1,8,0,12l4-1,7.707-7.707a1,1,0,0,0,0-1.414Z"></path></svg>
+      <span>Edit</span>
+    </span>
+        </a>
+    </li>
+
+
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 16 16"><path
+              d="M15,4H1C0.4,4,0,4.4,0,5v10c0,0.6,0.4,1,1,1h14c0.6,0,1-0.4,1-1V5C16,4.4,15.6,4,15,4z M14,14H2V6h12V14z"></path><rect
+              x="2" width="12" height="2"></rect></svg>
+      <span>Copy</span>
+    </span>
+        </a>
+    </li>
+
+    <li role="menuitem">
+
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M8.354,3.646a.5.5,0,0,0-.708,0L6,5.293,4.354,3.646a.5.5,0,0,0-.708.708L5.293,6,3.646,7.646a.5.5,0,0,0,.708.708L6,6.707,7.646,8.354a.5.5,0,1,0,.708-.708L6.707,6,8.354,4.354A.5.5,0,0,0,8.354,3.646Z"></path><path
+              d="M6,0a6,6,0,1,0,6,6A6.006,6.006,0,0,0,6,0ZM6,10a4,4,0,1,1,4-4A4,4,0,0,1,6,10Z"></path></svg>
+      <span>Delete</span>
+    </span>
+        </a>
+
+
+    </li>
+
+    <li class="menu__separator" role="separator"></li>
+
+    <li class="menu__label">Link examples</li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link One</a>
+    </li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link Two</a>
+    </li>
+    </menu>
+
+    </div>
+    </a>
+    </div></li>
+    <li>
+        <div class="card card--is-link">
+            <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+               aria-label="Description of the link ">
+                <figure class="card__img">
+                    <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">
+                    <div class="card__link-icon" aria-hidden="true">
+                        <svg class="icon" viewBox="0 0 32 32">
+                            <g stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor"
+                               fill="none" stroke-miterlimit="10">
+                                <path d="M21,5s-4.333-1.667-7,1L6,14c-2.667,2.667-1,7-1,7"></path>
+                                <path d="M27,11s1.667,4.333-1,7l-8,8c-2.667,2.667-7,1-7,1"></path>
+                                <line x1="12" y1="20" x2="4" y2="28"></line>
+                                <line x1="28" y1="4" x2="20" y2="12"></line>
+                            </g>
+                        </svg>
+                    </div>
+                </figure>
+
+                <div class="card__content">
+
+                    <div class="h4_group d-flex align-items-center">
+                        <img class="type_img_project " src="{% static "images/layers.svg" %}">
+
+
+                        <h4 class="flex_h4">Title of the Card </h4>
+
+                    </div>
+
+
+                    <button class="btn btn--primary else-button" aria-controls="menu-example5"></button>
+
+                    <menu id="menu-example5" class="menu js-menu">
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M10.121.293a1,1,0,0,0-1.414,0L1,8,0,12l4-1,7.707-7.707a1,1,0,0,0,0-1.414Z"></path></svg>
+      <span>Edit</span>
+    </span>
+        </a>
+    </li>
+
+
+    <li role="menuitem">
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 16 16"><path
+              d="M15,4H1C0.4,4,0,4.4,0,5v10c0,0.6,0.4,1,1,1h14c0.6,0,1-0.4,1-1V5C16,4.4,15.6,4,15,4z M14,14H2V6h12V14z"></path><rect
+              x="2" width="12" height="2"></rect></svg>
+      <span>Copy</span>
+    </span>
+        </a>
+    </li>
+
+    <li role="menuitem">
+
+
+        <a href="#0" class="menu__content js-menu__content">
+    <span class="menu__content js-menu__content">
+      <svg class="icon menu__icon" aria-hidden="true" viewBox="0 0 12 12"><path
+              d="M8.354,3.646a.5.5,0,0,0-.708,0L6,5.293,4.354,3.646a.5.5,0,0,0-.708.708L5.293,6,3.646,7.646a.5.5,0,0,0,.708.708L6,6.707,7.646,8.354a.5.5,0,1,0,.708-.708L6.707,6,8.354,4.354A.5.5,0,0,0,8.354,3.646Z"></path><path
+              d="M6,0a6,6,0,1,0,6,6A6.006,6.006,0,0,0,6,0ZM6,10a4,4,0,1,1,4-4A4,4,0,0,1,6,10Z"></path></svg>
+      <span>Delete</span>
+    </span>
+        </a>
+
+
+    </li>
+
+    <li class="menu__separator" role="separator"></li>
+
+    <li class="menu__label">Link examples</li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link One</a>
+    </li>
+
+    <li role="menuitem">
+        <a href="#0" class="menu__content js-menu__content">Link Two</a>
+    </li>
+    </menu>
+
+    </div>
+    </a>
+    </div></li>
+
+
+
+
+    </ul>
+    </div>
+
+
+{% endblock %}

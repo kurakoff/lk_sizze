@@ -1,0 +1,1806 @@
+// 👇 optional -> set custom breakpoints
+// $breakpoints: (
+//   xs: 32rem,
+//   sm: 48rem,
+//   md: 64rem,
+//   lg: 80rem,
+//   xl: 90rem
+// );
+
+@import 'base';
+@import 'custom-style';
+
+@font-face {
+    font-family: "SFPro Medium";
+    font-weight: 400;
+    font-style: normal;
+    src: url(../fonts/SFPro/SFProDisplay-Medium.eot);
+    src: url(../fonts/SFPro/SFProDisplay-Medium.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Medium.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Medium.ttf) format("truetype")
+}
+
+@font-face {
+    font-family: "SFPro Regular";
+    font-style: normal;
+    src: url(../fonts/SFPro/SFProDisplay-Regular.eot);
+    src: url(../fonts/SFPro/SFProDisplay-Regular.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Regular.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Regular.ttf) format("truetype")
+}
+
+
+@font-face {
+    font-family: "SFPro Bold";
+    font-weight: 700;
+    font-style: normal;
+    src: url(../fonts/SFPro/SFProDisplay-Bold.eot);
+    src: url(../fonts/SFPro/SFProDisplay-Bold.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Bold.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Bold.ttf) format("truetype")
+}
+
+
+/* -------------------------------- 
+
+File#: _1_auto-sized-grid
+Title: Auto Sized Grid
+Descr: A grid layout based on CSS Grid where the columns are automatically created according to a min-width value
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.grid-auto-xs, .grid-auto-sm, .grid-auto-md, .grid-auto-lg, .grid-auto-xl {
+  display: grid;
+  grid-gap: var(--gap, 0);
+  grid-template-columns: repeat(auto-fit, minmax(var(--col-min-width), 1fr)); // auto add new cols
+}
+
+.grid-auto-xs { --col-min-width: 8rem; }
+.grid-auto-sm { --col-min-width: 10rem; }
+.grid-auto-md { --col-min-width: 15rem; }
+.grid-auto-lg { --col-min-width: 20rem; }
+.grid-auto-xl { --col-min-width: 25rem; }
+
+@include breakpoint(xs) {
+  .grid-auto-xs\@xs { --col-min-width: 8rem; }
+  .grid-auto-sm\@xs { --col-min-width: 10rem; }
+  .grid-auto-md\@xs { --col-min-width: 15rem; }
+  .grid-auto-lg\@xs { --col-min-width: 20rem; }
+  .grid-auto-xl\@xs { --col-min-width: 25rem; }
+}
+
+@include breakpoint(sm) {
+  .grid-auto-xs\@sm { --col-min-width: 8rem; }
+  .grid-auto-sm\@sm { --col-min-width: 10rem; }
+  .grid-auto-md\@sm { --col-min-width: 15rem; }
+  .grid-auto-lg\@sm { --col-min-width: 20rem; }
+  .grid-auto-xl\@sm { --col-min-width: 25rem; }
+}
+
+@include breakpoint(md) {
+  .grid-auto-xs\@md { --col-min-width: 8rem; }
+  .grid-auto-sm\@md { --col-min-width: 10rem; }
+  .grid-auto-md\@md { --col-min-width: 15rem; }
+  .grid-auto-lg\@md { --col-min-width: 20rem; }
+  .grid-auto-xl\@md { --col-min-width: 25rem; }
+}
+
+@include breakpoint(lg) {
+  .grid-auto-xs\@lg { --col-min-width: 8rem; }
+  .grid-auto-sm\@lg { --col-min-width: 10rem; }
+  .grid-auto-md\@lg { --col-min-width: 15rem; }
+  .grid-auto-lg\@lg { --col-min-width: 20rem; }
+  .grid-auto-xl\@lg { --col-min-width: 25rem; }
+}
+
+@include breakpoint(xl) {
+  .grid-auto-xs\@xl { --col-min-width: 8rem; }
+  .grid-auto-sm\@xl { --col-min-width: 10rem; }
+  .grid-auto-md\@xl { --col-min-width: 15rem; }
+  .grid-auto-lg\@xl { --col-min-width: 20rem; }
+  .grid-auto-xl\@xl { --col-min-width: 25rem; }
+}
+
+// make gaps compatible with CodyFrame grid system
+[class*="grid-auto-"][class*="gap-xxxxs"], [class*="grid-auto-"][class*="gap-xxxs"], [class*="grid-auto-"][class*="gap-xxs"], [class*="grid-auto-"][class*="gap-xs"], [class*="grid-auto-"][class*="gap-sm"], [class*="grid-auto-"][class*="gap-md"], [class*="grid-auto-"][class*="gap-lg"], [class*="grid-auto-"][class*="gap-xl"], [class*="grid-auto-"][class*="gap-xxl"], [class*="grid-auto-"][class*="gap-xxxl"], [class*="grid-auto-"][class*="gap-xxxxl"], [class*="grid-auto-"][class*="grid-gap-"], [class*="grid-auto-"][class*="flex-gap-"] {
+  margin: 0;
+
+  > * {
+    margin: 0;
+  }
+}
+
+.main-content {
+  margin: 30px;
+}
+
+
+
+
+/* -------------------------------- 
+
+File#: _1_card
+Title: Card
+Descr: Container of information used as teaser for further content exploration
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.card {
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.card__img {
+  img {
+    display: block;
+    width: 100%;
+  }
+}
+
+.card__content {
+  padding: var(--space-xs);
+}
+
+// --link
+.card--is-link {
+  will-change: box-shadow;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+
+    .card__img::after {
+      opacity: 1;
+    }
+  }
+
+  .card__img {
+    position: relative;
+
+    &::after { // overlay layer
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: alpha(var(--color-black), 0.6);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+  }
+}
+
+.card__link {
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+
+.card__link-icon {
+  position: absolute;
+  z-index: 1;
+  width: 64px;
+  height: 64px;
+  top: calc(50% - 32px);
+  left: calc(50% - 32px);
+  background-color: alpha(var(--color-white), 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  .icon {
+    display: block;
+    width: 32px;
+    height: 32px;
+    color: var(--color-black); // icon color
+  }
+}
+
+.card--is-link:hover .card__link-icon {
+  opacity: 1;
+}
+
+
+.poject_title {
+    margin: 30px 0px;
+    color: #393939;
+    font-family: "SFPro Bold";
+}
+
+
+
+/* -------------------------------- 
+
+File#: _1_btn-states
+Title: Buttons states
+Descr: Multi-state button elements
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.btn .btn__content-a {
+  display: inline-flex;
+}
+
+
+.btn .btn__content-b {
+  display: none;
+}
+
+.btn__content-a, .btn__content-b {
+  align-items: center;
+}
+
+.btn--state-b {
+  .btn__content-a {
+    display: none;
+  }
+
+  .btn__content-b {
+    display: inline-block; // fallback
+    display: inline-flex;
+  }
+}
+
+/* preserve button width when switching from state A to state B */
+.btn--preserve-width {
+  .btn__content-b {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+  }
+
+  &.btn--state-b .btn__content-a {
+    display: inline-block; // fallback
+    display: inline-flex;
+    visibility: hidden;
+  }
+}
+
+
+.new_project {
+    margin: 30px 0px;
+}
+
+.new_project_button {
+    
+    width: 70px!important;
+    height: 70px!important;
+    background-color: #fff!important;
+    color: #393939;
+    border-radius: 50%;
+    background-image: url(/static/images/apps.svg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    box-shadow: none!important;
+}
+
+.type_img_project {
+margin-right: 5px;
+}
+
+.flex_h4 {
+    margin-top: 0px!important;
+    margin-bottom: 0px!important;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #393939;
+    font-size: 18px!important;
+    font-family: "SFPro Medium";
+}
+
+.flex_h4:hover {
+    text-decoration: none!important;
+}
+
+.description_card {
+    height: 70px;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+
+
+/* -------------------------------- 
+
+File#: _1_menu
+Title: Menu
+Descr: Application menu that provides access to a set of functionalities
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.menu {
+  --menu-vertical-gap: 4px; // vertical gap between the Menu element and its control
+  --menu-item-padding: var(--space-xxs) var(--space-sm);
+  list-style: none;
+  width: 220px;
+  position: fixed; // top/left position set in JS
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xxs) 0;
+  border-radius: var(--radius-md);
+  z-index: var(--zindex-popover);
+  user-select: none;
+  margin-top: var(--menu-vertical-gap);
+  margin-bottom: var(--menu-vertical-gap);
+  overflow: auto;
+
+  // reset spacing and text units - no longer affected by em units
+  @include spaceUnit(1rem);
+  @include textUnit(1rem);
+
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s .2s, opacity .2s;
+}
+
+.menu--is-visible {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity .2s;
+}
+
+.menu--overlay {
+  z-index: var(--zindex-overlay);
+}
+
+.menu__content {
+  display: block; // fallback
+  display: flex;
+  align-items: center;
+  text-decoration: none; // reset link style
+  padding: var(--menu-item-padding);
+  color: var(--color-contrast-high);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background-color: var(--color-contrast-lower);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: alpha(var(--color-primary), 0.1);
+  }
+}
+
+.menu__label {
+  padding: var(--menu-item-padding);
+  font-size: var(--text-sm);
+  color: var(--color-contrast-medium);
+}
+
+.menu__separator {
+  height: 1px;
+  background-color: var(--color-contrast-low);
+  margin: var(--menu-item-padding);
+}
+
+.menu__icon {
+  color: alpha(var(--color-contrast-higher), 0.7);
+  margin-right: var(--space-xxs);
+}
+
+
+
+
+.position_relative {
+    position: relative;
+    display: flex;
+}
+
+.else-button {
+    width: 50px!important;
+    background-color: #fff!important;
+    box-shadow: none!important;
+    background-image: url(/static/images/more-horizontal.svg);
+    background-position: center right;
+    background-repeat: no-repeat;
+}
+
+.h4_group {
+    width: 80%;
+}
+
+.create_prject_title {
+    text-align: center;
+    color: #393939;
+    margin: 30px 0px;
+    font-family: "SFPro Bold"!important;
+    width: 100%;
+    
+}
+
+
+
+/* -------------------------------- 
+
+File#: _1_choice-buttons
+Title: Choice Buttons
+Descr: Visually enhanced radio/checkbox buttons
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --choice-btn-border-width: 2px;
+  --choice-btn-border-radius: var(--radius-md);
+  --choice-btn-align-items: center; // set vertical alignment between custom input and content [center, start, end]
+  // custom input
+  --choice-btn-input-size: 20px; // custom input size
+  --choice-btn-input-icon-size: 16px; // icon size
+  --choice-btn-input-border-width: 2px; // custom input border width
+  --choice-btn-input-margin-right: var(--space-sm); // gap between custom input and content
+  --choice-btn-input-translate-y: 0em; // (optional) translate-y input to align it with the text 
+}
+
+.choice-btns {
+  display: flex;
+  flex-direction: column;
+}
+
+.choice-btn__grid {
+  display: none;
+}
+
+.js {
+  .choice-btn__fallback {
+    @include srHide; // visible only to screen readers
+  }
+
+  .choice-btn {
+    background-color: var(--color-bg);
+    border-width: var(--choice-btn-border-width);
+    border-style:  solid;
+    border-color: var(--color-contrast-low);
+    border-radius: var(--choice-btn-border-radius);
+    user-select: none;
+    cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+      border-color: lightness(var(--color-contrast-low), 0.85);
+    }
+
+    &.choice-btn--focus,
+    &.choice-btn--checked,
+    &:active {
+      border-color: var(--color-primary);
+    }
+    
+    &.choice-btn--focus,
+    &:active {
+      box-shadow: 0 0 0 2px alpha(var(--color-primary), 0.2);
+    }
+  }
+
+  .choice-btn__grid {
+    display: block; // fallback
+    display: grid;
+    grid-template-columns: var(--choice-btn-input-size) 1fr;
+    grid-gap: var(--choice-btn-input-margin-right);
+    align-items: var(--choice-btn-align-items);
+  }
+}
+
+// custom input
+.choice-btn__input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-bg);
+  width: var(--choice-btn-input-size);
+  height: var(--choice-btn-input-size);
+  border-width: var(--choice-btn-input-border-width);
+  border-style: solid;
+  border-color: var(--color-contrast-low);
+  position: relative;
+  top: var(--choice-btn-input-translate-y);
+
+  .icon {
+    color: var(--color-white); // icon color
+    font-size: var(--choice-btn-input-icon-size);
+  }
+
+  .choice-btn--checked & {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+  }
+}
+
+.choice-btn__input--checkbox {
+  border-radius: var(--radius-sm);
+
+  .icon > * {
+    transition: stroke-dashoffset .3s;
+    stroke-dashoffset: 16;
+    stroke-dasharray: 17;
+  }
+
+  .choice-btn--checked & .icon > * {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 17;
+  }
+}
+
+.choice-btn__input--radio {
+  border-radius: 50%;
+
+  .icon {
+    transition: transform .3s var(--bounce);
+    transform: scale(0);
+  }
+
+  .choice-btn--checked & .icon {
+    transform: scale(1);
+  }
+}
+
+
+.check_radio {
+    display: none;
+}
+
+
+.input_title {
+    margin: 30px 0px;
+    font-family: "SFPro Medium"!important;
+    font-size: 12px!important;
+    color: #393939;
+    display: block;
+    margin: auto;
+    width: 70%;
+}
+
+
+@media screen and (max-width: 425px) {
+    .input_title {
+    width: 90%;
+}
+}
+
+
+/* -------------------------------- 
+
+File#: _1_search-input
+Title: Search input
+Descr: Search input field with custom button
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --search-input-btn-width: 2.8em;
+  --search-input-icon-size: 1.25em;
+}
+
+.search-input {
+  position: relative;
+
+  .form-control::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+}
+
+.search-input--icon-right .form-control {
+  padding-right: var(--search-input-btn-width);
+}
+
+.search-input--icon-left .form-control {
+  padding-left: var(--search-input-btn-width);
+}
+
+.search-input__btn {
+  @include reset;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: var(--search-input-btn-width);
+
+  &:active .icon {
+    transform: scale(0.9);
+  }
+
+  .icon {
+    display: block;
+    width: var(--search-input-icon-size);
+    height: var(--search-input-icon-size);
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--color-contrast-low); // icon color
+    transition: transform 0.2s;
+  }
+}
+
+.search-input--icon-left .search-input__btn {
+  left: 0;
+  right: auto;
+  pointer-events: none;
+}
+
+.search-input__btn:focus .icon,
+.search-input .form-control:focus + .search-input__btn .icon {
+  color: var(--color-primary); // active icon color
+}
+
+
+.m-10 {
+    margin: 10px 0;
+}
+
+
+.confirm {
+    margin: 50px 0px;
+}
+
+
+.confirm_btn {
+    margin: auto;
+    display: block;
+    width: 40%;
+    background: #7D2BE5;
+    font-family: "SFPro Medium"!important
+}
+
+@media screen and (max-width: 540px) {
+    
+    
+.confirm_btn {
+    width: 70%;
+    }
+
+}
+
+.confirm_btn:hover{
+    background: #7D2BE5!important;
+}
+
+a:hover {
+    text-decoration: none!important;
+}
+
+.display_normal {
+    display: block!important;
+}
+
+
+
+
+/* -------------------------------- 
+
+File#: _1_custom-checkbox
+Title: Custom Checkbox
+Descr: Replace the native checkbox button with a custom element (e.g., an icon)
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --custom-checkbox-size: 20px;
+  --custom-checkbox-radius: 3px;
+  --custom-checkbox-marker-size: 18px;
+  --custom-checkbox-color-disabled: var(--color-contrast-medium);
+  --custom-checkbox-color-active: var(--color-primary);
+}
+
+.custom-checkbox {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  font-size: var(--custom-checkbox-size);
+}
+
+.custom-checkbox__input {
+  position: relative;
+  // hide input
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  height: 1em;
+  width: 1em;
+  display: block;
+  z-index: 1;
+}
+
+.custom-checkbox__control {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: transform 0.2s;
+  color: var(--custom-checkbox-color-disabled);
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+  }
+
+  &::before { // focus circle
+    width: 160%;
+    height: 160%;
+    background-color: currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    border-radius: 50%;
+    will-change: transform;
+    transition: transform .2s;
+  }
+
+  &::after { // custom checkbox
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    // custom checkbox style
+    background-color: var(--color-bg);
+    border-radius: var(--custom-checkbox-radius);
+    box-shadow: inset 0 0 0 2px var(--custom-checkbox-color-disabled); // border
+  }
+}
+
+.custom-checkbox__input:checked ~ .custom-checkbox__control,
+.custom-checkbox__input:indeterminate ~ .custom-checkbox__control {
+  &::after {
+    background-color: currentColor;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: var(--custom-checkbox-marker-size);
+    box-shadow: none;
+  }
+}
+
+.custom-checkbox__input:checked ~ .custom-checkbox__control {
+  color: var(--custom-checkbox-color-active); // checked color
+
+  &::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolyline points='2.5 8 6.5 12 13.5 3' fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'/%3E%3C/svg%3E");
+  }
+}
+
+.custom-checkbox__input:indeterminate ~ .custom-checkbox__control {
+  color: var(--custom-checkbox-color-disabled); // indeterminate color
+
+  &::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cline x1='2' y1='8' x2='14' y2='8' fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/svg%3E");
+  }
+}
+
+.custom-checkbox__input:active ~ .custom-checkbox__control {
+  transform: scale(0.9);
+}
+
+.custom-checkbox__input:checked:active ~ .custom-checkbox__control,
+.custom-checkbox__input:indeterminate:active ~ .custom-checkbox__control {
+  transform: scale(1);
+}
+
+.custom-checkbox__input:focus ~ .custom-checkbox__control::before {
+  opacity: 0.2;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+// --icon
+.custom-checkbox--icon {
+  --custom-checkbox-size: 32px;
+
+  .custom-checkbox__control::after {
+    display: none;
+  }
+
+  .icon {
+    display: block;
+    color: inherit;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+
+
+.svg-icon {
+    display: block;
+    margin: auto;
+}
+
+.choice-btns {
+    flex-direction: row!important;
+}
+
+.b-none {
+    border: none!important;
+}
+
+.js .choice-btn.choice-btn--focus, .js .choice-btn.choice-btn--checked, .js .choice-btn:active {
+    border-color: #fff!important;
+    box-shadow: none!important;
+}
+
+.device_name {
+    display: block;
+    margin: auto;
+    text-align: center;
+    font-family: "SFPro Bold"!important;
+    color:  #6B6F76;
+    font-size: smaller;
+}
+
+
+
+
+/* -------------------------------- 
+
+File#: _1_header
+Title: Main Header
+Descr: Accessible website navigation
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --header-height: 50px;
+
+  @include breakpoint(md) {
+    --header-height: 70px;
+  }
+}
+
+.header {
+  height: var(--header-height);
+  width: 100%;
+  background-color: var(--color-bg);
+  z-index: var(--zindex-header);
+}
+
+.header--expanded {
+  // class added when navigation is visible - small devices only
+}
+
+.header__container {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// logo
+.header__logo {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+
+  a, svg, img {
+    display: block;
+  }
+}
+
+// nav
+.header__nav {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-height: 100vh;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  font-size: 1.25em; // controls the font-size of all elements (sm)
+
+  display: none;
+
+  &::before { // top header bg + border
+    content: '';
+    display: block;
+    position: sticky;
+    top: 0;
+    height: var(--header-height);
+    background: inherit;
+    border-bottom: 1px solid var(--color-contrast-low);
+  }
+}
+
+.header__nav--is-visible {
+  display: block;
+}
+
+.header__nav-inner {
+  padding: var(--space-sm) var(--component-padding) var(--component-padding);
+}
+
+.header__label { // menu label
+  font-size: var(--text-sm);
+  color: var(--color-contrast-medium);
+  margin-bottom: var(--space-sm);
+}
+
+.header__item { // nav list item
+  margin-bottom: var(--space-sm);
+}
+
+.header__link { // link within list item
+  color: var(--color-contrast-higher);
+  text-decoration: none;
+
+  &:hover, &[aria-current] { // style of :hover + selected link
+    color: var(--color-primary);
+  }
+}
+
+.header__item--divider { // element used to separate nav items
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-contrast-low);
+}
+
+// menu trigger
+.header__trigger { // menu button
+  position: relative;
+  z-index: 2;
+}
+
+// menu icon
+.header__trigger-icon {
+  position: relative;
+  display: block;
+  height: 2px;
+  width: 1em;
+  background-color: currentColor;
+  margin-right: var(--space-xxs);
+  transition: 0.2s;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: inherit;
+    height: inherit;
+    background-color: currentColor;
+    transition: 0.2s;
+  }
+
+  &::before {
+    transform: translateY(-5px);
+  }
+
+  &::after {
+    transform: translateY(5px);
+  }
+}
+
+.header__trigger[aria-expanded="true"] .header__trigger-icon {
+  background-color: transparent;
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+}
+
+@include breakpoint(md) {
+  .header__nav {
+    // reset
+    position: static;
+    background-color: transparent;
+    width: auto;
+    max-height: none;
+    box-shadow: none;
+    overflow: visible;
+    overscroll-behavior: auto;
+    display: block;
+
+    font-size: 0.875em; // controls the font-size of all elements (md)
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .header__nav-inner {
+    padding: 0; // reset
+  }
+
+  .header__label { // hide label
+    @include srHide;
+  }
+
+  .header__list {
+    display: flex;
+    align-items: center;
+  }
+
+  .header__item {
+    display: inline-block; // flex fallback
+    margin-bottom: 0;
+    margin-left: var(--space-md);
+  }
+
+  .header__item--divider {
+    height: 1em;
+    width: 1px;
+  }
+
+  .header__trigger {
+    display: none;
+  }
+}
+
+// no JS fallback
+html:not(.js) {
+  .header {
+    height: auto;
+    padding-top: var(--space-xs);
+  }
+
+  .header__trigger {
+    display: none;
+  }
+
+  .header__container {
+    display: block;
+  }
+
+  .header__nav {
+    position: static;
+    height: auto;
+    padding: 0;
+    box-shadow: none;
+    overflow: visible;
+    display: block;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .header__nav-inner { 
+    position: static;
+    height: auto;
+    padding: var(--space-md) 0;
+    overflow: visible;
+  }
+
+  @include breakpoint(md) {
+    .header {
+      height: var(--header-height);
+      padding: 0;
+    }
+
+    .header__container {
+      display: flex;
+    }
+  }
+}
+
+
+.header__link:hover, .header__link[aria-current] {
+    color: #7D2BE5!important;
+}
+
+.btn--betta {
+    background-color: #7D2BE5!important;
+    color: #fff;
+}
+
+a:hover {
+    color: #fff!important;
+    text-decoration: none!important;
+}
+
+.btn--primary:focus {
+    box-shadow: none!important;
+}
+
+.header__link {
+    color: #9C9C9C!important;
+}
+
+
+
+/* -------------------------------- 
+
+File#: _1_filter-navigation
+Title: Filter Navigation
+Descr: Filter navigation template
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+// --expanded version
+.filter-nav--expanded {
+  .filter-nav__nav {
+    display: flex;
+    overflow: auto;
+    padding: var(--space-xs) 0;
+  }
+
+  .filter-nav__list {
+    display: inline-flex;
+    position: relative;
+  }
+
+  .filter-nav__item {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .filter-nav__btn { // <button> element inside each list item
+    margin: 0 var(--space-xxxs);
+    padding: var(--space-xxxs) var(--space-xs);
+    color: alpha(var(--color-contrast-higher), 0.5);
+    cursor: pointer;
+    transition: color .2s;
+
+    &:hover {
+      color: var(--color-contrast-higher);
+    }
+
+    &[aria-current="true"] {
+      color: var(--color-primary);
+    }
+  }
+
+  .filter-nav__marker { // animated marker
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-sm);
+    pointer-events: none;
+    border-radius: var(--radius-md);
+    transition: transform .3s, width .3s;
+    transition-timing-function: var(--ease-in-out);
+    will-change: width, transform;
+  }
+}
+
+// --collapsed version - available horizontal space not enough to contain all list items
+.filter-nav--collapsed {
+  .filter-nav__wrapper {
+    position: fixed;
+    z-index: var(--zindex-overlay);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: alpha(var(--color-contrast-higher), 0.9);
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .filter-nav__wrapper--is-visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .3s;
+
+    .filter-nav__nav {
+      transform: translateY(0);
+      transition: transform .3s;
+    }
+  }
+
+  .filter-nav__nav {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-md);
+    max-height: 100%;
+    transform: translateY(-1em);
+  }
+
+  .filter-nav__list {
+    order: 2;
+    flex-direction: column;
+    overflow: auto;
+    padding: 0 0 var(--space-md);
+
+    &::before { // top shadow - visible if menu height triggers vertical scrolling
+      content: '';
+      display: block;
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(alpha(var(--color-bg), 1), alpha(var(--color-bg), 0));
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+  }
+
+  .filter-nav__btn {
+    display: block; // fallback
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    font-size: var(--text-md);
+    padding: var(--space-xs) var(--space-sm);
+    color: alpha(var(--color-contrast-higher), 0.5);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-contrast-higher);
+    }
+
+    &[aria-current="true"] {
+      color: var(--color-primary);
+    }
+
+    &::before { // check icon next to the selected button
+      content: '';
+      display: block;
+      height: 1em;
+      width: 1em;
+      margin-right: var(--space-xxxs);
+      background-color: transparent;
+    }
+
+    &[aria-current="true"]::before {
+      background-color: var(--color-primary); // icon color
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolyline stroke-width='1.5' stroke='%23000000' fill='none' stroke-linecap='round' stroke-linejoin='round' points='1,9 5,13 15,3 '/%3E%3C/svg%3E");
+    }
+  }
+
+  .filter-nav__marker { // hide animated marker
+    display: none !important;
+  }
+
+  .filter-nav__close-btn { // X button
+    display: flex;
+    order: 1;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    margin: var(--space-xs) var(--space-xs) 0 auto;
+    width: 2em;
+    height: 2em;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-sm);
+    transition: .2s;
+  
+    &:hover {
+      background-color: var(--color-bg);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .icon {
+      display: block;
+      color: var(--color-contrast-high);
+    }
+  }
+}
+
+// no js
+html:not(.js) .filter-nav__nav {
+  //justify-content: left;
+}
+
+.filter-nav--expanded .filter-nav__btn[aria-current="true"] {
+    color: #7D2BE5!important;
+}
+
+.filter-nav--expanded .filter-nav__btn:hover {
+    color: #7D2BE5!important;
+}
+
+
+.card {
+    box-shadow: none!important;
+    border: none!important;
+}
+
+.card--is-link:hover {
+    box-shadow: var(--shadow-md)!important;
+}
+
+.header__container {
+    font-family: "SFPro Regular"!important;
+}
+
+.filter-nav--expanded .filter-nav__nav {
+     font-family: "SFPro Medium"!important;
+}
+
+
+.close_btn{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    right: 0px;
+    background: #fff;
+    box-shadow: none!important;
+    background-image: url(../img/Group%206243.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+@media screen and (max-width: 559px) {
+     .close_btn{
+         right: -40px;
+    }
+}
+
+@media screen and (max-width: 483px) {
+     .close_btn{
+         right: 0px;
+         top:-20px;
+    }
+}
+
+.close_btn:hover{
+    background-color: #fff;
+}
+
+.form-control {
+background: #F7F9FA;
+}
+.form-control:focus {
+    box-shadow: none!important;
+    border-color: #7D2BE5!important;
+}
+
+
+
+.cd-demo-container {
+    width: calc(100% - 2 * 1.25rem);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.25rem 0;
+}
+
+.cd-demo-max-width-xs {
+    max-width: 38rem;
+}
+
+.cd-demo-padding-y-xl {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+h1 {
+    font-family: "SFPro Bold"!important;
+    color: #393939!important;
+}
+
+
+.text-center {
+    font-family: "SFPro Regular"!important;
+}
+
+.form-label {
+    font-family: "SFPro Medium"!important;
+    color: #393939!important;
+}
+
+.btn--color {
+    font-family: "SFPro Medium"!important;
+    background: #7D2BE5!important;
+}
+
+.forgot {
+      font-family: "SFPro Medium"!important;
+}
+
+.log_link {
+    color: #7D2BE5!important;
+}
+
+.log_link:hover {
+    color: #7D2BE5!important;
+    font-family: "SFPro Medium"!important;
+}
+
+p {
+ font-family: "SFPro Medium"!important;
+    color: #393939!important;
+}
+
+.text-center_h1 {
+    text-align: center!important;
+}
+
+.reset_img {
+    display: block;
+    margin: auto;
+}
+
+.content {
+    max-width: 24rem;
+}
+
+.lk_block {
+    padding: 0px!important;
+    max-width: 60rem!important;
+}
+
+
+
+
+
+h1 {
+    font-size: var(--text-xl, 0.074em)!important;
+}
+
+.grid-auto-md {
+    --col-min-width: 14rem!important;
+}
+
+.account_settings {
+    max-width: 32rem!important;
+}
+
+
+/* -------------------------------- 
+
+File#: _1_radio-switch
+Title: Radio Switch
+Descr: Custom radio toggle
+Usage: codyhouse.co/license
+
+-------------------------------- */ 
+
+:root {
+  // style
+  --radio-switch-width: 186px;
+  --radio-switch-height: 46px;
+  --radio-switch-padding: 3px;
+  --radio-switch-radius: 50em;
+
+  // animation
+  --radio-switch-animation-duration: 0.3s;
+}
+
+.radio-switch {
+  position: relative;
+  display: inline-block; // flexbox fallback
+  display: inline-flex;
+  padding: var(--radio-switch-padding);
+  border-radius: calc(var(--radio-switch-radius) * 1.4);
+  background-color: var(--color-contrast-lower);
+
+  &:focus-within, &:active {
+    box-shadow: 0 0 0 2px var(--color-contrast-low); // focus effect
+  }
+}
+
+.radio-switch__item {
+  position: relative;
+  display: inline-block; // flexbox fallback
+  height: calc(var(--radio-switch-height) - 2*var(--radio-switch-padding));
+  width: calc(var(--radio-switch-width)*0.5 -  var(--radio-switch-padding));
+}
+
+.radio-switch__label {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radio-switch-radius);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  user-select: none;
+  transition: all var(--radio-switch-animation-duration);
+
+  .radio-switch__input:checked ~ & {
+    color: var(--color-white);
+  }
+
+  .radio-switch__input:focus ~ & { // focus effect in browsers not supporting :focus-within
+    background-color: lightness(var(--color-primary), 0.6);
+  }
+
+  :not(*):focus-within, // trick to detect :focus-within support -> https://css-tricks.com/using-feature-detection-conditionals-and-groups-with-selectors/
+  .radio-switch__input:focus ~ & { // reset focus style for browsers supporting :focus-within
+    background-color: transparent;
+  }
+}
+
+.radio-switch__marker {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: -100%;
+  border-radius: var(--radio-switch-radius);
+  background-color: var(--color-primary);
+  height: calc(var(--radio-switch-height) - 2*var(--radio-switch-padding));
+  width: calc(var(--radio-switch-width)*0.5 -  var(--radio-switch-padding));
+  box-shadow: var(--shadow-md);
+  transition: transform var(--radio-switch-animation-duration);
+
+  .radio-switch__input:checked ~ & {
+    transform: translateX(100%);
+  }
+}
+
+
+/* -------------------------------- 
+
+File#: _2_pricing-table
+Title: Pricing Table
+Descr: A table used to compare prices and features of different products
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.p-table__item {
+  background-color: var(--color-contrast-lower);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.p-table__item--popular {
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-primary);
+}
+
+.p-table__badge {
+  font-size: var(--text-sm);
+  background-color: var(--color-contrast-high);
+  color: var(--color-bg);
+  padding: var(--space-xxxs) var(--space-xxs);
+  @include fontSmooth;
+  vertical-align: middle;
+  border-radius: var(--radius-md);
+}
+
+.p-table__price {
+  span { // amount
+    font-size: var(--text-xxxl);
+    font-weight: bold;
+  }
+
+  i { // month/year
+    color: var(--color-contrast-medium);
+  }
+}
+
+.p-table__features {
+  li {
+    margin-bottom: var(--space-xs);
+  }
+}
+
+// --has-switch
+.p-table__switch {
+  display: none;
+}
+
+.js {
+  .p-table--has-switch {
+    .p-table__price-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .p-table__price {
+      transition: transform 0.3s, opacity 0.3s;
+      transition-timing-function: var(--ease-out);
+
+      &[data-transition-delay="2nd"] {
+        transition-delay: 0.1s;
+      }
+
+      &[data-transition-delay="3rd"] {
+        transition-delay: 0.2s;
+      }
+    }
+  
+    .p-table__price--month {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  
+    .p-table__price--year {
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  .p-table--yearly {
+    .p-table__price--month {
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+
+    .p-table__price--year {
+      pointer-events: auto;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+
+.plans {
+
+    max-width: 50rem;
+
+}
+
+
+
+
+/* -------------------------------- 
+
+File#: _1_choice-buttons
+Title: Choice Buttons
+Descr: Visually enhanced radio/checkbox buttons
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --choice-btn-border-width: 2px;
+  --choice-btn-border-radius: var(--radius-md);
+  --choice-btn-align-items: center; // set vertical alignment between custom input and content [center, start, end]
+  // custom input
+  --choice-btn-input-size: 20px; // custom input size
+  --choice-btn-input-icon-size: 16px; // icon size
+  --choice-btn-input-border-width: 2px; // custom input border width
+  --choice-btn-input-margin-right: var(--space-sm); // gap between custom input and content
+  --choice-btn-input-translate-y: 0em; // (optional) translate-y input to align it with the text 
+}
+
+.choice-btns {
+  display: flex;
+  flex-direction: column;
+}
+
+.choice-btn__grid {
+  display: none;
+}
+
+.js {
+  .choice-btn__fallback {
+    @include srHide; // visible only to screen readers
+  }
+
+  .choice-btn {
+    background-color: var(--color-bg);
+    border-width: var(--choice-btn-border-width);
+    border-style:  solid;
+    border-color: var(--color-contrast-low);
+    border-radius: var(--choice-btn-border-radius);
+    user-select: none;
+    cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+      border-color: lightness(var(--color-contrast-low), 0.85);
+    }
+
+    &.choice-btn--focus,
+    &.choice-btn--checked,
+    &:active {
+      border-color: var(--color-primary);
+    }
+    
+    &.choice-btn--focus,
+    &:active {
+      box-shadow: 0 0 0 2px alpha(var(--color-primary), 0.2);
+    }
+  }
+
+  .choice-btn__grid {
+    display: block; // fallback
+    display: grid;
+    grid-template-columns: var(--choice-btn-input-size) 1fr;
+    grid-gap: var(--choice-btn-input-margin-right);
+    align-items: var(--choice-btn-align-items);
+  }
+}
+
+// custom input
+.choice-btn__input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-bg);
+  width: var(--choice-btn-input-size);
+  height: var(--choice-btn-input-size);
+  border-width: var(--choice-btn-input-border-width);
+  border-style: solid;
+  border-color: var(--color-contrast-low);
+  position: relative;
+  top: var(--choice-btn-input-translate-y);
+
+  .icon {
+    color: var(--color-white); // icon color
+    font-size: var(--choice-btn-input-icon-size);
+  }
+
+  .choice-btn--checked & {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+  }
+}
+
+.choice-btn__input--checkbox {
+  border-radius: var(--radius-sm);
+
+  .icon > * {
+    transition: stroke-dashoffset .3s;
+    stroke-dashoffset: 16;
+    stroke-dasharray: 17;
+  }
+
+  .choice-btn--checked & .icon > * {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 17;
+  }
+}
+
+.choice-btn__input--radio {
+  border-radius: 50%;
+
+  .icon {
+    transition: transform .3s var(--ease-out-back);
+    transform: scale(0);
+  }
+
+  .choice-btn--checked & .icon {
+    transform: scale(1);
+  }
+}
+
+
+.p-table__item--popular {
+    background-color: #F7F9FA!important;
+    border: 2px solid #7D2BE5!important;
+}
+
+.p-table__item {
+    background-color: #F7F9FA!important;
+ 
+}
+
+.main--color {
+    color: #393939!important;
+}
+
+.main--color--add {
+color: #949596!important;
+}
