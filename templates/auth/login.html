@@ -1,0 +1,41 @@
+{% extends 'auth/layout.html' %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo account_settings">
+        <form class="login-form">
+            <div class="text-component text-center margin-bottom-sm">
+                <h1>Log in Sizze</h1>
+            </div>
+            <div class="text-center">
+                <p class="text-sm">Don't have an account? <a class="log_link" href="#0">Sing Up</a></p>
+            </div>
+            <div class="margin-bottom-sm">
+                <label class="text-sm form-label margin-bottom-xxxs" for="inputEmail1">Email</label>
+                <input class="form-control width-100%" type="email" name="inputEmail1" id="inputEmail1"
+                       placeholder="email@myemail.com">
+            </div>
+
+            <div class="margin-bottom-sm">
+                <div class="text-sm flex justify-between margin-bottom-xxxs">
+                    <label class="form-label" for="inputPassword1">Password</label>
+                </div>
+
+                <input class="form-control width-100%" type="password" name="inputPassword1" id="inputPassword1">
+            </div>
+
+            <div class="margin-bottom-sm">
+                <button class="btn--color btn btn--primary btn--md width-100%">Log in</button>
+            </div>
+
+            <p class="text-sm">Place for errors</p>
+
+            <a class="text-sm log_link mt-2 d-block text-sm forgot" href="{% url 'forgot_password' %}">Forgot your password?</a>
+
+
+        </form>
+    </div>
+{% endblock %}

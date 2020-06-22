@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'content/layout.html' %}
 {% load static %}
 
 {% block title %}
@@ -11,7 +11,7 @@
         <header class="header position-relative js-header ">
             <div class="m-0 p-0 w-100 header__container mt-0 mb-0 container max-width-lg">
                 <div class="header__logo">
-                    <a href="#0">
+                    <a href="{% url 'index' %}">
                         <img src="{% static 'images/SizzeLogo.svg' %}" alt="" class="nav-logo">
                     </a>
                 </div>
