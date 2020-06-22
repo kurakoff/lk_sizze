@@ -1,0 +1,18 @@
+{% extends 'auth/layout.html' %}
+{% load static %}
+
+{% block title %}
+    Mail send
+{% endblock %}
+
+{% block content %}
+<div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo content mt-5">
+    <img class="reset_img" src="{% static 'images/mail.svg' %}">
+    <h1 class="text-center_h1">Check your email</h1>
+    <p class="mt-3 text-center">We’ve sent you a reset link.</p>
+
+    <div class="mt-3 margin-bottom-sm">
+        <button class="btn--color btn btn--primary btn--md width-100%">My account</button>
+    </div>
+</div>
+{% endblock %}

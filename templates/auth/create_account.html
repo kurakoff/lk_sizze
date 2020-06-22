@@ -1,0 +1,55 @@
+{% extends 'auth/layout.html' %}
+{% load static %}
+{% block title %}
+    Create account
+{% endblock %}
+{% block content %}
+
+    <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo account_settings">
+
+
+        <form class="sign-up-form">
+            <div class="text-component text-center margin-bottom-sm">
+                <h1>Get started</h1>
+                <p class="text-sm">Already have an account? <a class="log_link" href="{% url 'login' %}">Log in</a></p>
+            </div>
+
+
+            <div class="margin-bottom-sm">
+
+
+                <label class="text-sm form-label margin-bottom-xxxs" for="inputFirstName">Your Name</label>
+                <input class="form-control width-100%" type="text" name="inputFirstName" id="inputFirstName">
+
+
+            </div>
+
+            <div class="margin-bottom-sm">
+                <label class="text-sm form-label margin-bottom-xxxs" for="inputEmail1">Your Email</label>
+                <input class="form-control width-100%" type="email" name="inputEmail1" id="inputEmail1"
+                       placeholder="email@myemail.com">
+            </div>
+
+            <div class="margin-bottom-md">
+                <label class="text-sm form-label margin-bottom-xxxs" for="inputPassword1">Password</label>
+                <input class="form-control width-100%" type="password" name="inputPassword1" id="inputPassword1"
+                       placeholder="5 characters minimum">
+            </div>
+
+            <div class="margin-bottom-sm">
+                <button class="btn--color btn btn--primary btn--md width-100%">Sing Up</button>
+            </div>
+
+            <p class="text-sm">Place for errors</p>
+
+            <div class="text-center">
+                <p class=" text-sm mt-2 d-block color-contrast-medium">By signing up, I agree to the Sizze's
+                    <a class="log_link" href="{% static 'docs/Privacy.pdf' %}">Privacy Policy</a>
+                    and
+                    <a class="log_link" href="{% static 'docs/Terms.pdf' %} ">Terms of Service.</a></p>
+            </div>
+        </form>
+
+    </div>
+
+{% endblock %}
