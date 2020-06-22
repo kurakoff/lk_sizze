@@ -282,7 +282,7 @@ Usage: codyhouse.co/license
 }
 
 .type_img_project {
-margin-right: 5px;
+margin-right: 5px!important;
 }
 
 .flex_h4 {
@@ -1307,7 +1307,7 @@ Usage: codyhouse.co/license
 
 // no js
 html:not(.js) .filter-nav__nav {
-  //justify-content: left;
+  justify-content: left;
 }
 
 .filter-nav--expanded .filter-nav__btn[aria-current="true"] {
@@ -1344,7 +1344,7 @@ html:not(.js) .filter-nav__nav {
     right: 0px;
     background: #fff;
     box-shadow: none!important;
-    background-image: url(../img/Group%206243.svg);
+    background-image: url(/static/images/Group%206243.svg);
     background-repeat: no-repeat;
     background-position: center right;
 }
@@ -1803,4 +1803,441 @@ Usage: codyhouse.co/license
 
 .main--color--add {
 color: #949596!important;
+}
+
+
+.menu__content:focus {
+    outline: none;
+    background-color: inherit!important;
+}
+
+ .menu__content:hover {
+    background-color: var(--color-contrast-lower);
+    color: #393939!important;
+}
+
+
+.menu {
+    color: #393939!important;
+}
+
+
+
+/* -------------------------------- 
+
+File#: _1_modal-window
+Title: Modal Window
+Descr: A modal dialog used to display critical information
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.modal {
+  position: fixed;
+  z-index: var(--zindex-overlay);
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+
+  &:not(.modal--is-visible) {
+    pointer-events: none;
+    background-color: transparent;
+  }
+}
+
+.modal--is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal__content {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 100%;
+}
+
+// close button
+.modal__close-btn {
+  display: flex;
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: .2s;
+
+  .icon {
+    display: block;
+    margin: auto;
+  }
+}
+
+.modal__close-btn--outer { // close button - outside the modal__content
+  width: 3.2em;
+  height: 3.2em;
+  position: fixed;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: var(--zindex-fixed-element);
+  background-color: alpha(var(--color-contrast-higher), 0.8);
+
+  &:hover {
+    background-color: var(--color-contrast-higher);
+  }
+
+  .icon {
+    color: var(--color-bg); // icon color
+  }
+}
+
+.modal__close-btn--inner { // close button - inside the modal__content
+  width: 2em;
+  height: 2em;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+
+  .icon {
+    color: inherit; // icon color
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// animations
+:root {
+  --modal-transition-duration: 0.2s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .modal--animate-fade {
+    --modal-transition-duration: 0.2s;
+    transition: opacity var(--modal-transition-duration), background-color var(--modal-transition-duration), visibility 0s var(--modal-transition-duration);
+
+    &.modal--is-visible {
+      transition: opacity var(--modal-transition-duration), background-color var(--modal-transition-duration), visibility 0s;
+    }
+  }
+
+  .modal--animate-scale,
+  .modal--animate-translate-up,
+  .modal--animate-translate-down,
+  .modal--animate-translate-right,
+  .modal--animate-translate-left {
+    --modal-transition-duration: 0.2s;
+    transition: opacity var(--modal-transition-duration), visibility 0s var(--modal-transition-duration);
+
+    .modal__content {
+      will-change: transform;
+      transition: transform var(--modal-transition-duration) var(--ease-out);
+    }
+
+    &.modal--is-visible {
+      transition: opacity var(--modal-transition-duration), visibility 0s;
+
+      .modal__content {
+        transform: scale(1); // reset all transformations
+      }
+    }
+  }
+
+  .modal--animate-slide-up,
+  .modal--animate-slide-down,
+  .modal--animate-slide-right,
+  .modal--animate-slide-left {
+    --modal-transition-duration: 0.3s;
+    transition: opacity 0s var(--modal-transition-duration), background-color var(--modal-transition-duration), visibility 0s var(--modal-transition-duration);
+
+    .modal__content {
+      will-change: transform;
+      transition: transform var(--modal-transition-duration) var(--ease-out);
+    }
+
+    &.modal--is-visible {
+      transition: background-color var(--modal-transition-duration), visibility 0s;
+
+      .modal__content {
+        transform: scale(1); // reset all transformations
+      }
+    }
+  }
+
+  // scale
+  .modal--animate-scale {
+    .modal__content {
+      transform: scale(0.95);
+    }
+  }
+
+  // translate
+  .modal--animate-translate-up {
+    .modal__content {
+      transform: translateY(40px);
+    }
+  }
+
+  .modal--animate-translate-down {
+    .modal__content {
+      transform: translateY(-40px);
+    }
+  }
+
+  .modal--animate-translate-right {
+    .modal__content {
+      transform: translateX(-40px);
+    }
+  }
+
+  .modal--animate-translate-left {
+    .modal__content {
+      transform: translateX(40px);
+    }
+  }
+
+  // slide
+  .modal--animate-slide-up {
+    .modal__content {
+      transform: translateY(100%);
+    }
+  }
+
+  .modal--animate-slide-down {
+    .modal__content {
+      transform: translateY(-100%);
+    }
+  }
+
+  .modal--animate-slide-right {
+    .modal__content {
+      transform: translateX(-100%);
+    }
+  }
+
+  .modal--animate-slide-left {
+    .modal__content {
+      transform: translateX(100%);
+    }
+  }
+}
+
+// load content - optional
+.modal--is-loading {
+  .modal__content {
+    visibility: hidden;
+  }
+
+  .modal__loader {
+    display: flex;
+  }
+}
+
+.modal__loader { // loader icon
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  pointer-events: none;
+}
+
+
+/* -------------------------------- 
+
+File#: _2_modal-form
+Title: Modal Form
+Descr: Modal window containing a form
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+
+/* -------------------------------- 
+
+File#: _1_off-canvas-content
+Title: Off-Canvas Content
+Descr: An off-canvas section used for complementary content
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --off-canvas-panel-width: 400px;
+  --off-canvas-panel-width-opposite: -400px; // it should be equal to (--off-screen-panel-width * -1)
+  --off-canvas-animation-duration: 0.4s;
+}
+
+.off-canvas {
+  overflow: hidden;
+}
+
+.off-canvas__main { // main content, pushed out when off-canvas content is visible
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+  will-change: transform;
+  transition: transform var(--off-canvas-animation-duration) var(--ease-in-out); 
+}
+
+.off-canvas--visible .off-canvas__main { // off-canvas content is always full-width on small devices
+  transform: translateX(100%);
+}
+
+@include breakpoint(xs) { // change tanslate value if off-canvas is not full-width
+  .off-canvas--visible:not(.off-canvas--full-width) .off-canvas__main {
+    transform: translateX(var(--off-canvas-panel-width));
+  }
+}
+
+// right-side panel variation
+.off-canvas--right.off-canvas--visible .off-canvas__main {
+  transform: translateX(-100%);
+}
+
+@include breakpoint(xs) {
+  .off-canvas--right.off-canvas--visible:not(.off-canvas--full-width) .off-canvas__main {
+    transform: translateX(var(--off-canvas-panel-width-opposite));
+  }
+}
+
+.off-canvas__close-btn { // if JS = disabled, hide panel close button
+  display: none;
+}
+
+.js {
+  .off-canvas__panel {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    background-color: var(--color-contrast-lower);
+    transition: visibility var(--off-canvas-animation-duration);
+
+    &:focus {
+      outline: none;
+    }
+  }
+  
+  @include breakpoint(xs) {
+    .off-canvas:not(.off-canvas--full-width) .off-canvas__panel {
+      width: var(--off-canvas-panel-width);
+    }
+  }
+
+  .off-canvas__content { // off-canvas panel content
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateX(-50%);
+    will-change: transform;
+    transition: transform var(--off-canvas-animation-duration) var(--ease-in-out);
+  }
+
+  .off-canvas__close-btn {
+    display: block;
+    position: fixed;
+    top: var(--space-xxs);
+    left: var(--space-xxs);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: alpha(var(--color-bg), 0.95);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(-60px);
+    transition: transform .4s, background .2s, box-shadow .2s;
+
+    &:hover {
+      background-color: var(--color-bg);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .icon {
+      display: block;
+      color: var(--color-contrast-high); // icon color
+      font-size: 16px; // icon size
+    }
+  }
+
+  .off-canvas--visible {
+    .off-canvas__panel {
+      visibility: visible;
+    }
+
+    .off-canvas__content {
+      transform: translateX(0);
+    }
+
+    .off-canvas__close-btn {
+      transform: translateX(0);
+      transition: transform .4s var(--off-canvas-animation-duration), background .2s 0s, box-shadow .2s 0s;
+      // transition-delay: var(--off-canvas-animation-duration);
+    }
+  }
+
+  // right-side panel variation
+  .off-canvas--right {
+    .off-canvas__panel {
+      left: auto;
+      right: 0;
+    }
+
+    &:not(.off-canvas--visible) .off-canvas__content {
+      transform: translateX(50%);
+    }
+
+    .off-canvas__close-btn {
+      left: auto;
+      right: var(--space-xxs);
+    }
+
+    &:not(.off-canvas--visible) .off-canvas__close-btn {
+      transform: translateX(60px);
+    }
+  }
+}
+
+// --full-width
+.off-canvas--full-width { 
+  --off-canvas-animation-duration: 0.75s; // increase animation duration if panel is full-screen
+
+  .off-canvas__close-btn {
+    width: 2em;
+    height: 2em;
+
+    .icon {
+      font-size: 1em;
+    }
+  }
+}
+
+
+
+.l-none {
+    list-style-type: none;
+}
+
+.js .off-canvas__panel {
+    background-color: #fff!important;
+}
+
+
+.red_color {
+color: #FF1D1D!important;
+}
+
+.menu__content {
+    color: #393939!important;
 }
