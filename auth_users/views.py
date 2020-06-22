@@ -1,3 +1,5 @@
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
@@ -30,8 +32,18 @@ class CreateAccount(View):
 
     def post(self, request, *args, **kwargs):
         response = {}
+        user = User()
+        form = self.form_class(request.POST, instance=user)
+        try:
+            response['result'] = True
+            response['form_url'] = '/user/login/'
+            form.save()
+        except Exception as e:
+            print(e)
+            response['result'] = False
+            if form.errors:
+                response['errors'] = form.errors
         return JsonResponse(response)
-
 
 
 class SuccessResetMailSend(TemplateView):
