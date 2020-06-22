@@ -1,0 +1,10 @@
+/.idea
+/venv
+db.sqlite3
+*.pyc
+/content/__pycache__/*.*
+/auth_users/__pycache__/*.*
+/__pycache__
+/comp
+/DATE
+/content/static/CACHE
