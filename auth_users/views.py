@@ -1,5 +1,7 @@
+from django.http import JsonResponse
 from django.shortcuts import render
-
+from django.views import View
+from auth_users.forms import CreateUserForm
 from django.views.generic import TemplateView
 
 
@@ -19,12 +21,17 @@ class ForgotPassword(TemplateView):
         return context
 
 
-class CreateAccount(TemplateView):
+class CreateAccount(View):
     template_name = 'auth/create_account.html'
+    form_class = CreateUserForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': self.form_class})
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        return JsonResponse(response)
+
 
 
 class SuccessResetMailSend(TemplateView):

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'compressor',
     'tinymce',
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [
