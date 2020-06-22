@@ -1,10 +1,14 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views import View
-from auth_users.forms import CreateUserForm
 from django.views.generic import TemplateView
+from django.conf import settings
+
+from auth_users.forms import CreateUserForm
 
 
 class LoginView(TemplateView):
@@ -38,6 +42,16 @@ class CreateAccount(View):
             response['result'] = True
             response['form_url'] = '/user/login/'
             form.save()
+
+            msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+            send_mail(
+                f"Какой то загаловок",
+                msg_html,
+                getattr(settings, "EMAIL_HOST_USER"),
+                [user.email],
+                html_message=msg_html,
+                fail_silently=True
+            )
         except Exception as e:
             print(e)
             response['result'] = False

@@ -152,8 +152,9 @@ STATIC_ROOT = 'static'
 MEDIA_ROOT = './media/'
 MEDIA_URL = '/media/'
 
-# EMAIL_HOST = 'smtp.yandex.ru'
-# EMAIL_PORT = '465'
-# EMAIL_HOST_USER = "xxx@yandex.ru"
-# EMAIL_HOST_PASSWORD = ""
-# EMAIL_USE_SSL = True
+# ПОКА ТЕСТ
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = '465'
+EMAIL_HOST_USER = "obuhova.reply@yandex.ru"
+EMAIL_HOST_PASSWORD = "PPPoe123"
+EMAIL_USE_SSL = True
