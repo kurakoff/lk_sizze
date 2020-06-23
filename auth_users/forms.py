@@ -11,3 +11,7 @@ class CreateUserForm(forms.ModelForm):
 class LogInForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ForgotPassword(forms.Form):
+    email = forms.EmailField()

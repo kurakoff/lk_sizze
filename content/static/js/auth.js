@@ -41,6 +41,8 @@ $(document).ready(function () {
     //
     // LOGIN USER
     init_ajax_form($('.login-form'))
+    //
+    // FORGOT PASSWORD
+    init_ajax_form($('.password-reset-form'))
 
-//
 });
