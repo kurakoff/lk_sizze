@@ -20,20 +20,25 @@
             <div class="margin-bottom-sm">
                 <label class="text-sm form-label margin-bottom-xxxs" for="inputFirstName">Your Name</label>
                 {{ form.username | add_classes:'form-control width-100%' }}
+                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
+
             </div>
 
             <div class="margin-bottom-sm">
                 <label class="text-sm form-label margin-bottom-xxxs" for="inputEmail1">Your Email</label>
                 {{ form.email | add_classes:'form-control width-100%' }}
+                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
+
             </div>
 
             <div class="margin-bottom-md">
                 <label class="text-sm form-label margin-bottom-xxxs" for="inputPassword1">Password</label>
                 {{ form.password | add_classes:'form-control width-100%' }}
+                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
             </div>
 
             <div class="margin-bottom-sm">
-                <button id="singUpButton" class="btn--color btn btn--primary btn--md width-100%">Sing Up</button>
+                <button class="btn--color btn btn--primary btn--md width-100%">Sing Up</button>
             </div>
 
             <p id="error_info" class="text-sm"></p>

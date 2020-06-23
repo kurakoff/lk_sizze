@@ -1,7 +1,7 @@
 function init_ajax_form($form) {
     $form.submit(function (e) {
         e.preventDefault();
-
+        form_clear_error($form)
         $form = $(this);
         let url = this.action;
         let data = $(this).serialize();
@@ -11,8 +11,7 @@ function init_ajax_form($form) {
             if (!data.result) {
                 const keys = Object.keys(data.errors);
                 for (let i in keys) {
-                    $form.find('#id_' + keys[i]).parent().addClass('warn');
-                    $form.removeClass('success');
+                    $form.find('#id_' + keys[i]).siblings('.error_style').addClass('show').text(data.errors[keys[i]])
                 }
             } else {
                 if (data.form_url) window.location.replace(data.form_url);
@@ -26,6 +25,10 @@ function clear_form($form) {
     $form.find('input[type=text], textarea').each(function () {
         $(this).val('');
     });
+}
+
+function form_clear_error($form) {
+    $form.find('.error_style').removeClass('show')
 }
 
 $(document).ready(function () {

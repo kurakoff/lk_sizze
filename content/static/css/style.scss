@@ -269,16 +269,16 @@ Usage: codyhouse.co/license
 }
 
 .new_project_button {
-    
-    width: 70px!important;
-    height: 70px!important;
-    background-color: #fff!important;
-    color: #393939;
-    border-radius: 50%;
-    background-image: url(/static/images/apps.svg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    box-shadow: none!important;
+
+  width: 70px !important;
+  height: 70px !important;
+  background-color: #fff !important;
+  color: #393939;
+  border-radius: 50%;
+  background-image: url(../img/apps.svg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  box-shadow: none !important;
 }
 
 .type_img_project {
@@ -403,12 +403,12 @@ Usage: codyhouse.co/license
 }
 
 .else-button {
-    width: 50px!important;
-    background-color: #fff!important;
-    box-shadow: none!important;
-    background-image: url(/static/images/more-horizontal.svg);
-    background-position: center right;
-    background-repeat: no-repeat;
+  width: 50px !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+  background-image: url(../img/more-horizontal.svg);
+  background-position: center right;
+  background-repeat: no-repeat;
 }
 
 .h4_group {
@@ -1337,16 +1337,16 @@ html:not(.js) .filter-nav__nav {
 }
 
 
-.close_btn{
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    right: 0px;
-    background: #fff;
-    box-shadow: none!important;
-    background-image: url(/static/images/Group%206243.svg);
-    background-repeat: no-repeat;
-    background-position: center right;
+.close_btn {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 0px;
+  background: #fff;
+  box-shadow: none !important;
+  background-image: url(../img/Group%206243.svg);
+  background-repeat: no-repeat;
+  background-position: center right;
 }
 
 @media screen and (max-width: 559px) {
@@ -2235,9 +2235,20 @@ Usage: codyhouse.co/license
 
 
 .red_color {
-color: #FF1D1D!important;
+  color: #FF1D1D !important;
 }
 
 .menu__content {
-    color: #393939!important;
+  color: #393939 !important;
+}
+
+
+.error_style {
+  display: none;
+  color: #af2828;
+  font-family: "SFPro Medium" !important;
+
+  &.show {
+    display: block;
+  }
 }
