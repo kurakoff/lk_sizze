@@ -14,7 +14,7 @@ function init_ajax_form($form) {
                     $form.find('#id_' + keys[i]).siblings('.error_style').addClass('show').text(data.errors[keys[i]])
                 }
             } else {
-                if (data.form_url) window.location.replace(data.form_url);
+                if (data.redirect_url) window.location.replace(data.redirect_url);
                 clear_form($form);
             }
         }, 'json');
@@ -36,6 +36,11 @@ $(document).ready(function () {
         $(this).find('input').prop('required', false);
         $(this).find('textarea').prop('required', false);
     });
-
+    //CREATE USER
     init_ajax_form($('.sign-up-form'))
+    //
+    // LOGIN USER
+    init_ajax_form($('.login-form'))
+
+//
 });

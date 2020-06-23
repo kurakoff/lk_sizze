@@ -1,22 +1,39 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import TemplateView
 from django.conf import settings
 
-from auth_users.forms import CreateUserForm
+from auth_users.forms import CreateUserForm, LogInForm
 
 
 class LoginView(TemplateView):
     template_name = 'auth/login.html'
+    form_class = LogInForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': self.form_class})
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = authenticate(username=email, password=password)
+        if user:
+            login(request, user)
+            response['result'] = True
+            response['redirect_url'] = '/'
+        else:
+            response['result'] = False
+            response['errors'] = {'password': 'username or the password is incorrect',
+                                  'email': 'username or the password is incorrect'}
+        return JsonResponse(response)
 
 
 class ForgotPassword(TemplateView):
@@ -40,7 +57,7 @@ class CreateAccount(View):
         form = self.form_class(request.POST, instance=user)
         try:
             response['result'] = True
-            response['form_url'] = '/user/login/'
+            response['redirect_url'] = '/user/login/'
             form.save()
 
             msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
