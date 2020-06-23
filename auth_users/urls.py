@@ -1,4 +1,3 @@
-from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import path
 from .views import \
     LoginView, \
