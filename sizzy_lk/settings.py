@@ -159,3 +159,5 @@ EMAIL_PORT = '465'
 EMAIL_HOST_USER = "obuhova.reply@yandex.ru"
 EMAIL_HOST_PASSWORD = "PPPoe123"
 EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = "obuhova.reply@yandex.ru"

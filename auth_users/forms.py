@@ -13,5 +13,5 @@ class LogInForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class ForgotPassword(forms.Form):
+class ForgotPasswordForm(forms.Form):
     email = forms.EmailField()

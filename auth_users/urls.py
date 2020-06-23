@@ -1,14 +1,21 @@
-from django.urls import path, include
-
-from .views import LoginView, ForgotPassword, CreateAccount, SuccessResetMailSend, SelectPassword, SuccessResetPassword
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.urls import path
+from .views import \
+    LoginView, \
+    CreateAccount, \
+    SuccessResetPassword, \
+    CustomPasswordResetDoneView, \
+    CustomPasswordResetConfirmView, CustomPasswordResetView
 
 # AUTH URLS
 
+
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
-    path('forgot_password/', ForgotPassword.as_view(), name='forgot_password'),
     path('create_account/', CreateAccount.as_view(), name='create_account'),
-    path('success_reset_mail/', SuccessResetMailSend.as_view(), name='success_reset_mail_send'),
-    path('select_password/', SelectPassword.as_view(), name='success_reset_mail_send'),
-    path('success_reset_password/', SuccessResetPassword.as_view(), name='success_reset_password'),
+
+    path('forgot_password/', CustomPasswordResetView.as_view(), name='forgot_password'),
+    path('password_mail_done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset_confirm_mail/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset'),
+    path('reset_done/', SuccessResetPassword.as_view(), name='password_reset_complete'),
 ]

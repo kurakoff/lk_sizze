@@ -43,6 +43,6 @@ $(document).ready(function () {
     init_ajax_form($('.login-form'))
     //
     // FORGOT PASSWORD
-    init_ajax_form($('.password-reset-form'))
+    // init_ajax_form($('.password-reset-form'))
 
 });
