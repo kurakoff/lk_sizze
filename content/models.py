@@ -29,7 +29,7 @@ class Screen(models.Model):
 
 class Prototype(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
-    image = models.ImageField(upload_to='images_prototypes/', verbose_name='изображение')
+    image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
 
     class Meta:
         verbose_name = 'прототип'
@@ -37,6 +37,9 @@ class Prototype(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# TODO: Продумать структуру привязки групп элементов
 
 
 class GroupElements(models.Model):

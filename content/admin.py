@@ -1,3 +1,15 @@
 from django.contrib import admin
+from .models import (
+    Project,
+    Screen,
+    Prototype,
+    GroupElements,
+    Element,
+)
 
-# Register your models here.
+
+class PrototypeAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Prototype, PrototypeAdmin)
