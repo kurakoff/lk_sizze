@@ -15,148 +15,23 @@
         </div>
 
         <div class="container-fluid create_devises">
-
-
             <div class="row choice-btns js-choice-btns">
-
-                <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn justify-content-between">
-                    <svg class="svg-icon" width="190" height="190" viewBox="0 0 190 190" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M155 50.5H35C31.4101 50.5 28.5 53.4101 28.5 57V127C28.5 130.59 31.4101 133.5 35 133.5H155C158.59 133.5 161.5 130.59 161.5 127V57C161.5 53.4101 158.59 50.5 155 50.5Z"
-                              fill="#6B6F76" stroke="#6B6F76" stroke-width="5"/>
-                        <rect x="31" y="53" width="128" height="74" rx="2" fill="#F9F9FA"/>
-                        <path d="M10 133.143C10 131.959 10.9594 131 12.1429 131H177.857C179.041 131 180 131.959 180 133.143V133.143C180 135.273 178.273 137 176.143 137H13.8571C11.7269 137 10 135.273 10 133.143V133.143Z"
-                              fill="#A7A7A7"/>
-                    </svg>
-
-                    <div class="choice-btn__fallback ">
-
-                        <input type="radio" name="choiceButtons" id="choiceButton1" checked>
-
+                {% for prototype in prototypes %}
+                    <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn justify-content-between">
+                        <div class="prototype {% if forloop.first %}active{% endif %}"
+                             data-prototype-id="{{ prototype.pk }}">
+                            <img alt="" src="{{ prototype.image.url }}"/>
+                            <div class="device_name">{{ prototype.device_name }}</div>
+                        </div>
                     </div>
-
-                    <div class="device_name">Desktop</div>
-                </div>
-
-                <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn  justify-content-between">
-                    <svg class="svg-icon" width="190" height="190" viewBox="0 0 190 190" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <rect x="68.5" y="41.5" width="53" height="109" rx="7.5" fill="white" stroke="#6B6F76"
-                              stroke-width="3"/>
-                        <path d="M81 42H110V44C110 45.6569 108.657 47 107 47H84C82.3431 47 81 45.6569 81 44V42Z"
-                              fill="#6B6F76"/>
-                    </svg>
-
-                    <div class="choice-btn__fallback ">
-
-                        <input type="radio" name="choiceButtons" id="choiceButton1" checked>
-
-                    </div>
-
-                    <div class="device_name">iphone X</div>
-                </div>
-
-                <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn justify-content-between">
-                    <svg class="svg-icon" width="190" height="190" viewBox="0 0 190 190" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <rect x="68.5" y="40.5" width="53" height="109" rx="7.5" fill="white" stroke="#6B6F76"
-                              stroke-width="3"/>
-                        <path d="M120 52L70 52L70 45C70 43.3431 71.3431 42 73 42L117 42C118.657 42 120 43.3431 120 45L120 52Z"
-                              fill="#6B6F76"/>
-                        <path d="M70 137H120V145C120 146.657 118.657 148 117 148H73C71.3431 148 70 146.657 70 145V137Z"
-                              fill="#6B6F76"/>
-                        <rect x="70" y="51" width="50" height="87" rx="1" fill="white"/>
-                        <circle cx="95" cy="144" r="4" fill="white"/>
-                    </svg>
-
-
-                    <div class="choice-btn__fallback ">
-
-                        <input type="radio" name="choiceButtons" id="choiceButton1" checked>
-
-                    </div>
-                    <div class="device_name">iphone</div>
-                </div>
-
-
-                <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn justify-content-between">
-                    <svg class="svg-icon" width="190" height="190" viewBox="0 0 190 190" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <rect x="70.5" y="43.5" width="48" height="104" rx="4.5" fill="#6B6F76" stroke="#6B6F76"
-                              stroke-width="7"/>
-                        <rect x="69" y="46" width="51" height="99" rx="3" fill="white"/>
-                    </svg>
-
-                    <div class="choice-btn__fallback ">
-
-                        <input type="radio" name="choiceButtons" id="choiceButton1" checked>
-
-                    </div>
-                    <div class="device_name">Android</div>
-                </div>
-
-
-                <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn justify-content-between">
-                    <svg class="svg-icon" width="190" height="190" viewBox="0 0 190 190" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <rect x="56.5" y="37.5" width="77" height="115" rx="7.5" fill="white" stroke="#6B6F76"
-                              stroke-width="3"/>
-                        <path d="M132 49L58 49L58 42C58 40.3431 59.3431 39 61 39L129 39C130.657 39 132 40.3431 132 42L132 49Z"
-                              fill="#6B6F76"/>
-                        <path d="M58 140H132V148C132 149.657 130.657 151 129 151H61C59.3431 151 58 149.657 58 148V140Z"
-                              fill="#6B6F76"/>
-                        <rect x="58" y="45" width="74" height="97" rx="1" fill="white"/>
-                        <circle cx="95" cy="148" r="4" fill="white"/>
-                    </svg>
-                    <div class="choice-btn__fallback ">
-
-                        <input type="radio" name="choiceButtons" id="choiceButton1" checked>
-
-                    </div>
-
-                    <div class="device_name">iPad</div>
-                </div>
-
-
-                <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn justify-content-between">
-                    <svg class="svg-icon" width="190" height="190" viewBox="0 0 190 190" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <rect x="58" y="39" width="74" height="112" rx="3" fill="white" stroke="#6B6F76"
-                              stroke-width="4"/>
-                        <path d="M132 49L58 49L58 42C58 40.3431 59.3431 39 61 39L129 39C130.657 39 132 40.3431 132 42L132 49Z"
-                              fill="#6B6F76"/>
-                        <path d="M58 140H132V148C132 149.657 130.657 151 129 151H61C59.3431 151 58 149.657 58 148V140Z"
-                              fill="#6B6F76"/>
-                        <rect x="92" y="148" width="6" height="2" rx="1" fill="#F8F9FA"/>
-                        <rect x="60" y="45" width="70" height="100" rx="1" fill="white"/>
-                    </svg>
-
-                    <div class="choice-btn__fallback ">
-
-                        <input type="radio" name="choiceButtons" id="choiceButton1" checked>
-
-                    </div>
-
-                    <div class="device_name">Android Tablet</div>
-                </div>
-
+                {% endfor %}
 
             </div>
-
-
         </div>
 
         <div class="confirm">
             <button class="confirm_btn btn btn--primary btn--preserve-width">
                 <span class="btn__content-a">Next</span>
-
-                <span class="btn__content-b">
-    <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g stroke-width="1"
-                                                                                                        fill="currentColor"
-                                                                                                        stroke="currentColor"><path
-            d="M.5,8a7.5,7.5,0,1,1,1.91,5" fill="none" stroke="currentColor" stroke-linecap="round"
-            stroke-linejoin="round"></path></g></svg>
-  </span>
             </button>
         </div>
 

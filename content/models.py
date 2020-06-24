@@ -28,7 +28,7 @@ class Screen(models.Model):
 
 
 class Prototype(models.Model):
-    title = models.CharField(max_length=64, verbose_name='название')
+    device_name = models.CharField(max_length=64, verbose_name='название')
     image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
 
     class Meta:
@@ -36,7 +36,7 @@ class Prototype(models.Model):
         verbose_name_plural = 'прототипы'
 
     def __str__(self):
-        return self.title
+        return self.device_name
 
 
 # TODO: Продумать структуру привязки групп элементов

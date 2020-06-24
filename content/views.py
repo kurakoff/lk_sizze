@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from content.forms import UserDetailsForm
+from content.models import Prototype
 
 
 class IndexView(TemplateView):
@@ -44,8 +45,8 @@ class CreateProjectView(View):
     template_name = 'content/create_project.html'
 
     def get(self, request, *args, **kwargs):
-        user = request.user
-        return render(request, self.template_name, {})
+        prototypes = Prototype.objects.all()
+        return render(request, self.template_name, {'prototypes': prototypes})
 
     def post(self, request, *args, **kwargs):
         response = {}
