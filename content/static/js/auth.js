@@ -1,4 +1,12 @@
-function init_ajax_form($form) {
+function blinking_success($form) {
+    let blink_success = $form.find('.blinking_success');
+    blink_success.css('display', 'block');
+    setTimeout(() => {
+        blink_success.css('display', 'none')
+    }, 3000)
+}
+
+function init_ajax_form($form, clean = true, after_save) {
     $form.submit(function (e) {
         e.preventDefault();
         form_clear_error($form)
@@ -15,14 +23,15 @@ function init_ajax_form($form) {
                 }
             } else {
                 if (data.redirect_url) window.location.replace(data.redirect_url);
-                clear_form($form);
+                if (clean) clear_form($form);
+                if (after_save) after_save($form)
             }
         }, 'json');
     });
 }
 
 function clear_form($form) {
-    $form.find('input[type=text], textarea').each(function () {
+    $form.find('input, textarea').each(function () {
         $(this).val('');
     });
 }
@@ -41,8 +50,8 @@ $(document).ready(function () {
     // LOGIN USER
     init_ajax_form($('.login-form'))
     // Change password details account
-    init_ajax_form($('.change-password-form'))
+    init_ajax_form($('.change-password-form'), true, blinking_success)
     // CHANGE account profile
-    init_ajax_form($('.login-account-profile'))
+    init_ajax_form($('.login-account-profile'), false, blinking_success)
     //
 });

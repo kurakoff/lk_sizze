@@ -12,6 +12,10 @@
         <link type="text/x-scss" href="{% static 'css/style.scss' %}" rel="stylesheet"
               media="screen">
     {% endcompress %}
+    {% compress css %}
+        <link type="text/x-scss" href="{% static 'css/develop.scss' %}" rel="stylesheet"
+              media="screen">
+    {% endcompress %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>

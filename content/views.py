@@ -22,8 +22,10 @@ class ProfileView(View):
     form_password = PasswordChangeForm
 
     def get(self, request, *args, **kwargs):
+        user = request.user
         return render(request, self.template_name,
-                      {'form_details': self.form_details,
+                      {'form_details': self.form_details(user,
+                                                         initial={'username': user.username, 'email': user.email}),
                        'form_password': self.form_password(request.user), })
 
     def post(self, request, *args, **kwargs):
@@ -43,7 +45,7 @@ class ProfileSaveDetailsView(View):
 
     def post(self, request, *args, **kwargs):
         response = {}
-        form = self.form_details(request.POST)
+        form = self.form_details(request.user, request.POST)
         if not form.is_valid():
             response['result'] = False
             response['errors'] = form.errors
