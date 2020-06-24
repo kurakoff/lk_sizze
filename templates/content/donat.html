@@ -1,0 +1,101 @@
+{% extends 'content/layout.html' %}
+{% load static %}
+{% block title %}
+    Plans
+{% endblock %}
+{% block content %}
+    <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo plans">
+
+
+        <section class="p-table">
+            <div class="container max-width-adaptive-lg">
+                <div class="grid gap-sm">
+                    <div class="p-table__item col-6@md">
+
+                        <div class="margin-bottom-xxs">
+                            <h4 class="p-table__title main--color">Free</h4>
+                        </div>
+
+                        <div class="p-table__price margin-bottom-sm mt-2 main--color"><span>$0</span> <i>/ month</i>
+                        </div>
+
+                        <ul class="p-table__features margin-bottom-md">
+                            <li class="text-sm d-flex align-items-center main--color"><img class="mr-2"
+                                                                                           src="{% static "images/circle-checked.svg" %}">Download
+                                JPG
+                            </li>
+                            <li class="text-sm d-flex align-items-center main--color"><img class="mr-2"
+                                                                                           src="{% static "images/circle-checked.svg" %}">Download
+                                PNG
+                            </li>
+                            <li class="text-sm d-flex align-items-center main--color"><img class="mr-2"
+                                                                                           src="{% static "images/circle-checked.svg" %}">Fonts
+                            </li>
+                            <li class="text-sm d-flex align-items-center main--color--add"><img class="mr-2"
+                                                                                                src="{% static "images/circle-x.svg" %}">Base
+                                of ready-made elements
+                            </li>
+                            <li class="text-sm d-flex align-items-center main--color--add"><img class="mr-2"
+                                                                                                src="{% static "images/circle-x.svg" %}">Download
+                                PDF
+                            </li>
+                            <li class="text-sm d-flex align-items-center main--color--add"><img class="mr-2"
+                                                                                                src="{% static "images/circle-x.svg" %}">Download
+                                SVG
+                            </li>
+                        </ul>
+
+                        <div class="margin-top-auto"><a href="#0"
+                                                        class="btn--color btn btn--primary btn--md width-100%">Сhoose</a>
+                        </div>
+
+                    </div>
+
+                    <div class="p-table__item p-table__item--popular col-6@md">
+
+
+                        <div class="flex justify-between items-center margin-bottom-xxs">
+                            <h4 class="p-table__title main--color">Pro</h4>
+                        </div>
+
+                        <div class="p-table__price mt-2 margin-bottom-sm main--color"><span>$9</span> <i>/ month</i>
+                        </div>
+
+                        <ul class="text-sm p-table__features margin-bottom-md">
+                            <li class="d-flex align-items-center main--color"><img class="mr-2"
+                                                                                   src="{% static "images/circle-checked.svg" %}">Download
+                                JPG
+                            </li>
+                            <li class="d-flex align-items-center main--color"><img class="mr-2"
+                                                                                   src="{% static "images/circle-checked.svg" %}">Download
+                                PNG
+                            </li>
+                            <li class="d-flex align-items-center main--color"><img class="mr-2"
+                                                                                   src="{% static "images/circle-checked.svg" %}">Fonts
+                            </li>
+                            <li class="d-flex align-items-center main--color"><img class="mr-2"
+                                                                                   src="{% static "images/circle-checked.svg" %}">Base
+                                of ready-made elements
+                            </li>
+                            <li class="d-flex align-items-center main--color"><img class="mr-2"
+                                                                                   src="{% static "images/circle-checked.svg" %}">Download
+                                PDF
+                            </li>
+                            <li class="d-flex align-items-center main--color"><img class="mr-2"
+                                                                                   src="{% static "images/circle-checked.svg" %}">Download
+                                SVG
+                            </li>
+                        </ul>
+
+                        <div class="margin-top-auto"><a href="#0"
+                                                        class="btn--color btn btn--primary btn--md width-100%">Сhoose</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+    </div>
+{% endblock %}

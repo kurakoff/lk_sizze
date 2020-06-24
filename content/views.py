@@ -40,6 +40,10 @@ class ProfileView(View):
         return JsonResponse(response)
 
 
+class PlansView(TemplateView):
+    template_name = 'content/donat.html'
+
+
 class ProfileSaveDetailsView(View):
     form_details = UserDetailsForm
 

@@ -81,10 +81,12 @@
                         </li>
 
                         <li class="filter-nav__item">
-                            <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus"
-                                    data-filter="tea-mugs">
-                                Plan
-                            </button>
+                            <a href="{% url 'plans' %}">
+                                <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus"
+                                        data-filter="tea-mugs">
+                                    Plan
+                                </button>
+                            </a>
                         </li>
                         <li class="filter-nav__marker js-filter-nav__marker" aria-hidden="true"></li>
                     </ul>
