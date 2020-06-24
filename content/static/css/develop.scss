@@ -1,3 +1,5 @@
+// a logic style on develop process
+
 .mt-3.margin-bottom-sm {
   a {
     text-decoration: none;
@@ -14,4 +16,18 @@
   color: #0d8054;
   display: none;
   font-weight: bold;
+}
+
+.step_2 {
+  display: none;
+}
+
+.error_style {
+  display: none;
+  color: #af2828;
+  font-family: "SFPro Medium" !important;
+
+  &.show {
+    display: block;
+  }
 }
