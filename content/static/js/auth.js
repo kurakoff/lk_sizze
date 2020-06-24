@@ -54,4 +54,6 @@ $(document).ready(function () {
     // CHANGE account profile
     init_ajax_form($('.login-account-profile'), false, blinking_success)
     //
+    init_ajax_form($('.form_create_project'), true, blinking_success)
+
 });

@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=16, verbose_name='название', blank=True)
+    name = models.CharField(max_length=16, verbose_name='название', blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
 

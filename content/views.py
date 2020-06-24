@@ -5,7 +5,7 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from content.forms import UserDetailsForm
+from content.forms import UserDetailsForm, CreateProjectForm
 from content.models import Prototype
 
 
@@ -43,13 +43,24 @@ class ProfileView(View):
 
 class CreateProjectView(View):
     template_name = 'content/create_project.html'
+    form_class = CreateProjectForm
 
     def get(self, request, *args, **kwargs):
         prototypes = Prototype.objects.all()
-        return render(request, self.template_name, {'prototypes': prototypes})
+        return render(request, self.template_name, {'prototypes': prototypes, 'form': self.form_class})
 
     def post(self, request, *args, **kwargs):
         response = {}
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.user = request.user
+            project.save()
+            response['result'] = True
+            response['redirect_url'] = '/'
+        else:
+            response['result'] = False
+            response['errors'] = form.errors
         return JsonResponse(response)
 
 

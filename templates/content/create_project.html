@@ -9,8 +9,10 @@
 
         <div class="block_close position_relative">
             <h1 class="create_prject_title">Choose prototype size
-                <button class="close_btn btn btn--primary btn--preserve-width">
-                </button>
+                <a href="{% url 'index' %}">
+                    <button class="close_btn btn btn--primary btn--preserve-width">
+                    </button>
+                </a>
             </h1>
         </div>
 
@@ -30,7 +32,7 @@
         </div>
 
         <div class="confirm">
-            <button class="confirm_btn btn btn--primary btn--preserve-width">
+            <button class="confirm_btn btn btn--primary btn--preserve-width create_next">
                 <span class="btn__content-a">Next</span>
             </button>
         </div>
@@ -39,32 +41,29 @@
     <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo lk_block step_2">
         <div class="block_close position_relative">
             <h1 class="create_prject_title">Write name of your project
-                <button class="close_btn btn btn--primary btn--preserve-width">
-                </button>
+                <a href="{% url 'index' %}">
+                    <button class="close_btn btn btn--primary btn--preserve-width">
+                    </button>
+                </a>
             </h1>
         </div>
         <div class="input_title">
             <h4>Project title</h4>
             <div class="m-10 search-input search-input--icon-right">
-                <input class="form-control width-100% height-100%" type="search" name="searchInputX" id="searchInputX"
-                       placeholder="Title" aria-label="Search">
+                <form method="POST" class="form_create_project">
+                    {% csrf_token %}
+                    {{ form.name|add_classes:'form-control width-100% height-100%' }}
+                    <div class="mt-2 text-sm error_input error_style"></div>
+                    {{ form.prototype }}
+                    <div class="confirm">
+                        <button type="submit" class="confirm_btn btn btn--primary btn--preserve-width">
+                            Create
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
-
-        <div class="confirm">
-            <button class="confirm_btn btn btn--primary btn--preserve-width">
-                <span class="btn__content-a">Create</span>
-
-                <span class="btn__content-b">
-    <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g stroke-width="1"
-                                                                                                        fill="currentColor"
-                                                                                                        stroke="currentColor"><path
-            d="M.5,8a7.5,7.5,0,1,1,1.91,5" fill="none" stroke="currentColor" stroke-linecap="round"
-            stroke-linejoin="round"></path></g></svg>
-  </span>
-            </button>
-        </div>
 
     </div>
 {% endblock %}
