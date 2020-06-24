@@ -4,8 +4,8 @@ from django.db import models
 
 class Project(models.Model):
     name = models.CharField(max_length=16, verbose_name='название', blank=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    prototype_id = models.ForeignKey('Prototype', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'проект'
@@ -17,7 +17,7 @@ class Project(models.Model):
 
 class Screen(models.Model):
     layout_screen = models.TextField(verbose_name='макет')
-    project_id = models.ForeignKey('Project', on_delete=models.CASCADE)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'экран'
@@ -44,7 +44,7 @@ class Prototype(models.Model):
 
 class GroupElements(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
-    prototype_id = models.ForeignKey('Prototype', on_delete=models.CASCADE)
+    prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'группа'
@@ -56,7 +56,7 @@ class GroupElements(models.Model):
 
 class Element(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
-    group_id = models.ForeignKey('GroupElements', on_delete=models.CASCADE)
+    group = models.ForeignKey('GroupElements', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images_elements/', verbose_name='изображение')
     layout_element = models.TextField(verbose_name='макет')
 
