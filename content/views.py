@@ -40,6 +40,18 @@ class ProfileView(View):
         return JsonResponse(response)
 
 
+class CreateProjectView(View):
+    template_name = 'content/create_project.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        return render(request, self.template_name, {})
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        return JsonResponse(response)
+
+
 class PlansView(TemplateView):
     template_name = 'content/donat.html'
 

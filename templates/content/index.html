@@ -3,14 +3,17 @@
 
 {% block title %}
 {% endblock %}
-
+{% block nav %}
+    {% include 'content/partials/_filter_nav.html' %}
+{% endblock %}
 {% block content %}
     <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo lk_block">
         <h1 class="poject_title">Projects</h1>
         <div class="new_project">
-            <button href="create_project.html" class="btn btn--primary btn--preserve-width new_project_button">
-                <span class="btn__content-a"></span>
-                <span class="btn__content-b">
+            <a href="{% url 'create_project' %}">
+                <button class="btn btn--primary btn--preserve-width new_project_button create_project">
+                    <span class="btn__content-a"></span>
+                    <span class="btn__content-b">
                     <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g
                             stroke-width="1"
                             fill="currentColor"
@@ -18,7 +21,8 @@
                             d="M.5,8a7.5,7.5,0,1,1,1.91,5" fill="none" stroke="currentColor" stroke-linecap="round"
                             stroke-linejoin="round"></path></g></svg>
                 </span>
-            </button>
+                </button>
+            </a>
         </div>
     </div>
 {% endblock %}

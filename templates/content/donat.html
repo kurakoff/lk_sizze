@@ -3,10 +3,11 @@
 {% block title %}
     Plans
 {% endblock %}
+{% block nav %}
+    {% include 'content/partials/_filter_nav.html' %}
+{% endblock %}
 {% block content %}
     <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo plans">
-
-
         <section class="p-table">
             <div class="container max-width-adaptive-lg">
                 <div class="grid gap-sm">
@@ -95,7 +96,5 @@
 
             </div>
         </section>
-
-
     </div>
 {% endblock %}
