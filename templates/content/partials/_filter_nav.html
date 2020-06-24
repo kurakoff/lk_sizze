@@ -13,15 +13,20 @@
         <nav class="filter-nav__nav justify-center js-filter-nav__nav">
             <ul class="filter-nav__list js-filter-nav__list" aria-controls="product-gallery">
                 <li class="filter-nav__item">
-                    <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus" aria-current="true"
-                            data-filter="*">Project
-                    </button>
+                    <a href="{% url 'index' %}">
+                        <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus"
+                                {% if request.resolver_match.url_name == "index" %}aria-current="true"{% endif %}
+                                data-filter="*"
+                        >Projects
+                        </button>
+                    </a>
                 </li>
-
                 <li class="filter-nav__item">
                     <a href="{% url 'user_profile' %}">
                         <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus"
-                                data-filter="coffee-mugs">Account Settings
+                                data-filter="coffee-mugs"
+                                {% if request.resolver_match.url_name == "user_profile" %}aria-current="true"{% endif %}
+                        >Account Settings
                         </button>
                     </a>
                 </li>
@@ -29,8 +34,9 @@
                 <li class="filter-nav__item">
                     <a href="{% url 'plans' %}">
                         <button class="reset filter-nav__btn js-filter-nav__btn js-tab-focus"
-                                data-filter="tea-mugs">
-                            Plan
+                                data-filter="tea-mugs"
+                                {% if request.resolver_match.url_name == "plans" %}aria-current="true"{% endif %}
+                        >Plan
                         </button>
                     </a>
                 </li>

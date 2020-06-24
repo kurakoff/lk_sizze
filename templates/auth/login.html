@@ -27,7 +27,7 @@
                     <label class="form-label" for="inputPassword1">Password</label>
                 </div>
                 {{ form.password | add_classes:'form-control width-100%' }}
-                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
+                <div class="mt-2 text-sm error_input error_style"></div>
 
             </div>
 
@@ -35,7 +35,7 @@
                 <button class="btn--color btn btn--primary btn--md width-100%">Log in</button>
             </div>
 
-            <p class="text-sm">Place for errors</p>
+            <p class="text-sm"></p>
 
             <a class="text-sm log_link mt-2 d-block text-sm forgot" href="{% url 'forgot_password' %}">Forgot your
                 password?</a>
