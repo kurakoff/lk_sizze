@@ -38,11 +38,11 @@ $(document).ready(function () {
     });
     //CREATE USER
     init_ajax_form($('.sign-up-form'))
-    //
     // LOGIN USER
     init_ajax_form($('.login-form'))
+    // Change password details account
+    init_ajax_form($('.change-password-form'))
+    // CHANGE account profile
+    init_ajax_form($('.login-account-profile'))
     //
-    // FORGOT PASSWORD
-    // init_ajax_form($('.password-reset-form'))
-
 });

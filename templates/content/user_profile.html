@@ -1,0 +1,68 @@
+{% extends 'content/layout.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %}
+    Account settings
+{% endblock %}
+{% block content %}
+    <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo account_settings">
+        <form action="{% url 'user_save_details' %}" class="login-account-profile">
+            {% csrf_token %}
+            <div class="text-component text-center margin-bottom-sm">
+                <h1>Account Details</h1>
+            </div>
+            <div class="margin-bottom-sm">
+                <label class="text-sm form-label margin-bottom-xxxs" for="inputEmail1">Name</label>
+                {{ form_details.username | add_classes:'form-control width-100%' }}
+                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
+            </div>
+            <div class="margin-bottom-sm">
+                <label class="text-sm form-label margin-bottom-xxxs" for="inputEmail1">Email</label>
+                {{ form_details.email| add_classes:'form-control width-100%' }}
+                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
+            </div>
+            <div class="margin-bottom-sm">
+                <button class="btn--color btn btn--primary btn--md width-100%">Change</button>
+                <div class="mt-2 text-sm error_input error_style">Sucсess</div>
+            </div>
+        </form>
+
+
+        <form class="change-password-form mt-5">
+            {% csrf_token %}
+            <div class="text-component text-center margin-bottom-sm">
+                <h1>Security</h1>
+            </div>
+            <div class="margin-bottom-sm">
+                <div class="text-sm flex justify-between margin-bottom-xxxs">
+                    <label class="form-label" for="inputPassword1">Current Password</label>
+                </div>
+                {{ form_password.old_password|add_classes:'form-control width-100%' }}
+                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
+            </div>
+
+            <div class="margin-bottom-sm">
+                <div class="text-sm flex justify-between margin-bottom-xxxs">
+                    <label class="form-label" for="inputPassword1">New Password</label>
+                </div>
+                {{ form_password.new_password1|add_classes:'form-control width-100%' }}
+            </div>
+
+            <div class="margin-bottom-sm">
+                <div class="text-sm flex justify-between margin-bottom-xxxs">
+                    <label class="form-label" for="inputPassword1">Confirm New Password</label>
+                </div>
+                {{ form_password.new_password2|add_classes:'form-control width-100%' }}
+                <div class="mt-2 text-sm error_input error_style">Place for errors</div>
+            </div>
+
+
+            <div class="margin-bottom-sm">
+                <button class="btn--color btn btn--primary btn--md width-100%">Change Password</button>
+            </div>
+
+
+        </form>
+
+    </div>
+{% endblock %}

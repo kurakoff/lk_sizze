@@ -1,0 +1,17 @@
+from django import forms
+from django.contrib.auth.models import User
+
+
+class UserDetailsForm(forms.ModelForm):
+    # def __init__(self, user, *args, **kwargs):
+    #     self.user = user
+    #     super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = User
+        fields = ['email', 'username']
+
+    # def save(self, commit=True):
+    #     self.user.username = self.cleaned_data.get('username') or self.username
+    #     self.user.mail = self.cleaned_data.get('email') or self.email
+    #     self.user.save()
