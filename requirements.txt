@@ -1,6 +1,6 @@
 django
 django-compressor
 django-libsass
-uwsgi
+# uwsgi
 django-tinymce==2.8.0
 pillow
