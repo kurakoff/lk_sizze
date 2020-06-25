@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from content.forms import UserDetailsForm, CreateProjectForm
-from content.models import Prototype
+from content.models import Prototype, Project
 
 
 class IndexView(TemplateView):
@@ -14,6 +14,7 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['projects'] = Project.objects.filter(user=self.request.user).all()
         return context
 
 

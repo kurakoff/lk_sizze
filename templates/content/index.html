@@ -24,5 +24,133 @@
                 </button>
             </a>
         </div>
+        <ul class="grid-auto-md gap-sm">
+
+            {% for project in projects %}
+                <li>
+                    <div class="card card--is-link">
+                        <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+                           aria-label="Description of the link ">
+                            <figure class="card__img">
+                                <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">
+                                <div class="card__link-icon" aria-hidden="true">
+                                    <svg class="icon" viewBox="0 0 32 32">
+                                        <g stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                           stroke="currentColor" fill="none" stroke-miterlimit="10">
+                                            <path d="M21,5s-4.333-1.667-7,1L6,14c-2.667,2.667-1,7-1,7"></path>
+                                            <path d="M27,11s1.667,4.333-1,7l-8,8c-2.667,2.667-7,1-7,1"></path>
+                                            <line x1="12" y1="20" x2="4" y2="28"></line>
+                                            <line x1="28" y1="4" x2="20" y2="12"></line>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </figure>
+
+                        </a>
+                        <div class="card__content"><a
+                                class="card__link d-flex justify-content-between align-items-center" href="#0"
+                                aria-label="Description of the link ">
+
+                            <div class="h4_group d-flex align-items-center">
+                                <img class="type_img_project " src="{% static 'images/layers.svg' %}">
+
+
+                                <h4 class="flex_h4">{{ project.name }}</h4>
+
+                            </div>
+
+
+                            <button class="btn btn--primary else-button" aria-controls="menu-example1"></button>
+
+                        </a>
+                            <menu id="menu-example1" class="menu js-menu display_normal"><a
+                                    class="card__link d-flex justify-content-between align-items-center" href="#0"
+                                    aria-label="Description of the link ">
+
+
+                            </a>
+                <li role="menuitem"><a class="card__link d-flex justify-content-between align-items-center" href="#0"
+                                       aria-label="Description of the link ">
+
+                </a><a href="#0" class="menu__content js-menu__content">
+    <span class="p-0 menu__content js-menu__content">
+<svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="24 / basic / share-arrow">
+<path id="icon" fill-rule="evenodd" clip-rule="evenodd"
+      d="M13 16.0002V5.41436L16.2929 8.70726L17.7071 7.29304L12 1.58594L6.29289 7.29304L7.70711 8.70726L11 5.41436V16.0002H13ZM21 20.0002V11.0002H19V20.0002H5V11.0002H3V20.0002C3 21.1047 3.89543 22.0002 5 22.0002H19C20.1046 22.0002 21 21.1047 21 20.0002Z"
+      fill="black"></path>
+</g>
+</svg>
+
+      <span>Download card</span>
+    </span>
+                </a>
+                </li>
+
+                <li role="menuitem">
+
+
+                    <a href="#0" class="menu__content js-menu__content">
+    <span class="p-0 menu__content js-menu__content">
+   <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="24 / basic / link">
+<path id="icon" fill-rule="evenodd" clip-rule="evenodd"
+      d="M10 15V17H6C3.23858 17 1 14.7614 1 12C1 9.23858 3.23858 7 6 7H10V9H6C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15H10ZM14 9V7H18C20.7614 7 23 9.23858 23 12C23 14.7614 20.7614 17 18 17H14V15H18C19.6569 15 21 13.6569 21 12C21 10.3431 19.6569 9 18 9H14ZM17 11H7V13H17V11Z"
+      fill="black"></path>
+</g>
+</svg>
+      <span>Copy Link</span>
+    </span>
+                    </a>
+
+
+                </li>
+
+
+                <li role="menuitem">
+
+
+                    <a href="#0" class="menu__content js-menu__content">
+    <span class="p-0 menu__content js-menu__content">
+     <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd"
+      d="M14 6C14 6.28742 14.0303 6.56777 14.0879 6.83801L9.01694 9.3735C8.28363 8.53189 7.20393 8 6 8C3.79086 8 2 9.79086 2 12C2 14.2091 3.79086 16 6 16C7.20393 16 8.28363 15.4681 9.01694 14.6265L14.0879 17.162C14.0303 17.4322 14 17.7126 14 18C14 20.2091 15.7909 22 18 22C20.2091 22 22 20.2091 22 18C22 15.7909 20.2091 14 18 14C16.7961 14 15.7164 14.5319 14.9831 15.3735L9.91208 12.838C9.96968 12.5678 10 12.2874 10 12C10 11.7126 9.96968 11.4322 9.91208 11.162L14.9831 8.6265C15.7164 9.46811 16.7961 10 18 10C20.2091 10 22 8.20914 22 6C22 3.79086 20.2091 2 18 2C15.7909 2 14 3.79086 14 6ZM8 12C8 13.1046 7.10457 14 6 14C4.89543 14 4 13.1046 4 12C4 10.8954 4.89543 10 6 10C7.10457 10 8 10.8954 8 12ZM18 8C19.1046 8 20 7.10457 20 6C20 4.89543 19.1046 4 18 4C16.8954 4 16 4.89543 16 6C16 7.10457 16.8954 8 18 8ZM20 18C20 19.1046 19.1046 20 18 20C16.8954 20 16 19.1046 16 18C16 16.8954 16.8954 16 18 16C19.1046 16 20 16.8954 20 18Z"
+      fill="black"></path>
+</svg>
+
+      <span>Share</span>
+    </span>
+                    </a>
+
+
+                </li>
+
+                <li role="menuitem">
+
+
+                    <a href="#0" class="menu__content js-menu__content">
+    <span class="p-0 menu__content js-menu__content">
+    <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="24 / basic / trash-empty">
+<path id="icon" fill-rule="evenodd" clip-rule="evenodd"
+      d="M9 1H15C16.1046 1 17 1.89543 17 3V4H20C21.1046 4 22 4.89543 22 6V8C22 9.10457 21.1046 10 20 10H19.9199L19 21C19 22.1046 18.1046 23 17 23H7C5.89543 23 5 22.1046 5.00345 21.083L4.07987 10H4C2.89543 10 2 9.10457 2 8V6C2 4.89543 2.89543 4 4 4H7V3C7 1.89543 7.89543 1 9 1ZM4 6H7H17H20V8H4V6ZM6.08649 10H17.9132L17.0035 20.917L17 21H7L6.08649 10ZM15 3V4H9V3H15ZM13.4142 15L15.7071 17.2929L14.2929 18.7071L12 16.4142L9.70711 18.7071L8.29289 17.2929L10.5858 15L8.29289 12.7071L9.70711 11.2929L12 13.5858L14.2929 11.2929L15.7071 12.7071L13.4142 15Z"
+      fill="#FF1D1D"></path>
+</g>
+</svg>
+      <span class="red_color">Delete</span>
+    </span>
+                    </a>
+
+
+                </li>
+
+
+                </div>
+            {% endfor %}
+
+    </ul>
+
     </div>
 {% endblock %}
+
+

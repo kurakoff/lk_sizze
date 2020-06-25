@@ -1,9 +1,11 @@
 $(document).ready(function () {
+    // init
     let id = $('.prototype.active').data('prototype-id')
     $('option').each(function () {
         $(this).removeAttr('selected')
     })
     $('select').val(id)
+    //
 
     $('.prototype').click(function () {
         $('.prototype').each(function () {
