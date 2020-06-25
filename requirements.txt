@@ -1,5 +1,9 @@
 django
 django-compressor
 django-libsass
+<<<<<<< HEAD
+=======
+# uwsgi
+>>>>>>> aeb7c740e062397e97db38860ae314959601fe52
 django-tinymce==2.8.0
 pillow
