@@ -25,7 +25,7 @@ SECRET_KEY = '$#@!4_9^kzr-9+0-@ob-5=cx(!bv7lu*hzi0w(ayq+*2ltay)n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['lk.sizze.io']
 
 LOGIN_URL = '/user/login/'
 # Application definition
