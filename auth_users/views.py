@@ -74,8 +74,9 @@ class CreateAccount(View):
             user = User.objects.create_user(username=request.POST['username'],
                                             email=request.POST['email'],
                                             password=request.POST['password'])
+            login(request, user)
             response['result'] = True
-            response['redirect_url'] = '/user/login/'
+            response['redirect_url'] = '/'
 
             msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
             send_mail(
