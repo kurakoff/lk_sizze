@@ -155,8 +155,8 @@ MEDIA_URL = '/media/'
 # ПОКА ТЕСТ
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = '465'
-EMAIL_HOST_USER = "obuhova.reply@yandex.ru"
-EMAIL_HOST_PASSWORD = "PPPoe123"
+EMAIL_HOST_USER = "Sizze.team@yandex.ru"
+EMAIL_HOST_PASSWORD = "Doc021295"
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = "obuhova.reply@yandex.ru"
+DEFAULT_FROM_EMAIL = "Sizze.team@yandex.ru"
