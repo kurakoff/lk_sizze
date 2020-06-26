@@ -9,26 +9,26 @@ from content.forms import UserDetailsForm, CreateProjectForm
 from content.models import Prototype, Project
 
 
-class IndexView(TemplateView):
+class IndexView(View):
     template_name = 'content/index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['projects'] = Project.objects.filter(user=self.request.user).all()
-        return context
-
-
-class ProfileView(View):
-    template_name = 'content/user_profile.html'
     form_details = UserDetailsForm
     form_password = PasswordChangeForm
 
     def get(self, request, *args, **kwargs):
+        projects = Project.objects.filter(user=self.request.user).all()
+
         user = request.user
-        return render(request, self.template_name,
-                      {'form_details': self.form_details(user,
-                                                         initial={'username': user.username, 'email': user.email}),
-                       'form_password': self.form_password(request.user), })
+        return render(request, self.template_name, {'form_details': self.form_details(user,
+                                                                                      initial={
+                                                                                          'username': user.username,
+                                                                                          'email': user.email}),
+                                                    'form_password': self.form_password(request.user),
+                                                    'projects': projects})
+
+
+class ProfileView(View):
+    template_name = 'content/user_profile.html'
+    form_password = PasswordChangeForm
 
     def post(self, request, *args, **kwargs):
         response = {}
@@ -63,10 +63,6 @@ class CreateProjectView(View):
             response['result'] = False
             response['errors'] = form.errors
         return JsonResponse(response)
-
-
-class PlansView(TemplateView):
-    template_name = 'content/donat.html'
 
 
 class ProfileSaveDetailsView(View):
