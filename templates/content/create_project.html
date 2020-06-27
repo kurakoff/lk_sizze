@@ -22,7 +22,9 @@
                     <div class="b-none col-lg-4 col-sm-6 choice-btn padding-sm js-choice-btn justify-content-between">
                         <div class="prototype {% if forloop.first %}active{% endif %}"
                              data-prototype-id="{{ prototype.pk }}">
-                            <img alt="" src="{{ prototype.image.url }}"/>
+                            <img alt="" class="create_img_hover" src="{{ prototype.image_hover.url }}"/>
+                            <img alt="" class="create_img" src="{{ prototype.image.url }}"/>
+
                             <div class="device_name">{{ prototype.device_name }}</div>
                         </div>
                     </div>

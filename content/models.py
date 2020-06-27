@@ -30,6 +30,7 @@ class Screen(models.Model):
 class Prototype(models.Model):
     device_name = models.CharField(max_length=64, verbose_name='название')
     image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
+    image_hover = models.FileField(upload_to='images_prototypes/hover/', verbose_name='hover', default='')
     # active = models.BooleanField(default=True, verbose_name='активно')
 
     class Meta:

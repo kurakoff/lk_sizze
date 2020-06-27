@@ -37,6 +37,20 @@
     margin: auto;
     display: block;
   }
+
+  .create_img_hover {
+    display: none;
+  }
+
+  &.active {
+    .create_img_hover {
+      display: block;
+    }
+
+    .create_img {
+      display: none;
+    }
+  }
 }
 
 .form_create_project {
@@ -51,3 +65,4 @@
     font-size: 15px;
   }
 }
+
