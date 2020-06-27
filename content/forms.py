@@ -23,3 +23,7 @@ class CreateProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'prototype']
+
+
+class DeleteProjectForm(forms.Form):
+    project = forms.IntegerField(widget=forms.HiddenInput)

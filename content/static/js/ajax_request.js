@@ -6,6 +6,11 @@ function blinking_success($form) {
     }, 3000)
 }
 
+function delete_project_success() {
+    let id = $('#delete_project_form').find('input#id_project').attr('value')
+    $(`.project_${id}`).remove()
+}
+
 function init_ajax_form($form, clean = true, after_save) {
     $form.submit(function (e) {
         e.preventDefault();
@@ -55,5 +60,11 @@ $(document).ready(function () {
     init_ajax_form($('.login-account-profile'), false, blinking_success)
     //
     init_ajax_form($('.form_create_project'), true, blinking_success)
-
+    //
+    init_ajax_form($('#delete_project_form'), false, delete_project_success)
+    $('.submit_delete_project').click(function () {
+        let $form = $('#delete_project_form');
+        $form.find('#id_project').val($(this).data('id'))
+        $('#delete_project_form').trigger('submit')
+    })
 });
