@@ -26,7 +26,7 @@ class CreateProjectForm(forms.ModelForm):
 
 
 class EditProjectForm(forms.Form):
-    name = forms.IntegerField(widget=forms.HiddenInput)
+    name = forms.CharField(min_length=1)
     id = forms.IntegerField(widget=forms.HiddenInput)
 
 

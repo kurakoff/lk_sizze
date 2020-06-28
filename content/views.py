@@ -13,6 +13,7 @@ class IndexView(View):
     form_details = UserDetailsForm
     form_password = PasswordChangeForm
     form_delete_project = DeleteProjectForm
+    form_rename_project = EditProjectForm
 
     def get(self, request, *args, **kwargs):
         projects = Project.objects.filter(user=self.request.user).all()
@@ -24,7 +25,8 @@ class IndexView(View):
                                                                                           'email': user.email}),
                                                     'form_password': self.form_password(request.user),
                                                     'projects': projects,
-                                                    'form_delete_project': DeleteProjectForm})
+                                                    'form_delete_project': DeleteProjectForm,
+                                                    'form_rename_project': EditProjectForm})
 
 
 class ProfileView(View):
@@ -92,8 +94,11 @@ class EditProject(View):
             project.name = form.cleaned_data['name']
             project.save()
             response['result'] = True
+            response['new_name'] = project.name
+            response['id'] = project.id
         else:
             response['result'] = False
+            response['errors'] = form.errors
         return JsonResponse(response)
 
 

@@ -24,7 +24,13 @@ function copy_project_success($form, data) {
     $('#dialog_copy_project .js-dialog__close').trigger('click')
     reload_js('/static/js/menu_project.js');
     reload_js('/static/js/modal.js');
+}
 
+function rename_project_success($form, data) {
+    let id = data['id']
+    let name = data['new_name']
+    $(`.project_${id}`).find('h4').text(name)
+    $('.close_modal_rename').trigger('click')
 }
 
 function init_ajax_form($form, clean = true, after_save) {
@@ -78,11 +84,8 @@ $(document).ready(function () {
     init_ajax_form($('.form_create_project'), true, blinking_success)
     //
     init_ajax_form($('#delete_project_form'), false, delete_project_success)
-    init_ajax_form($('#copy_project_form'), false, copy_project_success)
-
     //DELETE
     $(document).on('click', '.preparation_delete_project', function (e) {
-        console.log('opopo1')
         e.preventDefault()
         let $form = $('#delete_project_form');
         $form.find('#id_project').val($(this).data('id'))
@@ -92,7 +95,7 @@ $(document).ready(function () {
         $('#delete_project_form').submit()
     })
     //
-
+    init_ajax_form($('#copy_project_form'), false, copy_project_success)
     $(document).on('click', '.preparation_copy_project', function (e) {
         console.log('opopo1')
         e.preventDefault()
@@ -103,5 +106,11 @@ $(document).ready(function () {
     $('.submit_copy_project').click(function () {
         $('#copy_project_form').submit()
     })
-
+    // EDIT
+    init_ajax_form($('#rename_project_form'), false, rename_project_success)
+    $(document).on('click', '.preparation_edit_project', function (e) {
+        e.preventDefault()
+        let $form = $('#rename_project_form');
+        $form.find('#id_id').val($(this).data('id'))
+    })
 })
