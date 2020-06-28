@@ -34,7 +34,7 @@
     function showDialog(dialog) {
         Util.addClass(dialog.element, dialog.showClass);
         getFocusableElements(dialog);
-        dialog.firstFocusable.focus();
+        // dialog.firstFocusable.focus();
         // wait for the end of transitions before moving focus
         dialog.element.addEventListener("transitionend", function cb(event) {
             dialog.firstFocusable.focus();

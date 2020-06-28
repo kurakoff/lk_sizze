@@ -19,7 +19,7 @@
         </a>
     </div>
     <div class="container-fluid">
-        <div class="d-flex row">
+        <div class="d-flex row projects_container">
             {% for project in projects %}
                 <div class="col-md-4  col-sm-6 p-3 project_{{ project.id }}">
                     <div class="card m-2 p-0 card--is-link">
@@ -70,7 +70,8 @@
                                     <li role="menuitem">
 
 
-                                        <a href="#0" class="menu__content js-menu__content">
+                                        <a href="" data-id="{{ project.id }}"
+                                           class="menu__content js-menu__content preparation_copy_project">
     <span class="p-0 menu__content js-menu__content">
 <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="24 / grid / stack">
@@ -134,7 +135,11 @@
     {% csrf_token %}
     {{ form_delete_project.project }}
 </form>
-{#<button class="btn btn--primary" aria-controls="dialog2">Duplication</button>#}
+<form action="{% url 'copy_project' %}" id="copy_project_form" style="display: none">
+    {#  Форма отсылает id на разные url form_delete==form_copy  #}
+    {% csrf_token %}
+    {{ form_delete_project.project }}
+</form>
 
 <div id="dialog_delete_project" class="dialog dialog--sticky js-dialog" data-animation="on">
     <div class="dialog__content max-width-xxs" role="alertdialog" aria-labelledby="dialogTitle1"
@@ -161,7 +166,7 @@
         <footer class="margin-top-md">
             <div class="flex justify-center gap-xs flex-wrap">
                 <button class="btn btn--subtle js-dialog__close">No</button>
-                <button class="btn btn--color btn--accent">Yes</button>
+                <button class="btn btn--color btn--accent submit_copy_project">Yes</button>
             </div>
         </footer>
     </div>

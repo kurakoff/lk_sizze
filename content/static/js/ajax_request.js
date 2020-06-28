@@ -1,3 +1,8 @@
+function reload_js(src) {
+    $('script[src="' + src + '"]').remove();
+    $('<script>').attr('src', src).appendTo('head');
+}
+
 function blinking_success($form) {
     let blink_success = $form.find('.blinking_success');
     blink_success.css('display', 'block');
@@ -9,7 +14,17 @@ function blinking_success($form) {
 function delete_project_success() {
     let id = $('#delete_project_form').find('input#id_project').attr('value')
     $(`.project_${id}`).remove()
-    $('#dialog_delete_project').hide()
+    $('#dialog_delete_project .js-dialog__close').trigger('click')
+}
+
+
+function copy_project_success($form, data) {
+    let id = $('#delete_project_form').find('input#id_project').attr('value')
+    $(data['html_project']).appendTo('.projects_container')
+    $('#dialog_copy_project .js-dialog__close').trigger('click')
+    reload_js('/static/js/menu_project.js');
+    reload_js('/static/js/modal.js');
+
 }
 
 function init_ajax_form($form, clean = true, after_save) {
@@ -30,7 +45,7 @@ function init_ajax_form($form, clean = true, after_save) {
             } else {
                 if (data.redirect_url) window.location.replace(data.redirect_url);
                 if (clean) clear_form($form);
-                if (after_save) after_save($form)
+                if (after_save) after_save($form, data)
             }
         }, 'json');
     });
@@ -63,12 +78,30 @@ $(document).ready(function () {
     init_ajax_form($('.form_create_project'), true, blinking_success)
     //
     init_ajax_form($('#delete_project_form'), false, delete_project_success)
-    $('.preparation_delete_project').click(function (e) {
+    init_ajax_form($('#copy_project_form'), false, copy_project_success)
+
+    //DELETE
+    $(document).on('click', '.preparation_delete_project', function (e) {
+        console.log('opopo1')
         e.preventDefault()
         let $form = $('#delete_project_form');
         $form.find('#id_project').val($(this).data('id'))
     })
+
     $('.submit_delete_project').click(function () {
         $('#delete_project_form').submit()
     })
-});
+    //
+
+    $(document).on('click', '.preparation_copy_project', function (e) {
+        console.log('opopo1')
+        e.preventDefault()
+        let $form = $('#copy_project_form');
+        $form.find('#id_project').val($(this).data('id'))
+    })
+
+    $('.submit_copy_project').click(function () {
+        $('#copy_project_form').submit()
+    })
+
+})

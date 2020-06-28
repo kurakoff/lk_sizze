@@ -1,11 +1,10 @@
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.template.loader import get_template, render_to_string
 from django.views import View
-from django.views.generic import TemplateView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm
+from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm
 from content.models import Prototype, Project
 
 
@@ -77,6 +76,39 @@ class DeleteProject(View):
             project = Project.objects.filter(user=request.user, pk=form.cleaned_data['project']).first()
             project.delete()
             response['result'] = True
+        else:
+            response['result'] = False
+        return JsonResponse(response)
+
+
+class EditProject(View):
+    form_class = EditProjectForm
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            project = Project.objects.filter(user=request.user, pk=form.cleaned_data['id']).first()
+            project.name = form.cleaned_data['name']
+            project.save()
+            response['result'] = True
+        else:
+            response['result'] = False
+        return JsonResponse(response)
+
+
+class CopyProject(View):
+    form_class = DeleteProjectForm
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            project = Project.objects.filter(user=request.user, pk=form.cleaned_data['project']).first()
+            project.pk = None
+            project.save()
+            response['result'] = True
+            response['html_project'] = render_to_string('content/partials/_project.html', {'project': project})
         else:
             response['result'] = False
         return JsonResponse(response)
