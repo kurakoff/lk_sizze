@@ -9,6 +9,7 @@ function blinking_success($form) {
 function delete_project_success() {
     let id = $('#delete_project_form').find('input#id_project').attr('value')
     $(`.project_${id}`).remove()
+    $('#dialog_delete_project').hide()
 }
 
 function init_ajax_form($form, clean = true, after_save) {
@@ -62,10 +63,12 @@ $(document).ready(function () {
     init_ajax_form($('.form_create_project'), true, blinking_success)
     //
     init_ajax_form($('#delete_project_form'), false, delete_project_success)
-    $('.submit_delete_project').click(function (e) {
+    $('.preparation_delete_project').click(function (e) {
         e.preventDefault()
         let $form = $('#delete_project_form');
         $form.find('#id_project').val($(this).data('id'))
-        $('#delete_project_form').trigger('submit')
+    })
+    $('.submit_delete_project').click(function () {
+        $('#delete_project_form').submit()
     })
 });

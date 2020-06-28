@@ -39,7 +39,6 @@
                                     </svg>
                                 </div>
                             </figure>
-
                             <div class="card__content">
 
                                 <div class="h4_group d-flex align-items-center">
@@ -81,7 +80,7 @@
 </g>
 </svg>
 
-      <span>Duplicate</span>
+      <span aria-controls="dialog_copy_project">Duplicate</span>
     </span>
                                         </a>
 
@@ -99,14 +98,14 @@
                                     </g>
                                     </svg>
 
-                                          <span>Edit name</span>
+                                          <span aria-controls="dialog_rename_project">Edit name</span>
                                         </span>
                                         </a>
                                     </li>
                                     <li role="menuitem">
 
 
-                                        <a href="" class="menu__content js-menu__content submit_delete_project"
+                                        <a href="" class="menu__content js-menu__content preparation_delete_project"
                                            data-id="{{ project.id }}">
                                         <span class="p-0 menu__content js-menu__content">
                                                 <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -117,7 +116,7 @@
                                                           fill="#FF1D1D"/>
                                                     </g>
                                                     </svg>
-                                            <span class="red_color">Delete</span>
+                                            <span aria-controls="dialog_delete_project" class="red_color">Delete</span>
                                          </span>
                                         </a>
                                     </li>
@@ -135,3 +134,64 @@
     {% csrf_token %}
     {{ form_delete_project.project }}
 </form>
+{#<button class="btn btn--primary" aria-controls="dialog2">Duplication</button>#}
+
+<div id="dialog_delete_project" class="dialog dialog--sticky js-dialog" data-animation="on">
+    <div class="dialog__content max-width-xxs" role="alertdialog" aria-labelledby="dialogTitle1"
+         aria-describedby="dialogDescription1">
+        <div class="text-component">
+            <h4 class="text-center" id="dialogTitle1">Delete project?</h4>
+        </div>
+
+        <footer class="margin-top-md">
+            <div class="flex justify-center gap-xs flex-wrap">
+                <button class="btn btn--subtle js-dialog__close">Cancel</button>
+                <button class="btn btn--color btn--accent submit_delete_project">Delete</button>
+            </div>
+        </footer>
+    </div>
+</div>
+<div id="dialog_copy_project" class="dialog dialog--sticky js-dialog" data-animation="on">
+    <div class="dialog__content max-width-xxs" role="alertdialog" aria-labelledby="dialogTitle1"
+         aria-describedby="dialogDescription1">
+        <div class="text-component">
+            <h4 class="text-center" id="dialogTitle1">Duplicate a project?</h4>
+        </div>
+
+        <footer class="margin-top-md">
+            <div class="flex justify-center gap-xs flex-wrap">
+                <button class="btn btn--subtle js-dialog__close">No</button>
+                <button class="btn btn--color btn--accent">Yes</button>
+            </div>
+        </footer>
+    </div>
+</div>
+<div class="modal modal--animate-scale flex flex-center bg-contrast-higher bg-opacity-90% padding-md js-modal"
+     id="dialog_rename_project">
+    <div class="modal__content width-100% max-width-xs padding-md bg radius-md shadow-md" role="alertdialog"
+         aria-labelledby="modal-form-title" aria-describedby="modal-form-description">
+        <div class="text-component margin-bottom-md">
+            <h3 id="modal-form-title">Name of project</h3>
+        </div>
+
+        <div class="container-fluid">
+            <form class="margin-bottom-sm">
+                <div class="row">
+                    <input aria-label="Email" class="col-9 form-control flex-grow" type="email"
+                           placeholder="Name of project">
+                    <button class="col-3 ml-3 btn--color btn btn--primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <button class="reset modal__close-btn modal__close-btn--outer  js-modal__close js-tab-focus">
+        <svg class="icon icon--sm" viewBox="0 0 24 24">
+            <title>Close modal window</title>
+            <g fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2">
+                <line x1="3" y1="3" x2="21" y2="21"/>
+                <line x1="21" y1="3" x2="3" y2="21"/>
+            </g>
+        </svg>
+    </button>
+</div>
