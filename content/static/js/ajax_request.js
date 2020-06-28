@@ -62,7 +62,8 @@ $(document).ready(function () {
     init_ajax_form($('.form_create_project'), true, blinking_success)
     //
     init_ajax_form($('#delete_project_form'), false, delete_project_success)
-    $('.submit_delete_project').click(function () {
+    $('.submit_delete_project').click(function (e) {
+        e.preventDefault()
         let $form = $('#delete_project_form');
         $form.find('#id_project').val($(this).data('id'))
         $('#delete_project_form').trigger('submit')
