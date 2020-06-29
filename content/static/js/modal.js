@@ -171,16 +171,23 @@
         //open modal when clicking on trigger buttons
         if (this.triggers) {
             for (var i = 0; i < this.triggers.length; i++) {
-                this.triggers[i].addEventListener('click', function (event) {
-                    event.preventDefault();
-                    if (Util.hasClass(self.element, self.showClass)) {
-                        self.closeModal();
-                        return;
-                    }
-                    self.selectedTrigger = event.target;
-                    self.showModal();
-                    self.initModalEvents();
-                });
+                //
+                //Ограничение повторной инициализации на динамически загружаемый элемент
+                //
+                if (!$(this.triggers[i]).hasClass('was_init')) {
+                    this.triggers[i].addEventListener('click', function (event) {
+                        event.preventDefault();
+                        if (Util.hasClass(self.element, self.showClass)) {
+                            self.closeModal();
+                            return;
+                        }
+                        self.selectedTrigger = event.target;
+                        self.showModal();
+                        self.initModalEvents();
+                    });
+                    $(this.triggers[i]).addClass('was_init')
+                }
+
             }
         }
 
