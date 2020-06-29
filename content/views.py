@@ -140,7 +140,7 @@ class ProfileSaveDetailsView(View):
                 html_message=msg_html,
                 fail_silently=True
             )
-            response['send_mail']: send
+            response['send_mail'] = send
         else:
             if request.POST['email'] == user.email:
                 response['result'] = True
