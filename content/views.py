@@ -127,22 +127,26 @@ class ProfileSaveDetailsView(View):
     def post(self, request, *args, **kwargs):
         response = {}
         form = self.form_details(request.user, request.POST)
+        user = request.user
         if form.is_valid():
             response['result'] = True
             form.save()
-            msg_html = render_to_string('mail/signing_up.html', {'username': request.user.username})
-            send_mail(
-                f"Смена почты sizze.io",
+            msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+            send = send_mail(
+                "Смена почты sizze.io",
                 msg_html,
                 getattr(settings, "EMAIL_HOST_USER"),
-                [request.user.email],
+                [user.email],
                 html_message=msg_html,
                 fail_silently=True
             )
         else:
-            if request.POST['email'] == request.user.email:
+            if request.POST['email'] == user.email:
                 response['result'] = True
+            if not form.errors.get('username'):
+                user.username = request.POST['username']
             else:
                 response['result'] = False
                 response['errors'] = form.errors
+        user.save()
         return JsonResponse(response)
