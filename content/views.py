@@ -138,7 +138,7 @@ class ProfileSaveDetailsView(View):
                 getattr(settings, "EMAIL_HOST_USER"),
                 [user.email],
                 html_message=msg_html,
-                fail_silently=True
+                fail_silently=False
             )
             response['send_mail'] = send
         else:

@@ -153,10 +153,10 @@ MEDIA_ROOT = './media/'
 MEDIA_URL = '/media/'
 
 # ПОКА ТЕСТ
-EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '465'
-EMAIL_HOST_USER = "mail.sizze@yandex.ru"
+EMAIL_HOST_USER = "sizze.team@gmail.com"
 EMAIL_HOST_PASSWORD = "Doc021295"
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = "mail.sizze@yandex.ru"
+DEFAULT_FROM_EMAIL = "sizze.team@gmail.com"
