@@ -140,7 +140,9 @@ class ProfileSaveDetailsView(View):
                 fail_silently=True
             )
         else:
-            response['result'] = False
-            response['errors'] = form.errors
-
+            if request.POST['email'] == request.user.email:
+                response['result'] = True
+            else:
+                response['result'] = False
+                response['errors'] = form.errors
         return JsonResponse(response)
