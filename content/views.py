@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import get_template, render_to_string
@@ -128,6 +130,15 @@ class ProfileSaveDetailsView(View):
         if form.is_valid():
             response['result'] = True
             form.save()
+            msg_html = render_to_string('mail/signing_up.html', {'username': request.user.username})
+            send_mail(
+                f"Смена почты sizze.io",
+                msg_html,
+                getattr(settings, "EMAIL_HOST_USER"),
+                [request.user.email],
+                html_message=msg_html,
+                fail_silently=True
+            )
         else:
             response['result'] = False
             response['errors'] = form.errors
