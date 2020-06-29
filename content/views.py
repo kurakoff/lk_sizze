@@ -125,10 +125,11 @@ class ProfileSaveDetailsView(View):
     def post(self, request, *args, **kwargs):
         response = {}
         form = self.form_details(request.user, request.POST)
-        if not form.is_valid():
+        if form.is_valid():
+            response['result'] = True
+            form.save()
+        else:
             response['result'] = False
             response['errors'] = form.errors
-            return JsonResponse(response)
-        response['result'] = True
-        form.save()
+
         return JsonResponse(response)
