@@ -18,7 +18,8 @@ class Project(models.Model):
 
 
 class Screen(models.Model):
-    layout_screen = models.TextField(verbose_name='макет')
+    title = models.CharField(max_length=32, verbose_name='название', default='')
+    layout = models.TextField(verbose_name='макет', default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
 
     class Meta:
@@ -31,6 +32,7 @@ class Screen(models.Model):
 
 class Prototype(models.Model):
     device_name = models.CharField(max_length=64, verbose_name='название')
+    base_layout = models.TextField(verbose_name='начальный макет', default='')
     image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
     image_hover = models.FileField(upload_to='images_prototypes/hover/', verbose_name='hover', default='')
 
@@ -71,7 +73,8 @@ class Element(models.Model):
     category_prototype = models.ForeignKey('CategoryPrototype', on_delete=CASCADE, default=1)
     image = models.ImageField(upload_to='images_elements/', verbose_name='изображение')
     # TODO: сделать редактор кода
-    layout_element = models.TextField(verbose_name='макет')
+    layout = models.TextField(verbose_name='макет')
+    active = models.BooleanField(verbose_name='on', default=True)
 
     class Meta:
         verbose_name = 'графический элемент'

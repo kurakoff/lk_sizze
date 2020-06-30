@@ -14,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
     pass
 
 
-class ElementInline(nested_admin.NestedStackedInline):
+class ElementInline(nested_admin.NestedTabularInline):
     model = Element
     extra = 0
 
