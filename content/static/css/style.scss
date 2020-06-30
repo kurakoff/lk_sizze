@@ -270,15 +270,20 @@ Usage: codyhouse.co/license
 
 .new_project_button {
 
-  width: 70px !important;
+  width: 250px !important;
   height: 70px !important;
   background-color: #fff !important;
-  color: #393939;
-  border-radius: 50%;
-  background-image: url(../images/apps.svg);
-  background-position: center center;
+  color: #7D2BE5;   
+  text-decoration: none!important;
+  background-image: url(../images/icon.svg);
+  background-position: center left;
   background-repeat: no-repeat;
   box-shadow: none !important;
+  font-family: "SFPro Medium"!important;    
+}
+
+a {
+    text-decoration: none!important;
 }
 
 .type_img_project {
