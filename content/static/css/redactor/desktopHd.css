@@ -1,0 +1,486 @@
+@font-face {
+  font-family: "TimesNewRomanPSMT";
+  src: url('../fonts/Times New Roman.ttf') format("truetype");
+}
+
+.desktophd {
+  width: 100%;
+  height: 100%;
+  /*width               : 100%;*/
+  /*min-width           : 842px;*/
+  /*height              : 100vh;*/
+  /*min-height          : 595px;*/
+  /*position            : relative;*/
+  /*overflow            : hidden;*/
+  /*margin              : 0px;*/
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
+  /*background-color    : rgba(255, 255, 255, 1.0);*/
+}
+
+a {
+  text-decoration: none;
+}
+
+div {
+  -webkit-text-size-adjust: none;
+}
+
+.anima-full-width-a {
+  width: 100%;
+}
+
+.anima-full-height-a {
+  height: 100%;
+}
+
+div {
+  -webkit-text-size-adjust: none;
+}
+
+.desktophd .oval {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 509px;
+  height: 262px;
+  width: 262px;
+  position: absolute;
+  margin: 0;
+  left: -53px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .rectangle {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 71px;
+  height: 669px;
+  width: 789px;
+  position: absolute;
+  margin: 0;
+  left: 84px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .rectangle1 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 123px;
+  height: 349px;
+  width: 289px;
+  position: absolute;
+  margin: 0;
+  left: 459px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .angelwesterveltexa {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 441px;
+  height: 16px;
+  width: auto;
+  position: absolute;
+  margin: 0;
+  left: 531px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+  font-family: "Arial", Helvetica, Arial, serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 13.92px;
+  color: rgba(64, 64, 64, 1.0);
+  text-align: left;
+  line-height: 16.0px;
+}
+
+.desktophd .postcard {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 457px;
+  height: 200px;
+  width: 762px;
+  position: absolute;
+  margin: 0;
+  left: 195px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+  opacity: 0.09;
+  font-family: "Arial", Helvetica, Arial, serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 173.92px;
+  color: rgba(195, 161, 63, 1.0);
+  text-align: left;
+  line-height: 200.0px;
+}
+
+.desktophd .mattistellusarcum {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 361px;
+  height: 64px;
+  width: 246px;
+  position: absolute;
+  margin: 0;
+  left: 483px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+  font-family: "Arial", Helvetica, Arial, serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 13.92px;
+  color: rgba(251, 157, 74, 1.0);
+  text-align: left;
+  line-height: 16.0px;
+}
+
+.desktophd .loremipsumdolorsi {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 248px;
+  height: auto;
+  width: 252px;
+  position: absolute;
+  margin: 0;
+  left: 141px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+  font-family: "TimesNewRomanPSMT", Helvetica, Arial, serif;
+  font-size: 13.92px;
+  color: rgba(0, 0, 0, 1.0);
+  text-align: left;
+  line-height: 24.0px;
+}
+
+.desktophd .angelwestervelt {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 123px;
+  height: 56px;
+  width: 252px;
+  position: absolute;
+  margin: 0;
+  left: 141px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+  font-family: "TimesNewRomanPSMT", Helvetica, Arial, serif;
+  font-size: 33.92px;
+  color: rgba(0, 0, 0, 1.0);
+  text-align: left;
+  line-height: 24.0px;
+}
+
+.desktophd .group {
+  background-color: rgba(255, 255, 255, 1.0);
+  top: 142px;
+  height: 199px;
+  width: 250px;
+  position: absolute;
+  margin: 0;
+  left: 479px;
+  overflow: hidden;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .group .rectanglecopy {
+  background-color: rgba(255, 255, 255, 1.0);
+  top: 0px;
+  height: 199px;
+  width: 250px;
+  position: absolute;
+  margin: 0;
+  left: 0px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .group .cihansoysakal5ojfcqduo9eunsplash {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: -72px;
+  height: 375px;
+  width: 250px;
+  position: absolute;
+  margin: 0;
+  left: 0px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .path {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 15px;
+  height: 137px;
+  width: 137px;
+  position: absolute;
+  margin: 0;
+  left: 9px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .line {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: -5px;
+  height: 111px;
+  width: 165px;
+  position: absolute;
+  margin: 0;
+  left: 693px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .linecopy {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: -5px;
+  height: 111px;
+  width: 165px;
+  position: absolute;
+  margin: 0;
+  left: 625px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .oval1 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 451px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 427px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy4 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 465px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 427px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy8 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 479px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 427px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 451px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 443px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy5 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 465px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 443px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy9 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 479px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 443px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy2 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 451px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 459px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy6 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 465px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 459px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy10 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 479px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 459px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy3 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 451px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 475px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy7 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 465px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 475px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+.desktophd .ovalcopy11 {
+  background-color: rgba(255, 255, 255, 0.0);
+  top: 479px;
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  margin: 0;
+  left: 475px;
+  -ms-transform: rotate(0deg); /* IE 9 */
+  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+  transform: rotate(0deg);
+}
+
+/* .anima-animate-appear prefix for appear animations */
+.anima-animate-appear {
+  opacity: 0;
+  display: block;
+  -webkit-animation: anima-reveal 0.3s ease-in-out 1 normal forwards;
+  -moz-animation: anima-reveal 0.3s ease-in 1 normal forwards;
+  -o-animation: anima-reveal 0.3s ease-in-out 1 normal forwards;
+  animation: anima-reveal 0.3s ease-in-out 1 normal forwards;
+}
+
+.anima-animate-disappear {
+  opacity: 1;
+  display: block;
+  -webkit-animation: anima-reveal 0.3s ease-in-out 1 reverse forwards;
+  -moz-animation: anima-reveal 0.3s ease-in 1 normal forwards;
+  -o-animation: anima-reveal 0.3s ease-in-out 1 reverse forwards;
+  animation: anima-reveal 0.3s ease-in-out 1 reverse forwards;
+}
+
+.anima-animate-nodelay {
+  -webkit-animation-delay: 0;
+  -moz-animation-delay: 0;
+  -o-animation-delay: 0;
+  animation-delay: 0;
+}
+
+@-webkit-keyframes anima-reveal {
+  0% {
+    opacity: 0;
+  }
+
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes anima-reveal {
+  0% {
+    opacity: 0;
+  }
+
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes anima-reveal {
+  0% {
+    opacity: 0;
+  }
+
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes anima-reveal {
+  0% {
+    opacity: 0;
+  }
+
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.anima-valign-text-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

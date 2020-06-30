@@ -151,3 +151,10 @@ class ProfileSaveDetailsView(View):
                 response['errors'] = form.errors
         user.save()
         return JsonResponse(response)
+
+
+class RedactorView(View):
+    template_name = 'content/redactor.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
