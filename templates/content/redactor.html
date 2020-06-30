@@ -21,9 +21,10 @@
     <link href="{% static 'css/redactor/style.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/redactor/custom.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/redactor/site.css' %}" rel="stylesheet" type="text/css">
-    {#        'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css',#}
-    {#        'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/monolith.min.css',#}
-    {#        'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css',#}
+    <link href="{% static 'css/redactor/classic.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/redactor/monolith.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/redactor/nano.min.css' %}" rel="stylesheet" type="text/css">
+
     <link href="{% static 'css/redactor/item.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/redactor/desktopHd.css' %}" rel="stylesheet" type="text/css">
     {#        'js_core/crop/croppie.css',#}
@@ -330,15 +331,7 @@
                         <div class="canvas-wrap">
 
                             <div class="index-1 canvas1 align-self-center main-svg draggable" id='example'>
-                                <div class='template_default'>
-                                    {#                                    <img src="/img/64227.svg">#}
-                                    <div>Select a template in the left menu</div>
-                                </div>
-                                <div class='template_default_mobile'>
-                                    {#                                    <img src="/img/6227.svg">#}
-                                    <div class="mobile_template_text">Open left menu and select a template</div>
-                                </div>
-
+                                {% include 'content/reactor_partials/_test_template.html' %}
                             </div>
                         </div>
                         <div class="position-absolute fixed-bottom">
@@ -767,45 +760,58 @@
 <script>
 
 </script>
-
+<script></script>
 <script src="{% static 'js/libs/jquery-3.4.1.min.js' %}"></script>
+
+
+{#<script src="{% static 'js/redactor/pickr.js' %}"></script>#}
+<script src="{% static 'js/redactor/pickr.es5.min.js' %}"></script>
+{#<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>#}
+{#<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js"></script>#}
+<script src="{% static 'js/redactor/pickr_create.js' %}"></script>
+
 <script src="{% static 'js/libs/popper.min.js' %}"></script>
 <script src="{% static 'js/libs/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/libs/jszip-utils.min.js' %}"></script>
 <script src="{% static 'js/libs/jszip.min.js' %}"></script>
 <script src="{% static 'js/redactor/croppie.js' %}"></script>
 <script src="{% static 'js/redactor/saver_progress.js' %}"></script>
-<script src="{% static 'js/redactor/editor.js' %}"></script>
 <script src="{% static 'js/redactor/utility.js' %}"></script>
 <script src="{% static 'js/redactor/scenejs.js' %}"></script>
 <script src="{% static 'js/redactor/moveable.js' %}"></script>
+<script src="{% static 'js/redactor/mdb.js' %}"></script>
+
+<script src="{% static 'js/redactor/kendo.all.min.js' %}"></script>
+<script src="{% static 'js/redactor/pako_deflate.min.js' %}"></script>
+
+<script src="{% static 'js/redactor/editor.js' %}"></script>
 
 {#        'https://unpkg.com/dexie@latest/dist/dexie.js',#}
 {##}
-{#        'https://daybrush.com/scenejs/release/latest/dist/scene.js',#} +
+{#        'https://daybrush.com/scenejs/release/latest/dist/scene.js', +#}
 {#        'https://daybrush.com/moveable/release/latest/dist/moveable.min.js',#}
 {#        'js/new.js',#}
 {#        'js/utility.js',#}
 {#//         'js/scripts.min.js',#}
 {#        'js/util.js',#}
-{#        'js/jszip-utils.min.js',#} +
-{#        'js/jquery.min.js',#} +
+{#        'js/jszip-utils.min.js', +#}
+{#        'js/jquery.min.js', +#}
 {#        'js_core/html2canvas.min.js',#}
-{#        'js/popper.min.js',#} +
-{#        'js/bootstrap.min.js',#} +
+{#        'js/popper.min.js', +#}
+{#        'js/bootstrap.min.js', +#}
 {#        'js/mdb.min.js',#}
 {#        'js/mdb.js',#}
 {#        'js/active_template.js',#}
 {##}
-{#        'js_core/crop/croppie.js',#} +
+{#        'js_core/crop/croppie.js', +#}
 {##}
 {#        'js_core/slider_preview/owlcarousel/owl.carousel.js',#}
 {#        'js_core/slider_preview/slider_preview.js',#}
 {##}
-{#        'js_core/local_db/saver_progress.js',#} +
+{#        'js_core/local_db/saver_progress.js', +#}
 {##}
 {#        'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js',#}
-{#        'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js',#}
+{#        'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js', ++#}
 {#        'https://rawgithub.com/ajaxorg/ace-builds/master/src/ext-language_tools.js',#}
 {#        'https://rawgithub.com/ajaxorg/ace-builds/master/src/ace.js',#}
 {#        'https://kendo.cdn.telerik.com/2017.3.913/js/pako_deflate.min.js',#}
@@ -817,7 +823,7 @@
 {#        '//cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js',#}
 {#//         'node_modules/svg2pdf.js/dist/svg2pdf.js',#}
 {#        'js_core/FileSaver.js',#}
-{#        'https://daybrush.com/moveable/release/latest/dist/moveable.min.js',#}
+{#        'https://daybrush.com/moveable/release/latest/dist/moveable.min.js'+,#}
 {#       'https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js',#}
 {#        'js/jszip.min.js',#}
 {#        'js/kendo.all.min.js',#}

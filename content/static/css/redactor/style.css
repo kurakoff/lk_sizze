@@ -580,8 +580,8 @@ textarea,
     z-index: 10000;
     height: 100%;
     width: 100%;
-    background-image: url("/uploads/RectangleForBackGroundBig.svg");
-    -webkit-background-image: url("/uploads/RectangleForBackGroundBig.svg");
+    background-image: url("../../images/RectangleForBackGroundBig.svg");
+    -webkit-background-image: url("../../images/RectangleForBackGroundBig.svg");
     position: fixed;
     top: 0;
     display: none;
@@ -811,8 +811,8 @@ button.save-button-menu[disabled] {
     z-index: 10000;
     height: 100%;
     width: 100%;
-    background-image: url("/uploads/RectangleForBackGroundBig.svg");
-    -webkit-background-image: url("/uploads/RectangleForBackGroundBig.svg");
+    background-image: url("../../images/RectangleForBackGroundBig.svg");
+    -webkit-background-image: url("../../images/RectangleForBackGroundBig.svg");
     position: fixed;
     top: 0;
     display: none;
