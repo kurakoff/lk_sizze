@@ -1,0 +1,124 @@
+{% load static %}
+<aside class="sidebar sidebar--static@md js-sidebar" id="sidebar" aria-labelledby="sidebarTitle">
+    <div class="sidebar__panel">
+        <header class="sidebar__header">
+            <div class="Brand">Color Project</div>
+            <button class="reset sidebar__close-btn js-sidebar__close-btn js-tab-focus">
+                <svg class="icon" viewBox="0 0 16 16">
+                    <title>Close panel</title>
+                    <g stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round"
+                       stroke-linejoin="round" stroke-miterlimit="10">
+                        <line x1="13.5" y1="2.5" x2="2.5" y2="13.5"></line>
+                        <line x1="2.5" y1="2.5" x2="13.5" y2="13.5"></line>
+                    </g>
+                </svg>
+            </button>
+        </header>
+
+        <div class="sidebar__content">
+            <!-- start sidebar content -->
+            <div class="text-component padding-md">
+
+                <img class="ml-0" src="{% static 'images/SizzeLogo.svg' %}">
+
+                <section class="category-section">
+                    <div class="container m-0 p-0 max-width-sm">
+
+                        <ul class="accordion  js-accordion category-container mb-0" data-animation="on"
+                            data-multi-items="off">
+
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="font-section" style="display: none;">
+                    <div class="container m-0 p-0 max-width-sm">
+
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <button class="button-no-active shadow_none btn btn--primary button-studio category-button">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M9.41436 11.9999L16.7073 19.2928L15.293 20.707L6.58594 11.9999L15.293 3.29282L16.7073 4.70703L9.41436 11.9999Z"
+                                          fill="#393939"/>
+                                </svg>
+                            </button>
+
+
+                            <div class="current-font">Current</div>
+
+
+                        </div>
+                        <ul class="fonts-list mt-0">
+
+                        </ul>
+                        <style>
+                            .fonts-list {
+                                margin-top: 10px;
+                            }
+                        </style>
+                    </div>
+                </section>
+
+
+                <section class="font-style-section" style="display: none;">
+                    <div class="container m-0 p-0 max-width-sm">
+
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <button class="button-no-active shadow_none btn btn--primary button-studio category-button">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M9.41436 11.9999L16.7073 19.2928L15.293 20.707L6.58594 11.9999L15.293 3.29282L16.7073 4.70703L9.41436 11.9999Z"
+                                          fill="#393939"/>
+                                </svg>
+                            </button>
+
+
+                            <div class="current-font-style">Current</div>
+
+
+                        </div>
+                        <ul class="fonts-style-list mt-0">
+
+                        </ul>
+                        <style>
+                            .fonts-list {
+                                margin-top: 10px;
+                            }
+                        </style>
+                    </div>
+                </section>
+
+
+                <section class="html-list-section" style="display: none; margin-top: 10px;">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <button class="button-no-active shadow_none btn btn--primary button-studio category-button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M9.41436 11.9999L16.7073 19.2928L15.293 20.707L6.58594 11.9999L15.293 3.29282L16.7073 4.70703L9.41436 11.9999Z"
+                                      fill="#393939"/>
+                            </svg>
+                        </button>
+
+
+                        <div class="id-name">Template Name</div>
+
+
+                    </div>
+                    <div class="html-list-container">
+
+                    </div>
+                </section>
+
+
+            </div>
+            <!-- end sidebar content -->
+
+
+        </div>
+    </div>
+</aside>

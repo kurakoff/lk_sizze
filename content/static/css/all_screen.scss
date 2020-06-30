@@ -1,0 +1,895 @@
+@import 'base';
+@import 'custom-style';
+
+
+@font-face {
+  font-family: "SFPro Medium";
+  font-weight: 400;
+  font-style: normal;
+  src: url(../fonts/SFPro/SFProDisplay-Medium.eot);
+  src: url(../fonts/SFPro/SFProDisplay-Medium.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Medium.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Medium.ttf) format("truetype")
+}
+
+@font-face {
+  font-family: "SFPro Regular";
+  font-style: normal;
+  src: url(../fonts/SFPro/SFProDisplay-Regular.eot);
+  src: url(../fonts/SFPro/SFProDisplay-Regular.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Regular.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Regular.ttf) format("truetype")
+}
+
+
+@font-face {
+  font-family: "SFPro Bold";
+  font-weight: 700;
+  font-style: normal;
+  src: url(../fonts/SFPro/SFProDisplay-Bold.eot);
+  src: url(../fonts/SFPro/SFProDisplay-Bold.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Bold.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Bold.ttf) format("truetype")
+}
+
+
+/* --------------------------------
+
+File#: _1_off-canvas-content
+Title: Off-Canvas Content
+Descr: An off-canvas section used for complementary content
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --off-canvas-panel-width: 400px;
+  --off-canvas-panel-width-opposite: -400px; // it should be equal to (--off-screen-panel-width * -1)
+  --off-canvas-animation-duration: 0.4s;
+}
+
+.off-canvas {
+  overflow: hidden;
+}
+
+.off-canvas__main { // main content, pushed out when off-canvas content is visible
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+  will-change: transform;
+  transition: transform var(--off-canvas-animation-duration) var(--ease-in-out);
+}
+
+.off-canvas--visible .off-canvas__main { // off-canvas content is always full-width on small devices
+  transform: translateX(100%);
+}
+
+@include breakpoint(xs) { // change tanslate value if off-canvas is not full-width
+  .off-canvas--visible:not(.off-canvas--full-width) .off-canvas__main {
+    transform: translateX(var(--off-canvas-panel-width));
+  }
+}
+
+// right-side panel variation
+.off-canvas--right.off-canvas--visible .off-canvas__main {
+  transform: translateX(-100%);
+}
+
+@include breakpoint(xs) {
+  .off-canvas--right.off-canvas--visible:not(.off-canvas--full-width) .off-canvas__main {
+    transform: translateX(var(--off-canvas-panel-width-opposite));
+  }
+}
+
+.off-canvas__close-btn { // if JS = disabled, hide panel close button
+  display: none;
+}
+
+.js {
+  .off-canvas__panel {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    background-color: var(--color-contrast-lower);
+    transition: visibility var(--off-canvas-animation-duration);
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  @include breakpoint(xs) {
+    .off-canvas:not(.off-canvas--full-width) .off-canvas__panel {
+      width: var(--off-canvas-panel-width);
+    }
+  }
+
+  .off-canvas__content { // off-canvas panel content
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateX(-50%);
+    will-change: transform;
+    transition: transform var(--off-canvas-animation-duration) var(--ease-in-out);
+  }
+
+  .off-canvas__close-btn {
+    display: block;
+    position: fixed;
+    top: var(--space-xxs);
+    left: var(--space-xxs);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: alpha(var(--color-bg), 0.95);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(-60px);
+    transition: transform .4s, background .2s, box-shadow .2s;
+
+    &:hover {
+      background-color: var(--color-bg);
+      box-shadow: var(--shadow-md);
+    }
+
+    .icon {
+      display: block;
+      color: var(--color-contrast-high); // icon color
+      font-size: 16px; // icon size
+    }
+  }
+
+  .off-canvas--visible {
+    .off-canvas__panel {
+      visibility: visible;
+    }
+
+    .off-canvas__content {
+      transform: translateX(0);
+    }
+
+    .off-canvas__close-btn {
+      transform: translateX(0);
+      transition: transform .4s var(--off-canvas-animation-duration), background .2s 0s, box-shadow .2s 0s;
+      // transition-delay: var(--off-canvas-animation-duration);
+    }
+  }
+
+  // right-side panel variation
+  .off-canvas--right {
+    .off-canvas__panel {
+      left: auto;
+      right: 0;
+    }
+
+    &:not(.off-canvas--visible) .off-canvas__content {
+      transform: translateX(50%);
+    }
+
+    .off-canvas__close-btn {
+      left: auto;
+      right: var(--space-xxs);
+    }
+
+    &:not(.off-canvas--visible) .off-canvas__close-btn {
+      transform: translateX(60px);
+    }
+  }
+}
+
+// --full-width
+.off-canvas--full-width {
+  --off-canvas-animation-duration: 0.75s; // increase animation duration if panel is full-screen
+
+  .off-canvas__close-btn {
+    width: 2em;
+    height: 2em;
+
+    .icon {
+      font-size: 1em;
+    }
+  }
+
+}
+
+
+/* -------------------------------- 
+
+File#: _1_language-picker
+Title: Language Picker
+Descr: A custom selector allowing users to choose their preferred language on a page
+Usage: codyhouse.co/license
+
+-------------------------------- */
+:root {
+  --picker-vertical-gap: 4px;
+}
+
+.language-picker {
+  display: inline-block;
+  position: relative;
+}
+
+.js .language-picker__form { // if js is enabled we replace the default form with a custom dropdown
+  display: none;
+}
+
+.language-picker__button { // created in js - dropdown trigger. Pass custom classes using the data-trigger-class attribute of the .language-picker element
+  .icon { // dropdown arrow (edit inline SVG in JS file of component)
+    height: 16px;
+    width: 16px;
+
+    &:first-of-type {
+      margin-right: var(--space-xxxs);
+    }
+
+    &:last-of-type {
+      margin-left: var(--space-xxxs);
+    }
+  }
+}
+
+.language-picker__dropdown { // created in js - dropdown element with list of languages 
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 200px;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xxs) 0;
+  border-radius: var(--radius-md);
+  z-index: var(--zindex-popover);
+  margin-top: var(--picker-vertical-gap);
+  margin-bottom: var(--picker-vertical-gap);
+
+  // reset spacing and text units - no longer affected by em units
+  @include spaceUnit(1rem);
+  @include textUnit(1rem);
+
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s .2s, opacity .2s;
+}
+
+.language-picker__dropdown--right { // change dropdown position based on the available space
+  right: 0;
+  left: auto;
+}
+
+.language-picker__dropdown--up {
+  bottom: 100%;
+  top: auto;
+}
+
+.language-picker__button[aria-expanded="true"] + .language-picker__dropdown {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity .2s;
+}
+
+.language-picker__item {
+  text-decoration: none;
+  padding: var(--space-xs) var(--space-lg) var(--space-xs) var(--space-md);
+  color: var(--color-contrast-high);
+
+  span { // truncate text
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    background-color: var(--color-contrast-lower);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: alpha(var(--color-primary), 0.1);
+  }
+
+  &[aria-selected=true] { // selected language
+    position: relative;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    @include fontSmooth;
+
+    &:focus {
+      outline: 2px solid alpha(var(--color-primary), 0.2);
+    }
+
+    &::after { // check icon next to the selected language
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 16px;
+      width: 16px;
+      right: var(--space-sm);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolyline stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round' points='1,9 5,13 15,3 '/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+}
+
+.language-picker__flag { // create the icon flag element
+  display: block; // flexbox fallback
+  display: flex;
+  align-items: center;
+
+  &::before { // flag icon - hide on default version
+    display: none;
+    flex-shrink: 0;
+    content: '';
+    height: 16px;
+    width: 16px;
+    margin-right: var(--space-xxs);
+    // set flag as bg image
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .language-picker__dropdown &::before { // flag inside dropdown
+    margin-right: var(--space-xs);
+  }
+}
+
+// --flags
+.language-picker--flags {
+  .language-picker__flag::before { // show flag
+    display: inline-block; // flex fallback
+    display: inline-flex;
+  }
+
+  .language-picker__button .icon:first-of-type {
+    display: none; // hide globe icon
+  }
+}
+
+// set the proper flag image
+.language-picker__flag--deutsch::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M48,18H0V8c0-1.105,0.895-2,2-2h44c1.105,0,2,0.895,2,2V18z'/%3E%3Crect y='18' fill='%23EE0000' width='48' height='12'/%3E%3Cpath fill='%23FDCF00' d='M48,40c0,1.105-0.895,2-2,2H2c-1.105,0-2-0.895-2-2V30h48V40z'/%3E%3C/svg%3E");
+}
+
+.language-picker__flag--english::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23002781' d='M46,6H2C0.896,6,0,6.896,0,8v32c0,1.104,0.896,2,2,2h44c1.104,0,2-0.896,2-2V8C48,6.896,47.104,6,46,6z'/%3E%3Cpath fill='%23E6E6E6' d='M48,8c0-1.104-0.896-2-2-2h-5.161L28,15.876V6h-8v9.876L7.161,6H2C0.896,6,0,6.896,0,8v2.586L12.239,20H0v8 h12.239L0,37.415V40c0,1.104,0.896,2,2,2h5.161L20,32.124V42h8v-9.876L40.839,42H46c1.104,0,2-0.896,2-2v-2.585L35.761,28H48v-8 H35.761L48,10.586V8z'/%3E%3Cpolygon fill='%23D10D24' points='48,22 26,22 26,6 22,6 22,22 0,22 0,26 22,26 22,42 26,42 26,26 48,26 '/%3E%3Cpath fill='%23D10D24' d='M47.001,6.307L29.2,20h3.28L48,8.062V8C48,7.268,47.587,6.656,47.001,6.307z'/%3E%3Cpath fill='%23D10D24' d='M32.48,28H29.2l17.801,13.693C47.587,41.344,48,40.732,48,40v-0.062L32.48,28z'/%3E%3Cpath fill='%23D10D24' d='M15.52,28L0,39.938V40c0,0.732,0.413,1.344,0.999,1.693L18.8,28H15.52z'/%3E%3Cpath fill='%23D10D24' d='M15.52,20h3.28L0.999,6.307C0.413,6.656,0,7.268,0,8v0.062L15.52,20z'/%3E%3C/svg%3E");
+}
+
+.language-picker__flag--francais::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%2301209F' d='M16,42H2c-1.105,0-2-0.895-2-2V8c0-1.105,0.895-2,2-2h14V42z'/%3E%3Cpath fill='%23EF4234' d='M48,40c0,1.105-0.895,2-2,2H32V6h14c1.105,0,2,0.895,2,2V40z'/%3E%3Crect x='16' y='6' fill='%23E6E6E6' width='16' height='36'/%3E%3C/svg%3E");
+}
+
+.language-picker__flag--italiano::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23009345' d='M16,42H2c-1.105,0-2-0.895-2-2V8c0-1.105,0.895-2,2-2h14V42z'/%3E%3Cpath fill='%23CF2B36' d='M48,40c0,1.105-0.895,2-2,2H32V6h14c1.105,0,2,0.895,2,2V40z'/%3E%3Crect x='16' y='6' fill='%23E6E6E6' width='16' height='36'/%3E%3C/svg%3E");
+}
+
+// --hide-label
+.language-picker--hide-label .language-picker__button { // hide language label in custom button -> show only flag and arrow icon
+  .icon {
+    margin-left: 0;
+
+    &:first-of-type {
+      display: none;
+    }
+  }
+
+  em { // label
+    display: none;
+  }
+
+  .language-picker__flag::before {
+    margin-right: var(--space-xxxs);
+  }
+}
+
+.language-picker--hide-label .language-picker__flag::before { // show flag
+  display: inline-block; // flex fallback
+  display: inline-flex;
+}
+
+.about_plan {
+  color: #7D2BE5 !important;
+}
+
+#menu-example {
+  font-family: "SFPro Medium" !important;
+  color: #393939;
+}
+
+
+/* --------------------------------
+
+File#: _2_full-screen-select
+Title: Full Screen Select
+Descr: A full-screen window w/ a list of options
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.modal--select {
+  background-color: alpha(var(--color-bg), 0.95);
+
+  .modal__close-btn--outer {
+    background-color: var(--color-contrast-lower);
+
+    .icon {
+      color: var(--color-contrast-high);
+    }
+
+    &:hover {
+      background-color: var(--color-contrast-low);
+    }
+  }
+}
+
+.full-screen__select {
+}
+
+.full-screen-select__option {
+  display: block;
+  font-size: var(--text-lg);
+  color: var(--color-contrast-high);
+  padding: var(--space-xxxs) var(--space-sm);
+  border-radius: var(--radius-md);
+
+  &:hover {
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.full-screen-select__option--selected {
+  color: var(--color-primary);
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* -------------------------------- 
+
+File#: _1_modal-window
+Title: Modal Window
+Descr: A modal dialog used to display critical information
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.modal {
+  position: fixed;
+  z-index: var(--zindex-overlay);
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+
+  &:not(.modal--is-visible) {
+    pointer-events: none;
+    background-color: transparent;
+  }
+}
+
+.modal--is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal__content {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 100%;
+}
+
+// close button
+.modal__close-btn {
+  display: flex;
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: .2s;
+
+  .icon {
+    display: block;
+    margin: auto;
+  }
+}
+
+.modal__close-btn--outer { // close button - outside the modal__content
+  width: 3.2em;
+  height: 3.2em;
+  position: fixed;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: var(--zindex-fixed-element);
+  background-color: alpha(var(--color-contrast-higher), 0.8);
+
+  &:hover {
+    background-color: var(--color-contrast-higher);
+  }
+
+  .icon {
+    color: var(--color-bg); // icon color
+  }
+}
+
+.modal__close-btn--inner { // close button - inside the modal__content
+  width: 2em;
+  height: 2em;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+
+  .icon {
+    color: inherit; // icon color
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// animations
+:root {
+  --modal-transition-duration: 0.2s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .modal--animate-fade {
+    --modal-transition-duration: 0.2s;
+    transition: opacity var(--modal-transition-duration), background-color var(--modal-transition-duration), visibility 0s var(--modal-transition-duration);
+
+    &.modal--is-visible {
+      transition: opacity var(--modal-transition-duration), background-color var(--modal-transition-duration), visibility 0s;
+    }
+  }
+
+  .modal--animate-scale,
+  .modal--animate-translate-up,
+  .modal--animate-translate-down,
+  .modal--animate-translate-right,
+  .modal--animate-translate-left {
+    --modal-transition-duration: 0.2s;
+    transition: opacity var(--modal-transition-duration), visibility 0s var(--modal-transition-duration);
+
+    .modal__content {
+      will-change: transform;
+      transition: transform var(--modal-transition-duration) var(--ease-out);
+    }
+
+    &.modal--is-visible {
+      transition: opacity var(--modal-transition-duration), visibility 0s;
+
+      .modal__content {
+        transform: scale(1); // reset all transformations
+      }
+    }
+  }
+
+  .modal--animate-slide-up,
+  .modal--animate-slide-down,
+  .modal--animate-slide-right,
+  .modal--animate-slide-left {
+    --modal-transition-duration: 0.3s;
+    transition: opacity 0s var(--modal-transition-duration), background-color var(--modal-transition-duration), visibility 0s var(--modal-transition-duration);
+
+    .modal__content {
+      will-change: transform;
+      transition: transform var(--modal-transition-duration) var(--ease-out);
+    }
+
+    &.modal--is-visible {
+      transition: background-color var(--modal-transition-duration), visibility 0s;
+
+      .modal__content {
+        transform: scale(1); // reset all transformations
+      }
+    }
+  }
+
+  // scale
+  .modal--animate-scale {
+    .modal__content {
+      transform: scale(0.95);
+    }
+  }
+
+  // translate
+  .modal--animate-translate-up {
+    .modal__content {
+      transform: translateY(40px);
+    }
+  }
+
+  .modal--animate-translate-down {
+    .modal__content {
+      transform: translateY(-40px);
+    }
+  }
+
+  .modal--animate-translate-right {
+    .modal__content {
+      transform: translateX(-40px);
+    }
+  }
+
+  .modal--animate-translate-left {
+    .modal__content {
+      transform: translateX(40px);
+    }
+  }
+
+  // slide
+  .modal--animate-slide-up {
+    .modal__content {
+      transform: translateY(100%);
+    }
+  }
+
+  .modal--animate-slide-down {
+    .modal__content {
+      transform: translateY(-100%);
+    }
+  }
+
+  .modal--animate-slide-right {
+    .modal__content {
+      transform: translateX(-100%);
+    }
+  }
+
+  .modal--animate-slide-left {
+    .modal__content {
+      transform: translateX(100%);
+    }
+  }
+}
+
+// load content - optional
+.modal--is-loading {
+  .modal__content {
+    visibility: hidden;
+  }
+
+  .modal__loader {
+    display: flex;
+  }
+}
+
+.modal__loader { // loader icon
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  pointer-events: none;
+}
+
+
+/* -------------------------------- 
+
+File#: N/A
+Title: Diagonal Movement
+Descr: A JavaScript plugin that detects the direction of the mouse movement (diagonal vs vertical)
+Usage: codyhouse.co/license
+Based on the jQuery-menu-aim plugin https://github.com/kamens/jQuery-menu-aim
+
+⚠️ The style of this component is only for demo purpose. You don't need it to use the plugin.
+
+-------------------------------- */
+
+.d-movement {
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: var(--space-xxs);
+}
+
+.d-movement__source {
+  display: grid;
+  grid-gap: var(--space-xxs);
+}
+
+.d-movement__item {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 0.25em;
+}
+
+.d-movement__item--one {
+  background-color: var(--color-primary);
+}
+
+.d-movement__item--two {
+  background-color: var(--color-contrast-higher);
+}
+
+.d-movement__item--three {
+  background-color: var(--color-accent);
+}
+
+.d-movement__sub-element {
+  background-color: var(--color-contrast-lower);
+  border-radius: 0.25em;
+  transition: background 0.2s;
+}
+
+.d-movement__arrow {
+  @include triangle(right, 12px, white);
+}
+
+/* -------------------------------- 
+
+File#: _2_dropdown
+Title: Dropdown
+Descr: A hoverable link that toggles the visibility of a dropdown list
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --dropdown-item-padding: var(--space-xxs) var(--space-sm);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown__menu {
+  width: 200px;
+  border-radius: var(--radius-md);
+  padding: var(--space-xxs) 0;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+  z-index: var(--zindex-popover);
+  position: absolute;
+  left: 0;
+  top: 100%;
+
+  // reset spacing and text units - no longer affected by em units
+  @include spaceUnit(1rem);
+  @include textUnit(1rem);
+
+  // hide
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+}
+
+.dropdown__wrapper:hover > .dropdown__menu,
+.dropdown__sub-wrapper:hover > .dropdown__menu {
+  // show dropdown menu
+  clip: auto;
+  clip-path: none;
+}
+
+.dropdown__sub-wrapper:hover > .dropdown__menu {
+  left: 100%;
+}
+
+.dropdown__item {
+  display: block;
+  text-decoration: none;
+  color: var(--color-contrast-high);
+  padding: var(--dropdown-item-padding);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover, &.dropdown__item--hover {
+    background-color: var(--color-contrast-lower);
+  }
+}
+
+.dropdown__separator { // h line divider
+  height: 1px;
+  background-color: var(--color-contrast-low);
+  margin: var(--dropdown-item-padding);
+}
+
+.dropdown__sub-wrapper {
+  position: relative;
+
+  > .dropdown__item { // item w/ right arrow
+    position: relative;
+    padding-right: calc(var(--space-sm) + 12px);
+
+    .icon { // right arrow
+      position: absolute;
+      display: block;
+      width: 12px;
+      height: 12px;
+      right: var(--space-xxs);
+      top: calc(50% - 6px);
+    }
+  }
+
+  > .dropdown__menu { // sub menu
+    top: calc(var(--space-xxs) * -1);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.js { // add animations if JS = enabled
+  .dropdown__menu {
+    top: calc(100% + 4px); // add a 4px margin between trigger and dropdown
+  }
+
+  .dropdown__sub-wrapper {
+    .dropdown__menu {
+      top: calc(var(--space-xxs) * -1);
+    }
+  }
+
+  .dropdown__menu--is-visible {
+    clip: auto;
+    clip-path: none;
+    animation: dropdown-show 0.2s forwards;
+  }
+
+  .dropdown__menu--is-hidden {
+    animation: dropdown-hide 0.2s;
+  }
+
+  .dropdown__sub-wrapper > .dropdown__menu--is-visible,
+  .dropdown__sub-wrapper > .dropdown__menu--is-hidden {
+    left: 100%;
+
+    &.dropdown__menu--left {
+      left: -100%;
+    }
+  }
+}
+
+@keyframes dropdown-show {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes dropdown-hide {
+  0% {
+    clip: auto;
+    clip-path: none;
+    opacity: 1;
+  }
+
+  100% {
+    clip: auto;
+    clip-path: none;
+    opacity: 0;
+  }
+}
+
+.role-menu {
+  text-decoration: none !important;
+  color: #393939;
+}
+
+.role-menu:hover {
+  color: #393939 !important;
+}
+
+.modal__content {
+  color: #393939;
+  font-family: "SFPro Medium" !important;
+}
+
+
+.format-width {
+  width: 14rem;
+}
