@@ -1,5 +1,6 @@
-django
+django==3.0.7
 django-compressor
 django-libsass
 django-tinymce==2.8.0
 pillow
+django-nested-admin==3.2.2

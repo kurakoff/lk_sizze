@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+CASCADE = models.CASCADE
+
 
 class Project(models.Model):
     name = models.CharField(max_length=16, verbose_name='название', blank=False)
@@ -31,7 +33,6 @@ class Prototype(models.Model):
     device_name = models.CharField(max_length=64, verbose_name='название')
     image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
     image_hover = models.FileField(upload_to='images_prototypes/hover/', verbose_name='hover', default='')
-    # active = models.BooleanField(default=True, verbose_name='активно')
 
     class Meta:
         verbose_name = 'прототип'
@@ -41,25 +42,35 @@ class Prototype(models.Model):
         return self.device_name
 
 
-# TODO: Продумать структуру привязки групп элементов
-
-
-class GroupElements(models.Model):
+class Category(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
-    prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = 'группа'
-        verbose_name_plural = 'группы'
+    slug = models.CharField(max_length=64, verbose_name='slug')
 
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'картегория'
+        verbose_name_plural = 'категории'
+
+
+class CategoryPrototype(models.Model):
+    category = models.ForeignKey('Category', on_delete=CASCADE, verbose_name='категория')
+    prototype = models.ForeignKey('Prototype', on_delete=CASCADE)
+
+    class Meta:
+        verbose_name = 'картегория'
+        verbose_name_plural = 'категории'
+
+    def __str__(self):
+        return self.category.title
+
 
 class Element(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
-    group = models.ForeignKey('GroupElements', on_delete=models.CASCADE)
+    category_prototype = models.ForeignKey('CategoryPrototype', on_delete=CASCADE, default=1)
     image = models.ImageField(upload_to='images_elements/', verbose_name='изображение')
+    # TODO: сделать редактор кода
     layout_element = models.TextField(verbose_name='макет')
 
     class Meta:

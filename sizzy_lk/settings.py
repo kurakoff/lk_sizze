@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'content.apps.ContentConfig',
     'compressor',
     'tinymce',
+    'nested_admin',
 ]
 
 MIDDLEWARE = [

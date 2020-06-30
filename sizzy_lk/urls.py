@@ -22,4 +22,5 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', include('content.urls')),
                   path('user/', include('auth_users.urls')),
+                  path('nested_admin/', include('nested_admin.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
