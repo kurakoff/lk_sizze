@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <div class="off-canvas off-canvas--full-width js-off-canvas">
     <main class="off-canvas__main">
         {% include 'content/reactor_partials/_readactor_main.html' %}
@@ -11,14 +12,14 @@
                 </div>
 
                 <div class="container-fluid">
-                    <form action="" class="margin-bottom-sm" id="rename_project_form">
+                    <form action="{% url 'create_screen' %}" class="margin-bottom-sm form_create_screen">
                         {% csrf_token %}
-                        {#                {{ form_rename_project.id }}#}
                         <div class="row">
+                            {{ form_create_screen.project }}
                         </div>
                         <div class="row">
-                            {#                    {{ form_rename_project.name|add_classes:'col-9 form-control flex-grow' }}#}
-                            <button class="col-3 ml-3 btn--color btn btn--primary">Save</button>
+                            {{ form_create_screen.title|add_classes:'col-9 form-control flex-grow' }}
+                            <button type="submit" class="col-3 ml-3 btn--color btn btn--primary">Save</button>
                             <div class="col-5 error_input error_style">Place for errors</div>
                         </div>
                     </form>
@@ -150,5 +151,4 @@
             </svg>
         </button>
     </div>
-
 </div>

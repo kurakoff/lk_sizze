@@ -2,11 +2,12 @@ from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import get_template, render_to_string
 from django.views import View
 
-from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm
+from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
+    EditScreenForm, DeleteScreenForm
 from content.models import Prototype, Project, Screen
 
 
@@ -74,7 +75,7 @@ class CreateProjectView(View):
         return JsonResponse(response)
 
 
-class DeleteProject(View):
+class DeleteProjectView(View):
     form_class = DeleteProjectForm
 
     def post(self, request, *args, **kwargs):
@@ -89,7 +90,7 @@ class DeleteProject(View):
         return JsonResponse(response)
 
 
-class EditProject(View):
+class EditProjectView(View):
     form_class = EditProjectForm
 
     def post(self, request, *args, **kwargs):
@@ -108,7 +109,7 @@ class EditProject(View):
         return JsonResponse(response)
 
 
-class CopyProject(View):
+class CopyProjectView(View):
     form_class = DeleteProjectForm
 
     def post(self, request, *args, **kwargs):
@@ -165,9 +166,36 @@ class ProfileSaveDetailsView(View):
 
 class RedactorView(View):
     template_name = 'content/redactor.html'
+    form_create_screen = CreateScreenForm
+    form_edit_screen = EditScreenForm
+    form_delete_screen = DeleteScreenForm
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+    def get(self, request, project, *args, **kwargs):
+        get_object_or_404(Project, pk=project, user=request.user)
+        return render(request, self.template_name, {
+            'form_create_screen': self.form_create_screen(initial={'project': project}),
+            'form_edit_screen': self.form_edit_screen,
+            'form_delete_screen': self.form_delete_screen,
+        })
+
+
+class CreateScreenView(View):
+    template_name = 'content/create_project.html'
+    form_class = CreateScreenForm
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            screen = form.save(commit=False)
+            screen.user = request.user
+            screen.layout = screen.project.prototype.base_layout
+            screen.save()
+            response['result'] = True
+        else:
+            response['result'] = False
+            response['errors'] = form.errors
+        return JsonResponse(response)
 
 
 class TestView(View):

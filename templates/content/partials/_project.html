@@ -2,7 +2,8 @@
 {% load custom_tags %}
 <div class="col-md-4  col-sm-6 p-3 project_{{ project.id }}">
     <div class="card m-2 p-0 card--is-link">
-        <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+        <a class="card__link d-flex justify-content-between align-items-center"
+           href="{% url 'redactor' project=project.id %}"
            aria-label="Description of the link ">
             <figure class="card__img">
                 <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">

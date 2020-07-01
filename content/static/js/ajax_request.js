@@ -113,4 +113,7 @@ $(document).ready(function () {
         let $form = $('#rename_project_form');
         $form.find('#id_id').val($(this).data('id'))
     })
+
+    //    SCREENS
+    init_ajax_form($('.form_create_screen'), true, blinking_success)
 })
