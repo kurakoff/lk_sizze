@@ -1,0 +1,104 @@
+{% load static %}
+<div class="col-xl-3 col-lg-3  col-sm-6 p-3">
+    <div class="card m-2 p-0 card--is-link">
+        <a class="card__link d-flex justify-content-between align-items-center" href="#0"
+           aria-label="Description of the link ">
+            <figure class="card__img">
+                <img src="{% static 'images/card-img-1-2.jpg' %}" alt="Card preview img">
+                <div class="card__link-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 32 32">
+                        <g stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                           stroke="currentColor" fill="none" stroke-miterlimit="10">
+                            <path d="M21,5s-4.333-1.667-7,1L6,14c-2.667,2.667-1,7-1,7"></path>
+                            <path d="M27,11s1.667,4.333-1,7l-8,8c-2.667,2.667-7,1-7,1"></path>
+                            <line x1="12" y1="20" x2="4" y2="28"></line>
+                            <line x1="28" y1="4" x2="20" y2="12"></line>
+                        </g>
+                    </svg>
+                </div>
+            </figure>
+
+            <div class="card__content">
+                <div class="h4_group d-flex align-items-center">
+                    <img alt="" class="type_img_screen " src="{% static 'images/layers.svg' %}">
+                    <h4 class="flex_h4">Title of the screen </h4>
+                </div>
+                <button class="btn btn--primary else-button" aria-controls="menu_screen{{ screen.id }}"></button>
+
+                <menu id="menu_screen{{ screen.id }}" class="menu js-menu display_normal">
+                    <li role="menuitem">
+                        <a href="#0" class="menu__content js-menu__content">
+                           <span class="p-0 menu__content js-menu__content">
+                                <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <g id="24 / basic / share-arrow">
+                                    <path id="icon" fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M13 16.0002V5.41436L16.2929 8.70726L17.7071 7.29304L12 1.58594L6.29289 7.29304L7.70711 8.70726L11 5.41436V16.0002H13ZM21 20.0002V11.0002H19V20.0002H5V11.0002H3V20.0002C3 21.1047 3.89543 22.0002 5 22.0002H19C20.1046 22.0002 21 21.1047 21 20.0002Z"
+                                          fill="black"/>
+                                    </g>
+                                    </svg>
+                                <span>Download </span>
+                           </span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="" data-id="{{ screen.id }}"
+                           class="menu__content js-menu__content preparation_copy_screen"
+                           aria-controls="dialog_copy_screen">
+                            <span class="p-0 menu__content js-menu__content">
+                                <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                    <g id="24 / grid / stack">
+                    <path id="icon" fill-rule="evenodd" clip-rule="evenodd"
+                          d="M20 5V16C21.1046 16 22 15.1046 22 14V4C22 2.89543 21.1046 2 20 2H10C8.89543 2 8 2.89543 8 4H19C19.5523 4 20 4.44772 20 5ZM17 19V8C17 7.44772 16.5523 7 16 7H5C5 5.89543 5.89543 5 7 5H17C18.1046 5 19 5.89543 19 7V17C19 18.1046 18.1046 19 17 19ZM14 8H4C2.89543 8 2 8.89543 2 10V20C2 21.1046 2.89543 22 4 22H14C15.1046 22 16 21.1046 16 20V10C16 8.89543 15.1046 8 14 8ZM4 20V10H14V20H4Z"
+                          fill="black"/>
+                    </g>
+                    </svg>
+                                <span>Duplicate</span>
+                           </span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="" class="menu__content js-menu__content preparation_edit_screen"
+                           data-id="{{ screen.id }}"
+                           aria-controls="dialog_rename_screen"
+                        >
+                                        <span class="p-0 menu__content js-menu__content">
+                                            <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                    <g id="24 / basic / pencil-edit">
+                                    <path id="icon" fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M22 20V13H20V20H4V4H11V2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20ZM19.1781 2.72342C18.7197 2.26142 18.0921 2 17.4374 2C16.7834 2 16.1564 2.26083 15.6954 2.72463L7.3265 11.0934C6.57867 11.7523 6.08844 12.7328 6.00325 13.7873L6 17.0023V18.0023H10.1346C11.2689 17.9245 12.259 17.4295 12.9575 16.6238L21.279 8.30584C21.7407 7.84416 22.0001 7.21799 22.0001 6.56508C22.0001 5.91217 21.7407 5.286 21.279 4.82432L19.1781 2.72342ZM10.064 16.0048C10.5982 15.967 11.0955 15.7184 11.4948 15.2616L17.5567 9.19972L14.8024 6.44527L8.6961 12.5496C8.29095 12.9079 8.04031 13.4092 8 13.8678V16.0029L10.064 16.0048ZM16.2169 5.03128L18.9709 7.78551L19.8648 6.89162C19.9514 6.80502 20.0001 6.68756 20.0001 6.56508C20.0001 6.4426 19.9514 6.32514 19.8648 6.23854L17.7611 4.13486C17.6755 4.04855 17.5589 4 17.4374 4C17.3158 4 17.1992 4.04855 17.1136 4.13486L16.2169 5.03128Z"
+                                          fill="black"/>
+                                    </g>
+                                    </svg>
+
+                                          <span>Edit name</span>
+                                        </span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+
+
+                        <a href="" class="menu__content js-menu__content preparation_delete_screen"
+                           data-id="{{ screen.id }}"
+                           aria-controls="dialog_delete_screen">
+                                        <span class="p-0 menu__content js-menu__content">
+                                                <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="24 / basic / trash-empty">
+                                                    <path id="icon" fill-rule="evenodd" clip-rule="evenodd"
+                                                          d="M9 1H15C16.1046 1 17 1.89543 17 3V4H20C21.1046 4 22 4.89543 22 6V8C22 9.10457 21.1046 10 20 10H19.9199L19 21C19 22.1046 18.1046 23 17 23H7C5.89543 23 5 22.1046 5.00345 21.083L4.07987 10H4C2.89543 10 2 9.10457 2 8V6C2 4.89543 2.89543 4 4 4H7V3C7 1.89543 7.89543 1 9 1ZM4 6H7H17H20V8H4V6ZM6.08649 10H17.9132L17.0035 20.917L17 21H7L6.08649 10ZM15 3V4H9V3H15ZM13.4142 15L15.7071 17.2929L14.2929 18.7071L12 16.4142L9.70711 18.7071L8.29289 17.2929L10.5858 15L8.29289 12.7071L9.70711 11.2929L12 13.5858L14.2929 11.2929L15.7071 12.7071L13.4142 15Z"
+                                                          fill="#FF1D1D"/>
+                                                    </g>
+                                                    </svg>
+                                            <span class="red_color">Delete</span>
+                                         </span>
+                        </a>
+                    </li>
+                </menu>
+
+            </div>
+        </a>
+    </div>
+</div>
