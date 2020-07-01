@@ -158,3 +158,10 @@ class RedactorView(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+
+class TestView(View):
+    template_name = 'content/test_view.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)

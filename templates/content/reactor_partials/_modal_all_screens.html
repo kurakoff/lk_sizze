@@ -1,10 +1,7 @@
 {% load static %}
 <div class="off-canvas off-canvas--full-width js-off-canvas">
     <main class="off-canvas__main">
-        <!-- insert your main content here -->
-        <div class="container text-center margin-top-xl">
-            <button aria-controls="off-canvas-1" class="btn--color btn btn--primary">All screens</button>
-        </div>
+        {% include 'content/reactor_partials/_readactor_main.html' %}
     </main>
     <div id="off-canvas-1" class="off-canvas__panel js-off-canvas__panel" aria-labelledby="off-canvas__title"
          role="complementary">

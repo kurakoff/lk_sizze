@@ -10,13 +10,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <script>document.getElementsByTagName("html")[0].className += " js";</script>
-    {#  CUSTOM  #}
-    {#    {% compress css %}#}
-    {#        <link type="text/x-scss" href="{% static 'css/all_screen.scss' %}" rel="stylesheet"#}
-    {#              media="screen">#}
-    {#    {% endcompress %}#}
-    {#  ENDCUSTOM  #}
-    {#  REDACTOR  #}
     <link href="{% static 'css/redactor/index.min.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/redactor/style1.css' %}" rel="stylesheet" type="text/css">
     {#            'https://use.fontawesome.com/releases/v5.11.2/css/all.css',#}
@@ -46,7 +39,6 @@
 
 </head>
 <body id="redact-page">
-{#{% include 'content/reactor_partials/_modal_all_screens.html' %}#}
 <div class="label"></div>
 <div id="temp-svg" style="position: absolute; top: 0; left: 0;"></div>
 <div class="flex@md">
@@ -670,9 +662,6 @@
 
 <script src="{% static 'js/redactor/editor.js' %}"></script>
 <script src="{% static 'js/redactor/api_cloudconvert.js' %}"></script>
-
-{#  #}
-{#<script src="{% static 'js/modal_all_screen.js' %}"></script>#}
 
 </body>
 </html>
