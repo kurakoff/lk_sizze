@@ -7,7 +7,7 @@ from django.template.loader import get_template, render_to_string
 from django.views import View
 
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm
-from content.models import Prototype, Project
+from content.models import Prototype, Project, Screen
 
 
 class IndexView(View):
@@ -62,6 +62,10 @@ class CreateProjectView(View):
             project = form.save(commit=False)
             project.user = request.user
             project.save()
+
+            screen = Screen(title='screen#1', project=project, layout=project.prototype.base_layout)
+            screen.save()
+
             response['result'] = True
             response['redirect_url'] = '/'
         else:
@@ -112,8 +116,14 @@ class CopyProject(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             project = Project.objects.filter(user=request.user, pk=form.cleaned_data['project']).first()
+            screens = project.screen_set.all()
             project.pk = None
+            project.name = f'{project.name}_copy'
             project.save()
+            for screen in screens:
+                screen.pk = None
+                screen.project = project
+                screen.save()
             response['result'] = True
             response['html_project'] = render_to_string('content/partials/_project.html', {'project': project})
         else:
