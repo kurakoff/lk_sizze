@@ -53,12 +53,15 @@ class Category(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
     slug = models.CharField(max_length=64, verbose_name='slug')
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         verbose_name = 'картегория'
         verbose_name_plural = 'категории'
+
+    def __str__(self):
+        return self.title
+
+    def get_elements_on_prototype(self, prototype_id):
+        return Element.objects.filter(category_prototype__category=self.id, category_prototype__prototype=prototype_id)
 
 
 class CategoryPrototype(models.Model):

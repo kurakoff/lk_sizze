@@ -8,7 +8,7 @@ from django.views import View
 
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
     EditScreenForm, DeleteScreenForm, CopyScreenForm
-from content.models import Prototype, Project, Screen
+from content.models import Prototype, Project, Screen, Category
 from django.utils.timezone import now
 
 
@@ -175,6 +175,7 @@ class RedactorView(View):
     def get(self, request, project, *args, **kwargs):
         project = get_object_or_404(Project, pk=project, user=request.user)
         screens = project.screen_set.all()
+
         return render(request, self.template_name, {
             'form_create_screen': self.form_create_screen(initial={'project': project}),
             'form_edit_screen': self.form_edit_screen,
