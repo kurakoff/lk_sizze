@@ -40,13 +40,6 @@ function create_zip() {
 
 function get_ids() {
     let ids_nodes = []
-    if ($('.content-block.active').data('list') === 1) {
-        $('.html-list-container').find('.node').each((index, element) => {
-            ids_nodes.push($(element).data('node'))
-        })
-    } else {
-        ids_nodes.push($('.content-block.active').data('id'))
-    }
     return ids_nodes
 }
 
@@ -206,30 +199,9 @@ function sendJob(template, format, svg, pdf_url, count) {
 function OnConvert(format, svg) {
     let ids_nodes = get_ids()
     ids_nodes.forEach((id, index, array) => {
-        _db.tt_db.templates.get({id})
-            .then((result) => {
-                if (result) {
-                    sendJob($(result.template), format, svg, '', array.length)
-                } else {
-                    $.ajax({
-                        type: 'GET',
-                        url: 'img/html',
-                        data: {
-                            id: id
-                        },
-                        async: true,
-                        success: (result) => {
-                            sendJob($(result), format, svg, '', array.length)
-                        }
-                    });
-                }
-            }).catch((error) => {
-            console.log('Catch-> error', error)
-        })
-
+        let template = saver_user_progress.getTemplate('get_screen', id)
+        sendJob($(result.template), format, svg, '', array.length)
     })
-
-
 }
 
 
