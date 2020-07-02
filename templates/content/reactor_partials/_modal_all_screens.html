@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <button class="reset modal__close-btn modal__close-btn--outer  js-modal__close js-tab-focus close_modal_rename">
+            <button class="reset modal__close-btn modal__close-btn--outer  js-modal__close js-tab-focus close_create_screen">
                 <svg class="icon icon--sm" viewBox="0 0 24 24">
                     <title>Close modal window</title>
                     <g fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2">
@@ -56,33 +56,33 @@
 
                 <menu id="menu-example" class="menu js-menu">
                     <li role="menuitem">
-<span class="menu__content d-flex justify-content-between js-menu__content">
+                        <span class="menu__content d-flex justify-content-between js-menu__content">
 
-      <span>SVG</span>  <span class="about_plan">FREE</span>
-    </span>
+                              <span>SVG</span>  <span class="about_plan">FREE</span>
+                            </span>
                     </li>
 
                     <li role="menuitem">
- <span class="menu__content d-flex justify-content-between js-menu__content">
+                         <span class="menu__content d-flex justify-content-between js-menu__content">
 
-      <span>PDF</span>  <span class="about_plan">FREE</span>
-    </span>
+                              <span>PDF</span>  <span class="about_plan">FREE</span>
+                            </span>
                     </li>
 
                     <li role="menuitem">
-    <span class="menu__content d-flex justify-content-between js-menu__content">
+                        <span class="menu__content d-flex justify-content-between js-menu__content">
 
-      <span>JPEG</span>
-         <span class="about_plan">FREE</span>
+                          <span>JPEG</span>
+                             <span class="about_plan">FREE</span>
 
-    </span>
+                        </span>
                     </li>
 
                     <li role="menuitem">
-  <span class="menu__content d-flex justify-content-between js-menu__content">
+                          <span class="menu__content d-flex justify-content-between js-menu__content">
 
-      <span>PNG</span>  <span class="about_plan">FREE</span>
-    </span>
+                              <span>PNG</span>  <span class="about_plan">FREE</span>
+                            </span>
                     </li>
 
                 </menu>
@@ -90,12 +90,11 @@
 
             <!-- insert your secondary content here -->
             <div class="container-fluid">
-                <div class="d-flex row">
-
-
+                <div class="d-flex row screens_container">
                     <!--Start block-->
-                    {% include 'content/reactor_partials/_screen.html' %}
-
+                    {% for screen in screens %}
+                        {% include 'content/reactor_partials/_screen.html' %}
+                    {% endfor %}
                 </div>
             </div>
 

@@ -171,11 +171,14 @@ class RedactorView(View):
     form_delete_screen = DeleteScreenForm
 
     def get(self, request, project, *args, **kwargs):
-        get_object_or_404(Project, pk=project, user=request.user)
+        project = get_object_or_404(Project, pk=project, user=request.user)
+        screens = project.screen_set.all()
         return render(request, self.template_name, {
             'form_create_screen': self.form_create_screen(initial={'project': project}),
             'form_edit_screen': self.form_edit_screen,
             'form_delete_screen': self.form_delete_screen,
+            'screens': screens,
+
         })
 
 
@@ -191,6 +194,7 @@ class CreateScreenView(View):
             screen.user = request.user
             screen.layout = screen.project.prototype.base_layout
             screen.save()
+            response['html_screen'] = render_to_string('content/reactor_partials/_screen.html', {'screen': screen})
             response['result'] = True
         else:
             response['result'] = False

@@ -3,6 +3,13 @@ function reload_js(src) {
     $('<script>').attr('src', src).appendTo('head');
 }
 
+function create_screens_success($form, data) {
+    $('.close_create_screen').trigger('click')
+    $(data['html_screen']).appendTo('.screens_container')
+    reload_js('/static/js/menu_project.js');
+    reload_js('/static/js/modal.js');
+}
+
 function blinking_success($form) {
     let blink_success = $form.find('.blinking_success');
     blink_success.css('display', 'block');
@@ -97,7 +104,6 @@ $(document).ready(function () {
     //
     init_ajax_form($('#copy_project_form'), false, copy_project_success)
     $(document).on('click', '.preparation_copy_project', function (e) {
-        console.log('opopo1')
         e.preventDefault()
         let $form = $('#copy_project_form');
         $form.find('#id_project').val($(this).data('id'))
@@ -115,5 +121,5 @@ $(document).ready(function () {
     })
 
     //    SCREENS
-    init_ajax_form($('.form_create_screen'), true, blinking_success)
+    init_ajax_form($('.form_create_screen'), true, create_screens_success)
 })
