@@ -1,58 +1,3 @@
-function reload_js(src) {
-    $('script[src="' + src + '"]').remove();
-    $('<script>').attr('src', src).appendTo('head');
-}
-
-function create_screens_success($form, data) {
-    $('.close_create_screen').trigger('click')
-    $(data['html_screen']).appendTo('.screens_container')
-    reload_js('/static/js/menu_project.js');
-    reload_js('/static/js/modal.js');
-}
-
-function rename_screen_success($form, data) {
-    let id = data['id']
-    let name = data['new_name']
-    $(`.screen_${id}`).find('h4').text(name)
-    $('.close_modal_rename').trigger('click')
-}
-
-function blinking_success($form) {
-    let blink_success = $form.find('.blinking_success');
-    blink_success.css('display', 'block');
-    setTimeout(() => {
-        blink_success.css('display', 'none')
-    }, 3000)
-}
-
-function delete_project_success() {
-    let id = $('#delete_project_form').find('input#id_project').attr('value')
-    $(`.project_${id}`).remove()
-    $('#dialog_delete_project .js-dialog__close').trigger('click')
-}
-
-
-function delete_screen_success($form, data) {
-    let id = data.id
-    $(`.screen_${id}`).remove()
-    $('#dialog_delete_screen .js-dialog__close').trigger('click')
-}
-
-function copy_project_success($form, data) {
-    let id = $('#delete_project_form').find('input#id_project').attr('value')
-    $(data['html_project']).appendTo('.projects_container')
-    $('#dialog_copy_project .js-dialog__close').trigger('click')
-    reload_js('/static/js/menu_project.js');
-    reload_js('/static/js/modal.js');
-}
-
-function rename_project_success($form, data) {
-    let id = data['id']
-    let name = data['new_name']
-    $(`.project_${id}`).find('h4').text(name)
-    $('.close_modal_rename').trigger('click')
-}
-
 function init_ajax_form($form, clean = true, after_save) {
     $form.submit(function (e) {
         e.preventDefault();
@@ -86,6 +31,71 @@ function clear_form($form) {
 function form_clear_error($form) {
     $form.find('.error_style').removeClass('show')
 }
+
+function reload_js(src) {
+    $('script[src="' + src + '"]').remove();
+    $('<script>').attr('src', src).appendTo('head');
+}
+
+function blinking_success($form) {
+    let blink_success = $form.find('.blinking_success');
+    blink_success.css('display', 'block');
+    setTimeout(() => {
+        blink_success.css('display', 'none')
+    }, 3000)
+}
+
+
+function create_screens_success($form, data) {
+    $('.close_create_screen').trigger('click')
+    $(data['html_screen']).appendTo('.screens_container')
+    reload_js('/static/js/menu_project.js');
+    reload_js('/static/js/modal.js');
+}
+
+function rename_screen_success($form, data) {
+    let id = data['id']
+    let name = data['new_name']
+    $(`.screen_${id}`).find('h4').text(name)
+    $('.close_modal_rename').trigger('click')
+}
+
+function delete_screen_success($form, data) {
+    let id = data.id
+    $(`.screen_${id}`).remove()
+    $('#dialog_delete_screen .js-dialog__close').trigger('click')
+}
+
+function copy_screen_success($form, data) {
+    let id = $('#delete_screen_form').find('input#id_screen').attr('value')
+    $(data['html_screen']).appendTo('.screens_container')
+    $('#dialog_copy_screen .js-dialog__close').trigger('click')
+    reload_js('/static/js/menu_project.js');
+    reload_js('/static/js/modal.js');
+}
+
+
+function copy_project_success($form, data) {
+    let id = $('#delete_project_form').find('input#id_project').attr('value')
+    $(data['html_project']).appendTo('.projects_container')
+    $('#dialog_copy_project .js-dialog__close').trigger('click')
+    reload_js('/static/js/menu_project.js');
+    reload_js('/static/js/modal.js');
+}
+
+function rename_project_success($form, data) {
+    let id = data['id']
+    let name = data['new_name']
+    $(`.project_${id}`).find('h4').text(name)
+    $('.close_modal_rename').trigger('click')
+}
+
+function delete_project_success() {
+    let id = $('#delete_project_form').find('input#id_project').attr('value')
+    $(`.project_${id}`).remove()
+    $('#dialog_delete_project .js-dialog__close').trigger('click')
+}
+
 
 $(document).ready(function () {
     $('form').each(function () {
@@ -151,5 +161,14 @@ $(document).ready(function () {
         $form.find('#id_id').val($(this).data('id'))
     })
     init_ajax_form($('#rename_screen_form'), false, rename_screen_success)
-    init_ajax_form($('#copy_screen_form'), true, create_screens_success)
+
+    init_ajax_form($('#copy_screen_form'), false, copy_screen_success)
+    $(document).on('click', '.preparation_copy_screen', function (e) {
+        e.preventDefault()
+        let $form = $('#copy_screen_form');
+        $form.find('#id_screen').val($(this).data('id'))
+    })
+    $('.submit_copy_screen').click(() => {
+        $('#copy_screen_form').submit()
+    })
 })

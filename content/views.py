@@ -48,6 +48,38 @@ class ProfileView(View):
         return JsonResponse(response)
 
 
+class ProfileSaveDetailsView(View):
+    form_details = UserDetailsForm
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        form = self.form_details(request.user, request.POST)
+        user = request.user
+        if form.is_valid():
+            response['result'] = True
+            form.save()
+            msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+            send = send_mail(
+                "Смена почты sizze.io",
+                msg_html,
+                getattr(settings, "EMAIL_HOST_USER"),
+                [user.email],
+                html_message=msg_html,
+                fail_silently=False
+            )
+            response['send_mail'] = send
+        else:
+            if request.POST['email'] == user.email:
+                response['result'] = True
+            if not form.errors.get('username'):
+                user.username = request.POST['username']
+            else:
+                response['result'] = False
+                response['errors'] = form.errors
+        user.save()
+        return JsonResponse(response)
+
+
 class CreateProjectView(View):
     template_name = 'content/create_project.html'
     form_class = CreateProjectForm
@@ -132,38 +164,6 @@ class CopyProjectView(View):
         return JsonResponse(response)
 
 
-class ProfileSaveDetailsView(View):
-    form_details = UserDetailsForm
-
-    def post(self, request, *args, **kwargs):
-        response = {}
-        form = self.form_details(request.user, request.POST)
-        user = request.user
-        if form.is_valid():
-            response['result'] = True
-            form.save()
-            msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
-            send = send_mail(
-                "Смена почты sizze.io",
-                msg_html,
-                getattr(settings, "EMAIL_HOST_USER"),
-                [user.email],
-                html_message=msg_html,
-                fail_silently=False
-            )
-            response['send_mail'] = send
-        else:
-            if request.POST['email'] == user.email:
-                response['result'] = True
-            if not form.errors.get('username'):
-                user.username = request.POST['username']
-            else:
-                response['result'] = False
-                response['errors'] = form.errors
-        user.save()
-        return JsonResponse(response)
-
-
 class RedactorView(View):
     template_name = 'content/redactor.html'
     form_create_screen = CreateScreenForm
@@ -229,10 +229,10 @@ class EditScreenView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             screen = Screen.objects.filter(pk=form.cleaned_data['id']).first()
-            screen.name = form.cleaned_data['title']
+            screen.title = form.cleaned_data['title']
             screen.save()
             response['result'] = True
-            response['new_name'] = screen.name
+            response['new_name'] = screen.title
             response['id'] = screen.id
         else:
             response['result'] = False
@@ -247,15 +247,11 @@ class CopyScreenView(View):
         response = {}
         form = self.form_class(request.POST)
         if form.is_valid():
-            screen = Screen.objects.filter(user=request.user, pk=form.cleaned_data['project']).first()
-            screens = screen.screen_set.all()
+            screen = Screen.objects.filter(pk=form.cleaned_data['screen']).first()
             screen.pk = None
-            screen.name = f'{screen.name}_copy'
+            screen.title = f'{screen.title}_copy'
             screen.save()
-            for screen in screens:
-                screen.pk = None
-                screen.screen = screen
-                screen.save()
+
             response['result'] = True
             response['html_screen'] = render_to_string('content/reactor_partials/_screen.html', {'screen': screen})
         else:
