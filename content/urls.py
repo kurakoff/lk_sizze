@@ -2,7 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path
 from .views import IndexView, ProfileView, ProfileSaveDetailsView, CreateProjectView, DeleteProjectView, \
     CopyProjectView, \
-    EditProjectView, RedactorView, TestView, CreateScreenView, DeleteScreenView, CopyScreenView, EditScreenView
+    EditProjectView, RedactorView, TestView, CreateScreenView, DeleteScreenView, CopyScreenView, EditScreenView, \
+    ScreenActionView
 
 # CONTENT URLS
 urlpatterns = [
@@ -16,6 +17,8 @@ urlpatterns = [
     path('delete_screen/', login_required(DeleteScreenView.as_view()), name='delete_screen'),
     path('copy_screen/', login_required(CopyScreenView.as_view()), name='copy_screen'),
     path('rename_screen/', login_required(EditScreenView.as_view()), name='edit_screen'),
+
+    path('screen/<str:action>', login_required(ScreenActionView.as_view()), name='screen_action'),
 
     path('redactor/<int:project>', login_required(RedactorView.as_view()), name='redactor'),
 

@@ -262,6 +262,22 @@ class CopyScreenView(View):
         return JsonResponse(response)
 
 
+class ScreenActionView(View):
+    # actions:
+    # 1. last_saved
+    # 2. save
+    #
+    def post(self, action, *args, **kwargs):
+        response = {}
+        if action == 'last_saved':
+            print('last_saved')
+            pass
+        if action == 'save':
+            print('save')
+            pass
+        return JsonResponse(response)
+
+
 class TestView(View):
     template_name = 'content/test_view.html'
 

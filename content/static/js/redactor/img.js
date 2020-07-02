@@ -80,12 +80,10 @@ const appendTemplate = (html) => {
     })
 };
 
-//Класс управления CRUD шаблонов INDEXDB
-_db = new SaverProgress(appendTemplate);
-//
+saver_user_progress = new SaverUserProgressScreen(appendTemplate);
 
 const main = () => {
-
+    saver_user_progress.runAutoSave()
 };
 
 main();

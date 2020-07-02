@@ -1,14 +1,13 @@
-class SaverUserProgressScreen {
+class SaverProgress {
     constructor(appendTemplate, timeout = 15) {
-        // Аргумент конструктура - функция,
-        // которая принимает шаблон и производит его вставку в редактор appendTemplate(html)
+        // Аргумент appendTemplate конструктура - функция вставки html скрина на сцену
         this.timeout = timeout;
         this.allowed_save = true;
         this.appendTemplate = appendTemplate;
-        $('.db_get_original').on('click', () => this.getOriginalBackendTemplate());
+        $('.get_original').on('click', () => this.getBackendTemplate());
     }
 
-    getActiveScreenHtml() {
+    getHtml() {
         let content = $('.main-svg').html()
             .replace(/currenteditable="true"/g, 'currenteditable="false"')
             .replace(/currentEditable="true"/g, '');
@@ -18,35 +17,37 @@ class SaverUserProgressScreen {
     saveTemplate() {
         if (this.allowed_save) {
             const id = this.getActiveId();
-            const active_template = this.getActiveScreenHtml();
-            //     AJAX SAVE SCREEN
+            const active_template = this.getHtml();
+            if (id) {
+                //    Отправка на сервер
+            }
         }
     }
 
-    getOriginalBackendTemplate(id) {
+    getActiveId() {
+        //ПОЛУЧТЬ ID 
+        return 1
+    }
+
+    getBackendTemplate(id) {
         this.allowed_save = false;
-        const node_id = this.getActiveId() || id;
         const self = this;
         $.ajax({
             type: 'GET',
             url: 'img/html',
             data: {
-                id: node_id
+                id: id
             },
-            success: (html) => {
-                self.appendTemplate(html);
+            success: (data) => {
+                self.appendTemplate(data['screen_html']);
                 this.allowed_save = true;
-                this.clearDragControlBox()
+                this.clearDragControlBox();
             }
         });
     }
 
     clearDragControlBox() {
         $('.moveable-control-box').empty()
-    }
-
-    getActiveId() {
-        // Вернуть активный ID установленного в редактор screen    
     }
 
     runAutoSave() {
