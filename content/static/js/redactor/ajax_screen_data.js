@@ -1,10 +1,12 @@
-class SaverProgress {
+class SaverUserProgressScreen {
     constructor(appendTemplate, timeout = 15) {
         // Аргумент appendTemplate конструктура - функция вставки html скрина на сцену
         this.timeout = timeout;
         this.allowed_save = true;
         this.appendTemplate = appendTemplate;
-        $('.get_original').on('click', () => this.getBackendTemplate());
+        this.getTemplate('init_screen');
+        $('.get_original_screen').on('click', () => this.getTemplate('original_screen'));
+        $('.get_screen').on('click', (e) => this.getTemplate('get_screen', $(e.target).data('screen-id')));
     }
 
     getHtml() {
@@ -16,27 +18,50 @@ class SaverProgress {
 
     saveTemplate() {
         if (this.allowed_save) {
-            const id = this.getActiveId();
+            const id = this.getActiveScreen();
             const active_template = this.getHtml();
             if (id) {
-                //    Отправка на сервер
+                $.ajax({
+                    type: 'GET',
+                    url: `/screen/save`,
+                    data: {
+                        layout: active_template,
+                    },
+                    success: (data) => {
+                        if (data.success) {
+                            console.log('Шаблон успешно сохранен')
+                        } else {
+                            console.error('ОШИБКА! Срин не сохранен!')
+
+                        }
+                    }
+                });
             }
         }
     }
 
-    getActiveId() {
-        //ПОЛУЧТЬ ID 
+    getActiveScreen() {
+        //ПОЛУЧТЬ ID
         return 1
     }
 
-    getBackendTemplate(id) {
+    getProjectId() {
+        //ПОЛУЧТЬ ID
+        return 1
+    }
+
+
+    getTemplate(action, screen_id) {
         this.allowed_save = false;
         const self = this;
+        const project_id = this.getProjectId()
         $.ajax({
             type: 'GET',
-            url: 'img/html',
+            url: `/screen/${action}`,
             data: {
-                id: id
+                id: id,
+                project_id: project_id,
+                action: action,
             },
             success: (data) => {
                 self.appendTemplate(data['screen_html']);
