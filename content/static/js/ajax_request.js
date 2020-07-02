@@ -10,6 +10,13 @@ function create_screens_success($form, data) {
     reload_js('/static/js/modal.js');
 }
 
+function rename_screen_success($form, data) {
+    let id = data['id']
+    let name = data['new_name']
+    $(`.screen_${id}`).find('h4').text(name)
+    $('.close_modal_rename').trigger('click')
+}
+
 function blinking_success($form) {
     let blink_success = $form.find('.blinking_success');
     blink_success.css('display', 'block');
@@ -134,10 +141,15 @@ $(document).ready(function () {
         let $form = $('#delete_screen_form');
         $form.find('#id_screen').val($(this).data('id'))
     })
-
     init_ajax_form($('#delete_screen_form'), true, delete_screen_success)
     $('.submit_delete_screen').click(() => $('#delete_screen_form').submit())
 
-    init_ajax_form($('#rename_screen_form'), true, create_screens_success)
+    init_ajax_form($('#rename_project_form'), false, rename_project_success)
+    $(document).on('click', '.preparation_edit_screen', function (e) {
+        e.preventDefault()
+        let $form = $('#rename_screen_form');
+        $form.find('#id_id').val($(this).data('id'))
+    })
+    init_ajax_form($('#rename_screen_form'), false, rename_screen_success)
     init_ajax_form($('#copy_screen_form'), true, create_screens_success)
 })

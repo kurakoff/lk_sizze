@@ -15,7 +15,7 @@ urlpatterns = [
     path('create_screen/', login_required(CreateScreenView.as_view()), name='create_screen'),
     path('delete_screen/', login_required(DeleteScreenView.as_view()), name='delete_screen'),
     path('copy_screen/', login_required(CopyScreenView.as_view()), name='copy_screen'),
-    path('rename_delete/', login_required(EditScreenView.as_view()), name='edit_screen'),
+    path('rename_screen/', login_required(EditScreenView.as_view()), name='edit_screen'),
 
     path('redactor/<int:project>', login_required(RedactorView.as_view()), name='redactor'),
 

@@ -229,7 +229,7 @@ class EditScreenView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             screen = Screen.objects.filter(pk=form.cleaned_data['id']).first()
-            screen.name = form.cleaned_data['name']
+            screen.name = form.cleaned_data['title']
             screen.save()
             response['result'] = True
             response['new_name'] = screen.name
