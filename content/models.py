@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 from tinymce.models import HTMLField
+from django.utils.timezone import now
 
 CASCADE = models.CASCADE
 
@@ -22,6 +25,7 @@ class Screen(models.Model):
     title = models.CharField(max_length=32, verbose_name='название', default='')
     layout = HTMLField(verbose_name='макет', default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    last_change = models.DateTimeField(verbose_name='последние изменение', default=now())
 
     class Meta:
         verbose_name = 'экран'

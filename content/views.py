@@ -9,6 +9,7 @@ from django.views import View
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
     EditScreenForm, DeleteScreenForm, CopyScreenForm
 from content.models import Prototype, Project, Screen
+from django.utils.timezone import now
 
 
 class IndexView(View):
@@ -248,6 +249,7 @@ class CopyScreenView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             screen = Screen.objects.filter(pk=form.cleaned_data['screen']).first()
+            screen.last_change = now()
             screen.pk = None
             screen.title = f'{screen.title}_copy'
             screen.save()
