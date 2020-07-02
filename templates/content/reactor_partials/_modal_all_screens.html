@@ -111,43 +111,120 @@
             </svg>
         </button>
     </div>
-    <div class="modal modal--select modal--animate-scale flex flex-center padding-md js-modal"
-         id="modal-select1">
-        <div class="modal__content format-width padding-md" role="alertdialog"
-             aria-labelledby="modal-select-title" aria-describedby="">
-            <p class="color-contrast-medium margin-bottom-xs text-center"
-               id="modal-select-title">Select a format:</p>
+    <div>
+        <div class="modal modal--select modal--animate-scale flex flex-center padding-md js-modal"
+             id="modal-select1">
+            <div class="modal__content format-width padding-md" role="alertdialog"
+                 aria-labelledby="modal-select-title" aria-describedby="">
+                <p class="color-contrast-medium margin-bottom-xs text-center"
+                   id="modal-select-title">Select a format:</p>
 
-            <ul class="full-screen-select flex flex-column gap-xxs js-full-screen-select"
-                role="listbox">
-                <li class=""><a href="#0"
-                                class="d-flex justify-content-between role-menu full-screen-select__option "
-                                role="option">PDF<span
-                        class="about_plan">FREE</span> </a></li>
-                <li class=""><a href="#0"
-                                class="d-flex justify-content-between role-menu full-screen-select__option "
-                                role="option">SVG<span
-                        class="about_plan">FREE</span> </a></li>
-                <li class=""><a href="#0"
-                                class="d-flex justify-content-between role-menu full-screen-select__option "
-                                role="option">JPEG<span
-                        class="about_plan">FREE</span> </a></li>
-                <li class=""><a href="#0"
-                                class="d-flex justify-content-between role-menu full-screen-select__option "
-                                role="option">PNG<span
-                        class="about_plan">FREE</span> </a></li>
-            </ul>
+                <ul class="full-screen-select flex flex-column gap-xxs js-full-screen-select"
+                    role="listbox">
+                    <li class=""><a href="#0"
+                                    class="d-flex justify-content-between role-menu full-screen-select__option "
+                                    role="option">PDF<span
+                            class="about_plan">FREE</span> </a></li>
+                    <li class=""><a href="#0"
+                                    class="d-flex justify-content-between role-menu full-screen-select__option "
+                                    role="option">SVG<span
+                            class="about_plan">FREE</span> </a></li>
+                    <li class=""><a href="#0"
+                                    class="d-flex justify-content-between role-menu full-screen-select__option "
+                                    role="option">JPEG<span
+                            class="about_plan">FREE</span> </a></li>
+                    <li class=""><a href="#0"
+                                    class="d-flex justify-content-between role-menu full-screen-select__option "
+                                    role="option">PNG<span
+                            class="about_plan">FREE</span> </a></li>
+                </ul>
+            </div>
+
+            <button class="reset modal__close-btn modal__close-btn--outer  js-modal__close js-tab-focus">
+                <svg class="icon icon--sm" viewBox="0 0 24 24">
+                    <title>Close modal window</title>
+                    <g fill="none" stroke="currentColor" stroke-miterlimit="10"
+                       stroke-width="2">
+                        <line x1="3" y1="3" x2="21" y2="21"/>
+                        <line x1="21" y1="3" x2="3" y2="21"/>
+                    </g>
+                </svg>
+            </button>
         </div>
+        <div id="dialog_rename_screen"
+             class="modal modal--animate-scale flex flex-center bg-contrast-higher bg-opacity-90% padding-md js-modal">
+            <div class="modal__content width-100% max-width-xs padding-md bg radius-md shadow-md" role="alertdialog"
+                 aria-labelledby="modal-form-title" aria-describedby="modal-form-description">
+                <div class="text-component margin-bottom-md">
+                    <h3 id="modal-form-title">Name of screen</h3>
+                </div>
 
-        <button class="reset modal__close-btn modal__close-btn--outer  js-modal__close js-tab-focus">
-            <svg class="icon icon--sm" viewBox="0 0 24 24">
-                <title>Close modal window</title>
-                <g fill="none" stroke="currentColor" stroke-miterlimit="10"
-                   stroke-width="2">
-                    <line x1="3" y1="3" x2="21" y2="21"/>
-                    <line x1="21" y1="3" x2="3" y2="21"/>
-                </g>
-            </svg>
-        </button>
+                <div class="container-fluid">
+                    <form action="{% url 'edit_screen' %}" class="margin-bottom-sm" id="rename_screen_form">
+                        {% csrf_token %}
+                        {{ form_edit_screen.id }}
+                        <div class="row">
+                        </div>
+                        <div class="row">
+                            {{ form_edit_screen.title|add_classes:'col-9 form-control flex-grow' }}
+                            <button class="col-3 ml-3 btn--color btn btn--primary">Save</button>
+                            <div class="col-5 error_input error_style">Place for errors</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <button class="reset modal__close-btn modal__close-btn--outer  js-modal__close js-tab-focus close_modal_rename">
+                <svg class="icon icon--sm" viewBox="0 0 24 24">
+                    <title>Close modal window</title>
+                    <g fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2">
+                        <line x1="3" y1="3" x2="21" y2="21"/>
+                        <line x1="21" y1="3" x2="3" y2="21"/>
+                    </g>
+                </svg>
+            </button>
+        </div>
+        <div id="dialog_delete_screen" class="dialog dialog--sticky js-dialog" data-animation="on">
+            <div class="dialog__content max-width-xxs" role="alertdialog" aria-labelledby="dialogTitle1"
+                 aria-describedby="dialogDescription1">
+                <div class="text-component">
+                    <h4 class="text-center" id="dialogTitle1">Delete screen?</h4>
+                </div>
+
+                <footer class="margin-top-md">
+                    <div class="flex justify-center gap-xs flex-wrap">
+                        <button class="btn btn--subtle js-dialog__close">Cancel</button>
+                        <button class="btn btn--color btn--accent submit_delete_screen">Delete</button>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <div id="dialog_copy_screen" class="dialog dialog--sticky js-dialog" data-animation="on">
+            <div class="dialog__content max-width-xxs" role="alertdialog" aria-labelledby="dialogTitle1"
+                 aria-describedby="dialogDescription1">
+                <div class="text-component">
+                    <h4 class="text-center" id="dialogTitle1">Duplicate a screen?</h4>
+                </div>
+
+                <footer class="margin-top-md">
+                    <div class="flex justify-center gap-xs flex-wrap">
+                        <button class="btn btn--subtle js-dialog__close">No</button>
+                        <button class="btn btn--color btn--accent submit_copy_screen">Yes</button>
+                    </div>
+                </footer>
+            </div>
+        </div>
     </div>
+
+    <form action="{% url 'copy_screen' %}" id="copy_screen_form" style="display: none">
+        {% csrf_token %}
+        {{ form_copy_screen.screen }}
+    </form>
+
+    <form action="{% url 'delete_screen' %}" id="delete_screen_form" style="display: none">
+        {% csrf_token %}
+        {{ form_delete_screen.screen }}
+    </form>
+
+
 </div>

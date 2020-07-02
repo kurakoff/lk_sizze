@@ -25,6 +25,12 @@ function delete_project_success() {
 }
 
 
+function delete_screen_success($form, data) {
+    let id = data.id
+    $(`.screen_${id}`).remove()
+    $('#dialog_delete_screen .js-dialog__close').trigger('click')
+}
+
 function copy_project_success($form, data) {
     let id = $('#delete_project_form').find('input#id_project').attr('value')
     $(data['html_project']).appendTo('.projects_container')
@@ -122,4 +128,16 @@ $(document).ready(function () {
 
     //    SCREENS
     init_ajax_form($('.form_create_screen'), true, create_screens_success)
+
+    $(document).on('click', '.preparation_delete_screen', function (e) {
+        e.preventDefault()
+        let $form = $('#delete_screen_form');
+        $form.find('#id_screen').val($(this).data('id'))
+    })
+
+    init_ajax_form($('#delete_screen_form'), true, delete_screen_success)
+    $('.submit_delete_screen').click(() => $('#delete_screen_form').submit())
+
+    init_ajax_form($('#rename_screen_form'), true, create_screens_success)
+    init_ajax_form($('#copy_screen_form'), true, create_screens_success)
 })

@@ -7,7 +7,7 @@ from django.template.loader import get_template, render_to_string
 from django.views import View
 
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
-    EditScreenForm, DeleteScreenForm
+    EditScreenForm, DeleteScreenForm, CopyScreenForm
 from content.models import Prototype, Project, Screen
 
 
@@ -168,6 +168,7 @@ class RedactorView(View):
     template_name = 'content/redactor.html'
     form_create_screen = CreateScreenForm
     form_edit_screen = EditScreenForm
+    form_copy_screen = CopyScreenForm
     form_delete_screen = DeleteScreenForm
 
     def get(self, request, project, *args, **kwargs):
@@ -177,6 +178,7 @@ class RedactorView(View):
             'form_create_screen': self.form_create_screen(initial={'project': project}),
             'form_edit_screen': self.form_edit_screen,
             'form_delete_screen': self.form_delete_screen,
+            'form_copy_screen': self.form_copy_screen,
             'screens': screens,
 
         })
@@ -199,6 +201,65 @@ class CreateScreenView(View):
         else:
             response['result'] = False
             response['errors'] = form.errors
+        return JsonResponse(response)
+
+
+class DeleteScreenView(View):
+    form_class = DeleteScreenForm
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            screen = Screen.objects.filter(pk=form.cleaned_data['screen']).first()
+            response['id'] = screen.id
+            screen.delete()
+            response['result'] = True
+        else:
+            response['errors'] = form.errors
+            response['result'] = False
+        return JsonResponse(response)
+
+
+class EditScreenView(View):
+    form_class = EditScreenForm
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            screen = Screen.objects.filter(pk=form.cleaned_data['id']).first()
+            screen.name = form.cleaned_data['name']
+            screen.save()
+            response['result'] = True
+            response['new_name'] = screen.name
+            response['id'] = screen.id
+        else:
+            response['result'] = False
+            response['errors'] = form.errors
+        return JsonResponse(response)
+
+
+class CopyScreenView(View):
+    form_class = DeleteScreenForm
+
+    def post(self, request, *args, **kwargs):
+        response = {}
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            screen = Screen.objects.filter(user=request.user, pk=form.cleaned_data['project']).first()
+            screens = screen.screen_set.all()
+            screen.pk = None
+            screen.name = f'{screen.name}_copy'
+            screen.save()
+            for screen in screens:
+                screen.pk = None
+                screen.screen = screen
+                screen.save()
+            response['result'] = True
+            response['html_screen'] = render_to_string('content/reactor_partials/_screen.html', {'screen': screen})
+        else:
+            response['result'] = False
         return JsonResponse(response)
 
 

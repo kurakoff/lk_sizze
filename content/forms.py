@@ -41,8 +41,16 @@ class EditScreenForm(forms.Form):
     id = forms.IntegerField(widget=forms.HiddenInput)
 
 
-class DeleteScreenForm(forms.Form):
-    project = forms.IntegerField(widget=forms.HiddenInput)
+class ScreenIdHiddenForm(forms.Form):
+    screen = forms.IntegerField(widget=forms.HiddenInput)
+
+
+class DeleteScreenForm(ScreenIdHiddenForm):
+    pass
+
+
+class CopyScreenForm(ScreenIdHiddenForm):
+    pass
 
 
 class DeleteProjectForm(forms.Form):
