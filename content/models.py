@@ -76,7 +76,7 @@ class CategoryPrototype(models.Model):
 class Element(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
     category_prototype = models.ForeignKey('CategoryPrototype', on_delete=CASCADE, default=1)
-    image = models.ImageField(upload_to='images_elements/', verbose_name='изображение')
+    image = models.FileField(upload_to='images_elements/', verbose_name='изображение')
     # TODO: сделать редактор кода
     layout = models.TextField(verbose_name='макет')
     active = models.BooleanField(verbose_name='on', default=True)
