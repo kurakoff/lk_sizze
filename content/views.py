@@ -297,6 +297,7 @@ class ScreenActionView(View):
             screen.layout = request.POST.get('layout')
             screen.last_change = now()
             screen.save()
+            response['result'] = True
         return JsonResponse(response)
 
 
