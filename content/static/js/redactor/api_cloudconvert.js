@@ -196,11 +196,16 @@ function sendJob(template, format, svg, pdf_url, count) {
     });
 }
 
-function OnConvert(format, svg, source) {
+function OnConvert(format, svg, goal) {
+    console.log('SL:D', goal)
     let ids_nodes = [];
-    if (source === 'active_screen') {
+    if (goal === 'active_screen') {
         ids_nodes.push(saver_user_progress.getActiveScreenID())
     }
+    if (goal === 'changed_screen') {
+        ids_nodes.push($('.data_data').data('changed_screen_id'))
+    }
+    console.log(ids_nodes)
     const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
     ids_nodes.forEach((id, index, array) => {
         let data = {

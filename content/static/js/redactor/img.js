@@ -84,6 +84,9 @@ $(document).ready(function () {
     };
 
     saver_user_progress = new SaverUserProgressScreen(appendTemplate);
+    $(document).on('click', 'a[aria-controls="modal-select1"]', function (e) {
+        $('.data_data').data('changed_screen_id', $(e.target).closest('a.menu__content').data('screen-id'))
+    })
 
     const main = () => {
         saver_user_progress.runAutoSave()

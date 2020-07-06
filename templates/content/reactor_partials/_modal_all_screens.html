@@ -110,6 +110,8 @@
                 </g>
             </svg>
         </button>
+
+
     </div>
     <div>
         <div class="modal modal--select modal--animate-scale flex flex-center padding-md js-modal"
@@ -123,17 +125,18 @@
                     role="listbox">
                     <li class=""><a href="#0"
                                     class="d-flex justify-content-between role-menu full-screen-select__option "
-                                    role="option">PDF<span
+                                    role="option" onclick="OnConvert('pdf', false, 'changed_screen')">PDF<span
                             class="about_plan">FREE</span> </a></li>
                     <li class=""><a href="#0"
                                     class="d-flex justify-content-between role-menu full-screen-select__option "
-                                    role="option">SVG<span
+                                    role="option" onclick="OnConvert('pdf', true, 'changed_screen')"
+                    >SVG<span
                             class="about_plan">FREE</span> </a></li>
-                    <li class=""><a href="#0"
+                    <li class=""><a href="#0" onclick="OnConvert('jpg', false, 'changed_screen')"
                                     class="d-flex justify-content-between role-menu full-screen-select__option "
                                     role="option">JPEG<span
                             class="about_plan">FREE</span> </a></li>
-                    <li class=""><a href="#0"
+                    <li class=""><a href="#0" onclick="OnConvert('png', false, 'changed_screen')"
                                     class="d-flex justify-content-between role-menu full-screen-select__option "
                                     role="option">PNG<span
                             class="about_plan">FREE</span> </a></li>

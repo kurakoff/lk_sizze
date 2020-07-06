@@ -28,6 +28,11 @@
     <link href={% static 'css/webflow.css' %} rel="stylesheet" type="text/css">
     <link href="{% static 'css/sizze.webflow.css' %}" rel="stylesheet" type="text/css">
     {% compress css %}
+        <link type="text/x-scss" href="{% static 'css/develop.scss' %}" rel="stylesheet"
+              media="screen">
+    {% endcompress %}
+
+    {% compress css %}
         <link type="text/x-scss" href="{% static 'css/style.scss' %}" rel="stylesheet"
               media="screen">
     {% endcompress %}
@@ -82,10 +87,6 @@
 <script src="{% static 'js/ajax_request.js' %}"></script>
 <script src="{% static 'js/redactor/img.js' %}"></script>
 
-{% compress css %}
-    <link type="text/x-scss" href="{% static 'css/develop.scss' %}" rel="stylesheet"
-          media="screen">
-{% endcompress %}
 
 </body>
 </html>
