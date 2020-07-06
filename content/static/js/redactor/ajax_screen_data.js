@@ -9,7 +9,7 @@ class SaverUserProgressScreen {
 
         this.getTemplate(undefined, 'init_screen');
         $('.get_original_screen').on('click', (e) => this.getTemplate(e, 'original_screen'));
-        $('.get_screen').on('click', (e) => this.getTemplate(e, 'get_screen', $(e.target).data('screen-id')));
+        $(document).on('click', '.get_screen', (e) => this.getTemplate(e, 'get_screen', $(e.target).data('screen-id')))
     }
 
     getHtml() {

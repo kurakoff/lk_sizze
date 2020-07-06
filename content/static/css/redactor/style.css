@@ -161,7 +161,7 @@ button:focus {
     border: 1px solid #EBEBEB !important;
     color: #393939 !important;
     padding: .84rem 5rem .84rem .84rem !important;
-    background-image: url(../img/c.svg) !important;
+    background-image: url(../../images/c.svg) !important;
     background-repeat: no-repeat !important;
     background-position: right 0.84rem center !important;
 

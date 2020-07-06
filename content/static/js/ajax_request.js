@@ -22,6 +22,20 @@ function init_ajax_form($form, clean = true, after_save) {
     });
 }
 
+function removerDoubleClass() {
+    $('.card__content').find('.get_screen').each(function (id, elem) {
+        $(elem).removeClass('get_screen')
+        $(elem).click(function () {
+            return false;
+        });
+
+    })
+}
+
+$(document).ready(function () {
+    removerDoubleClass()
+})
+
 function clear_form($form) {
     $form.find('input, textarea').each(function () {
         $(this).val('');
@@ -51,6 +65,7 @@ function create_screens_success($form, data) {
     $(data['html_screen']).appendTo('.screens_container')
     reload_js('/static/js/menu_project.js');
     reload_js('/static/js/modal.js');
+    removerDoubleClass()
 }
 
 function rename_screen_success($form, data) {
@@ -73,6 +88,7 @@ function copy_screen_success($form, data) {
     $('#dialog_copy_screen .js-dialog__close').trigger('click')
     reload_js('/static/js/menu_project.js');
     reload_js('/static/js/modal.js');
+    removerDoubleClass()
 }
 
 
@@ -82,6 +98,7 @@ function copy_project_success($form, data) {
     $('#dialog_copy_project .js-dialog__close').trigger('click')
     reload_js('/static/js/menu_project.js');
     reload_js('/static/js/modal.js');
+    removerDoubleClass()
 }
 
 function rename_project_success($form, data) {
