@@ -33,12 +33,6 @@ class SaverUserProgressScreen {
                     project_id: project_id,
                 }
                 $.post("/screen/save_screen", data, (response) => {
-                    if (response.success) {
-                        console.log('Шаблон успешно сохранен')
-                    } else {
-                        console.error('ОШИБКА! Срин не сохранен!')
-
-                    }
                 }, 'json')
             }
         }
