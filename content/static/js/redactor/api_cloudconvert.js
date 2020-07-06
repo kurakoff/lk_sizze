@@ -196,11 +196,20 @@ function sendJob(template, format, svg, pdf_url, count) {
     });
 }
 
-function OnConvert(format, svg) {
-    let ids_nodes = get_ids()
+function OnConvert(format, svg, source) {
+    let ids_nodes = [];
+    if (source === 'active_screen') {
+        ids_nodes.push(saver_user_progress.getActiveScreenID())
+    }
+    const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
     ids_nodes.forEach((id, index, array) => {
-        let template = saver_user_progress.getTemplate('get_screen', id)
-        sendJob($(result.template), format, svg, '', array.length)
+        let data = {
+            csrfmiddlewaretoken: csrf_token,
+            screen_id: id,
+        }
+        $.post(`/screen/get_screen`, data, (response) => {
+            sendJob($(response['screen_html']), format, svg, '', array.length)
+        }, 'json')
     })
 }
 

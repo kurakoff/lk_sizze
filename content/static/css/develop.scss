@@ -94,3 +94,8 @@
 .dropdown-menu-save, .dropdown-menu-share {
   top: 64px;
 }
+
+// Посмотреть, рамка вокруг палитры
+.pickr input :focus {
+  box-shadow: none !important;
+}

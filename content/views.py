@@ -272,7 +272,7 @@ class ScreenActionView(View):
     def post(self, request, action, *args, **kwargs):
         response = {}
         project_id = request.POST.get('project_id')
-        assert project_id
+        # assert project_id
         if action == 'init_screen':
             screen = Screen.objects.order_by('-last_change').filter(project_id=project_id).first()
             response['result'] = True

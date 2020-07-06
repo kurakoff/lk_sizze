@@ -46,8 +46,7 @@ class SaverUserProgressScreen {
         return $('.data_data').data('project-id')
     }
 
-    getTemplate(e, action) {
-        let screen_id;
+    getTemplate(e, action, screen_id = null) {
         if (e) {
             e.stopPropagation()
             e.preventDefault()
@@ -66,6 +65,7 @@ class SaverUserProgressScreen {
             this.appendTemplate(response['screen_html'], response.screen_id);
             this.allowed_save = true;
             this.clearDragControlBox();
+            return response
         }, 'json')
     }
 

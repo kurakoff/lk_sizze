@@ -85,18 +85,21 @@
             </div>
             <div class="window-menu dropdown-menu dropdown-menu-save"
                  aria-labelledby="dropdownMenuMenuFormat">
-                <button class='dropdown-item format-save-item export-pdf' onclick="OnConvert('pdf')">
+                <button class='dropdown-item format-save-item export-pdf'
+                        onclick="OnConvert('pdf', false, 'active_screen')">
                     Export as PDF <span class="about_plan">Free</span>
                 </button>
-                <button class='dropdown-item format-save-item export-img' onclick="OnConvert('jpg')">
+                <button class='dropdown-item format-save-item export-img'
+                        onclick="OnConvert('jpg', false, 'active_screen')">
                     Export as JPEG <span class="about_plan">Free</span>
                 </button>
-                <button class='dropdown-item format-save-item export-img' onclick="OnConvert('png')">
+                <button class='dropdown-item format-save-item export-img'
+                        onclick="OnConvert('png', false, 'active_screen')">
                     Export as
                     PNG <span class="about_plan">Free</span>
                 </button>
                 <button class='dropdown-item format-save-item export-svg'
-                        onclick="OnConvert('pdf', true)">Export as SVG <span
+                        onclick="OnConvert('pdf', true, 'active_screen')">Export as SVG <span
                         class="about_plan">Free</span>
                 </button>
             </div>
