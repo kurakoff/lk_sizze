@@ -72,3 +72,12 @@
   }
 }
 
+.top-menu, .tools-panel, .view-container__add {
+  .btn--primary {
+    background-color: transparent;
+  }
+}
+
+.sidebar__content button {
+  width: 100%;
+}
