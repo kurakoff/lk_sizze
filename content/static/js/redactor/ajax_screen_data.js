@@ -21,13 +21,16 @@ class SaverUserProgressScreen {
 
     saveTemplate() {
         if (this.allowed_save) {
-            const id = this.getActiveScreen();
+            const id = this.getActiveScreenID();
             const active_template = this.getHtml();
+            const project_id = this.getProjectId()
+
             if (id) {
                 const data = {
                     csrfmiddlewaretoken: this.csrf_token,
-                    id_screen: id,
+                    screen_id: id,
                     layout: active_template,
+                    project_id: project_id,
                 }
                 $.post("/screen/save_screen", data, (response) => {
                     if (response.success) {
@@ -41,19 +44,23 @@ class SaverUserProgressScreen {
         }
     }
 
-    getActiveScreen() {
-        //ПОЛУЧТЬ ID
-        return 1
+    getActiveScreenID() {
+        return $('.main-svg').data('screen_id')
     }
 
     getProjectId() {
-        //ПОЛУЧТЬ ID
-        return 1
+        return $('.data_data').data('project-id')
     }
 
-    getTemplate(e, action, screen_id) {
-        if (e) e.preventDefault()
-        if (e) e.stopPropagation()
+    getTemplate(e, action) {
+        let screen_id;
+        if (e) {
+            e.stopPropagation()
+            e.preventDefault()
+            screen_id = ($(e.target).closest('.get_screen').data('screen-id'))
+        }
+
+
         this.allowed_save = false;
         const project_id = this.getProjectId()
         const data = {
@@ -62,7 +69,7 @@ class SaverUserProgressScreen {
             project_id: project_id,
         }
         $.post(`/screen/${action}`, data, (response) => {
-            this.appendTemplate(response['screen_html']);
+            this.appendTemplate(response['screen_html'], response.screen_id);
             this.allowed_save = true;
             this.clearDragControlBox();
         }, 'json')

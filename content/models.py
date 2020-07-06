@@ -34,6 +34,9 @@ class Screen(models.Model):
     def __str__(self):
         return self.pk
 
+    def base_layout(self):
+        return self.project.prototype.base_layout
+
 
 class Prototype(models.Model):
     device_name = models.CharField(max_length=64, verbose_name='название')

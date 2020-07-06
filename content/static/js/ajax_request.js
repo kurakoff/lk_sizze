@@ -64,6 +64,7 @@ function delete_screen_success($form, data) {
     let id = data.id
     $(`.screen_${id}`).remove()
     $('#dialog_delete_screen .js-dialog__close').trigger('click')
+    saver_user_progress.getTemplate(undefined, 'init_screen');
 }
 
 function copy_screen_success($form, data) {

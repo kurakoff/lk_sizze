@@ -182,7 +182,7 @@ class RedactorView(View):
             'form_delete_screen': self.form_delete_screen,
             'form_copy_screen': self.form_copy_screen,
             'screens': screens,
-
+            'project': project,
         })
 
 
@@ -271,14 +271,32 @@ class ScreenActionView(View):
 
     def post(self, request, action, *args, **kwargs):
         response = {}
+        project_id = request.POST.get('project_id')
+        assert project_id
         if action == 'init_screen':
-            print('init_screen')
+            screen = Screen.objects.order_by('-last_change').filter(project_id=project_id).first()
+            response['result'] = True
+            response['screen_html'] = screen.layout
+            response['screen_id'] = screen.id
         if action == 'get_screen':
-            print('get_screen')
+            screen_id = request.POST.get('screen_id')
+            assert int(screen_id) > 0
+            screen = Screen.objects.get(pk=int(screen_id))
+            response['result'] = True
+            response['screen_html'] = screen.layout
+            response['screen_id'] = screen.id
         if action == 'original_screen':
-            print('original_screen')
+            screen_id = request.POST.get('screen_id')
+            screen = Screen.objects.get(pk=int(screen_id))
+            response['result'] = True
+            response['screen_html'] = screen.base_layout()
+            response['screen_id'] = screen.id
         if action == 'save_screen':
-            print('save_screen')
+            screen_id = request.POST.get('screen_id')
+            screen = Screen.objects.get(pk=int(screen_id))
+            screen.layout = request.POST.get('layout')
+            screen.last_change = now()
+            screen.save()
         return JsonResponse(response)
 
 

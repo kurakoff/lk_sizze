@@ -1,8 +1,10 @@
 // ВСТАВКА TEMPLATE В КОНТЕЙНЕР MAIN SVG
 $(document).ready(function () {
-    const appendTemplate = (html) => {
+    const appendTemplate = (html, screen_id) => {
         $('.main-svg').empty();
         $('.main-svg').append(html);
+        $('.main-svg').data('screen_id', screen_id)
+
         if (draggable) draggable.target = ""
 
         let imgWidth = parseInt($('.main-svg').css('width'));
