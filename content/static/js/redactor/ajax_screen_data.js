@@ -51,7 +51,7 @@ class SaverUserProgressScreen {
         if (e) {
             e.stopPropagation()
             e.preventDefault()
-            screen_id = ($(e.target).closest('.get_screen').data('screen-id'))
+            screen_id = ($(e.target).closest('.get_screen').data('screen-id')) || this.getActiveScreenID
         }
 
 
