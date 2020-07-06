@@ -264,17 +264,21 @@ class CopyScreenView(View):
 
 class ScreenActionView(View):
     # actions:
-    # 1. last_saved
-    # 2. save
-    #
-    def post(self, action, *args, **kwargs):
+    # 1) original_screen
+    # 2) get_screen
+    # 3) save_screen
+    # 3) init_screen
+
+    def post(self, request, action, *args, **kwargs):
         response = {}
-        if action == 'last_saved':
-            print('last_saved')
-            pass
-        if action == 'save':
-            print('save')
-            pass
+        if action == 'init_screen':
+            print('init_screen')
+        if action == 'get_screen':
+            print('get_screen')
+        if action == 'original_screen':
+            print('original_screen')
+        if action == 'save_screen':
+            print('save_screen')
         return JsonResponse(response)
 
 

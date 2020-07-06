@@ -4,9 +4,12 @@ class SaverUserProgressScreen {
         this.timeout = timeout;
         this.allowed_save = true;
         this.appendTemplate = appendTemplate;
-        this.getTemplate('init_screen');
-        $('.get_original_screen').on('click', () => this.getTemplate('original_screen'));
-        $('.get_screen').on('click', (e) => this.getTemplate('get_screen', $(e.target).data('screen-id')));
+        this.csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+
+
+        this.getTemplate(undefined, 'init_screen');
+        $('.get_original_screen').on('click', (e) => this.getTemplate(e, 'original_screen'));
+        $('.get_screen').on('click', (e) => this.getTemplate(e, 'get_screen', $(e.target).data('screen-id')));
     }
 
     getHtml() {
@@ -21,21 +24,19 @@ class SaverUserProgressScreen {
             const id = this.getActiveScreen();
             const active_template = this.getHtml();
             if (id) {
-                $.ajax({
-                    type: 'GET',
-                    url: `/screen/save`,
-                    data: {
-                        layout: active_template,
-                    },
-                    success: (data) => {
-                        if (data.success) {
-                            console.log('Шаблон успешно сохранен')
-                        } else {
-                            console.error('ОШИБКА! Срин не сохранен!')
+                const data = {
+                    csrfmiddlewaretoken: this.csrf_token,
+                    id_screen: id,
+                    layout: active_template,
+                }
+                $.post("/screen/save_screen", data, (response) => {
+                    if (response.success) {
+                        console.log('Шаблон успешно сохранен')
+                    } else {
+                        console.error('ОШИБКА! Срин не сохранен!')
 
-                        }
                     }
-                });
+                }, 'json')
             }
         }
     }
@@ -50,25 +51,21 @@ class SaverUserProgressScreen {
         return 1
     }
 
-
-    getTemplate(action, screen_id) {
+    getTemplate(e, action, screen_id) {
+        if (e) e.preventDefault()
+        if (e) e.stopPropagation()
         this.allowed_save = false;
-        const self = this;
         const project_id = this.getProjectId()
-        $.ajax({
-            type: 'GET',
-            url: `/screen/${action}`,
-            data: {
-                id: id,
-                project_id: project_id,
-                action: action,
-            },
-            success: (data) => {
-                self.appendTemplate(data['screen_html']);
-                this.allowed_save = true;
-                this.clearDragControlBox();
-            }
-        });
+        const data = {
+            csrfmiddlewaretoken: this.csrf_token,
+            screen_id: screen_id,
+            project_id: project_id,
+        }
+        $.post(`/screen/${action}`, data, (response) => {
+            this.appendTemplate(response['screen_html']);
+            this.allowed_save = true;
+            this.clearDragControlBox();
+        }, 'json')
     }
 
     clearDragControlBox() {

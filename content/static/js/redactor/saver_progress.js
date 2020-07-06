@@ -52,6 +52,7 @@ class SaverUserProgressScreen {
     runAutoSave() {
         setInterval(() => {
             this.saveTemplate();
+            console.log('save!')
         }, this.timeout * 1000);
     }
 }
