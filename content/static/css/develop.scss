@@ -81,3 +81,16 @@
 .sidebar__content button {
   width: 100%;
 }
+
+
+.no-main-svg {
+  .top-menu {
+    .flex-column {
+      position: relative;
+    }
+  }
+}
+
+.dropdown-menu-save, .dropdown-menu-share {
+  top: 64px;
+}

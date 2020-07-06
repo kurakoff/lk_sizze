@@ -68,56 +68,6 @@
                         </button>
 
 
-                        <div class="window-menu-share dropdown-menu dropdown-menu-share pt-0 pb-0 w-300"
-                             aria-labelledby="dropdownMenuMenuFormat">
-                            <button class="dropdown_padding dropdown-item copy-bottom-border">
-                                Copy link <span class="about_share">Copied!</span>
-
-                            </button>
-                            <div class="dropdown-item dropdown_padding">
-                                Share by e-mail:
-                                <!--    <input type="text" id="exampleForm2" class="form-control">    -->
-
-
-                                <form>
-                                    <!-- Grid row -->
-                                    <div class="form-row align-items-center non-flex">
-                                        <!-- Grid column -->
-                                        <div class="col-auto position-relative">
-                                            <!-- Default input -->
-                                            <label class="sr-only" for="inlineFormInput">Name</label>
-                                            <input type="text" class="form-control mb-2" id="inlineFormInput"
-                                                   placeholder="example@youmail.com">
-                                            <div class="col-auto share-sent-button">
-                                                <button type="submit"
-                                                        class="share-mail-button btn btn-primary btn-md mt-0">
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                              d="M1.82617 1.50098L2.73617 7.87099L3.25068 7.99962L2.73617 8.12825L1.82617 14.4983L14.8235 7.99962L1.82617 1.50098ZM3.92942 6.7948L3.50608 3.83149L11.8421 7.99951L3.50608 12.1675L3.92942 9.20422L8.74825 7.99951L3.92942 6.7948Z"
-                                                              fill="#393939"/>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!-- Grid column -->
-
-
-                                        <!-- Grid column -->
-
-                                        <!-- Grid column -->
-
-                                    </div>
-                                    <!-- Grid row -->
-                                </form>
-                                <!-- Default auto-sizing form -->
-
-                            </div>
-
-
-                        </div>
-
-
                         <button class="window-menu button-no-active shadow_none save btn btn--primary button-studio save-button save-button-menu"
                                 type="button">
 
@@ -130,26 +80,75 @@
 
 
                         </button>
-                        <div class="window-menu dropdown-menu dropdown-menu-save"
-                             aria-labelledby="dropdownMenuMenuFormat">
-                            <button class='dropdown-item format-save-item export-pdf' onclick="OnConvert('pdf')">
-                                Export as PDF <span class="about_plan">Free</span>
-                            </button>
-                            <button class='dropdown-item format-save-item export-img' onclick="OnConvert('jpg')">
-                                Export as JPEG <span class="about_plan">Free</span>
-                            </button>
-                            <button class='dropdown-item format-save-item export-img' onclick="OnConvert('png')">
-                                Export as
-                                PNG <span class="about_plan">Free</span>
-                            </button>
-                            <button class='dropdown-item format-save-item export-svg'
-                                    onclick="OnConvert('pdf', true)">Export as SVG <span
-                                    class="about_plan">Free</span>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
+            <div class="window-menu dropdown-menu dropdown-menu-save"
+                 aria-labelledby="dropdownMenuMenuFormat">
+                <button class='dropdown-item format-save-item export-pdf' onclick="OnConvert('pdf')">
+                    Export as PDF <span class="about_plan">Free</span>
+                </button>
+                <button class='dropdown-item format-save-item export-img' onclick="OnConvert('jpg')">
+                    Export as JPEG <span class="about_plan">Free</span>
+                </button>
+                <button class='dropdown-item format-save-item export-img' onclick="OnConvert('png')">
+                    Export as
+                    PNG <span class="about_plan">Free</span>
+                </button>
+                <button class='dropdown-item format-save-item export-svg'
+                        onclick="OnConvert('pdf', true)">Export as SVG <span
+                        class="about_plan">Free</span>
+                </button>
+            </div>
+            <div class="window-menu-share dropdown-menu dropdown-menu-share pt-0 pb-0 w-300"
+                 aria-labelledby="dropdownMenuMenuFormat">
+                <button class="dropdown_padding dropdown-item copy-bottom-border">
+                    Copy link <span class="about_share">Copied!</span>
+
+                </button>
+                <div class="dropdown-item dropdown_padding">
+                    Share by e-mail:
+                    <!--    <input type="text" id="exampleForm2" class="form-control">    -->
+
+
+                    <form>
+                        <!-- Grid row -->
+                        <div class="form-row align-items-center non-flex">
+                            <!-- Grid column -->
+                            <div class="col-auto position-relative">
+                                <!-- Default input -->
+                                <label class="sr-only" for="inlineFormInput">Name</label>
+                                <input type="text" class="form-control mb-2" id="inlineFormInput"
+                                       placeholder="example@youmail.com">
+                                <div class="col-auto share-sent-button">
+                                    <button type="submit"
+                                            class="share-mail-button btn btn-primary btn-md mt-0">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M1.82617 1.50098L2.73617 7.87099L3.25068 7.99962L2.73617 8.12825L1.82617 14.4983L14.8235 7.99962L1.82617 1.50098ZM3.92942 6.7948L3.50608 3.83149L11.8421 7.99951L3.50608 12.1675L3.92942 9.20422L8.74825 7.99951L3.92942 6.7948Z"
+                                                  fill="#393939"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Grid column -->
+
+
+                            <!-- Grid column -->
+
+                            <!-- Grid column -->
+
+                        </div>
+                        <!-- Grid row -->
+                    </form>
+                    <!-- Default auto-sizing form -->
+
+                </div>
+
+
+            </div>
+
             <div class="w-100 no-main-svg">
                 <div class="d-flex index-0 card-body justify-content-center no-main-svg">
 
