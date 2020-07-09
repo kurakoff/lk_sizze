@@ -51,6 +51,10 @@ class Prototype(models.Model):
 
     def __str__(self):
         return self.device_name
+    #
+    # @property
+    # def created_categories(self):
+    #     return self.categoryprototype_set.values_list('pk', flat=True)
 
 
 class Category(models.Model):

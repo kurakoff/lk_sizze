@@ -27,6 +27,18 @@ class CategoryPrototypeInline(nested_admin.NestedStackedInline):
     inlines = [ElementInline]
     extra = 0
 
+    # def get_queryset(self, request):
+    #     qs = super(CategoryPrototypeInline, self).get_queryset(request)
+    #     created_categories = self.parent_obj.created_categories
+    #     print(list(created_categories))
+    #     qs.filter(pk__notin=list(created_categories))
+    #     print(qs)
+    #     return qs
+    #
+    # def get_formset(self, request, obj=None, **kwargs):
+    #     self.parent_obj = obj
+    #     return super(CategoryPrototypeInline, self).get_formset(request, obj, **kwargs)
+
 
 class PrototypeAdmin(nested_admin.NestedModelAdmin):
     inlines = [CategoryPrototypeInline]
