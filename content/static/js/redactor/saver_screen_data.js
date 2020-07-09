@@ -65,7 +65,11 @@ class SaverUserProgressScreen {
             this.appendTemplate(response['screen_html'], response.screen_id);
             this.allowed_save = true;
             this.clearDragControlBox();
-            return response
+            if (action === 'get_screen') {
+                $('.off-canvas__close-btn').trigger('click')
+                $(".js-sidebar__close-btn").trigger('click');
+
+            }
         }, 'json')
     }
 

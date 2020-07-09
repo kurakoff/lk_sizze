@@ -1,4 +1,12 @@
 // ВСТАВКА TEMPLATE В КОНТЕЙНЕР MAIN SVG
+function open_sidebar_mobile_across_trigger() {
+    $(".top-menu button[aria-controls='sidebar']").trigger('click');
+}
+
+function close_sidebar_mobile_across_trigger() {
+    $(".js-sidebar__close-btn").trigger('click');
+}
+
 $(document).ready(function () {
     const appendTemplate = (html, screen_id) => {
         $('.main-svg').empty();
@@ -88,12 +96,189 @@ $(document).ready(function () {
         $('.data_data').data('changed_screen_id', $(e.target).closest('a.menu__content').data('screen-id'))
     })
     slider_preview = new SliderPreview()
+    saver_user_progress.runAutoSave()
 
-    const main = () => {
-        saver_user_progress.runAutoSave()
-    };
+    $('.fonts-style').click((event) => {
+        $(".top-menu button[aria-controls='sidebar']").trigger('click');
 
-    main();
+        if ($('.category-section:visible').get(0)) {
+            oldSection = '.category-section';
+        }
+        if ($('.html-list-section:visible').get(0)) {
+            oldSection = '.html-list-section';
+        }
+
+        if ($('.font-style-section:visible').get(0) && $('aside.sidebar').attr('role') !== 'alertdialog') {
+            $('.font-style-section').hide();
+            $(oldSection).show();
+            return;
+        } else {
+
+        }
+
+
+        $('.font-section').hide();
+        $('.category-section').hide();
+        $('.html-list-section').hide();
+        $('.fonts-style-list').empty();
+        $('.font-style-section').show();
+        $.ajax({
+            type: 'GET',
+            url: 'http://sizze.io/img/font-face',
+            data: {
+                font: $('.current-font').html()
+            },
+            success: (html) => {
+                html.faces.filter(face => {
+                    $('.fonts-style-list').append(`
+                    <button data-src="${face.src}" type="button" 
+                    class="list-group-item list-group-item-action"
+                    style="font-family: ${html.title}; font-style: ${face.title}"
+                    >${face.title}</button>
+                    
+                    `);
+                    $('.all_fonts').append(
+                        `
+                            <style>
+                                @font-face {
+                                    font-family: ${html.title};
+                                    src: url('${document.location.origin}/${face.fileName}') format('truetype');
+                                    font-style: ${face.title};
+                                }
+                            </style>
+                         `)
+                })
+
+                $('.fonts-style-list').click((event) => {
+                    if (event.target.tagName != 'BUTTON') return;
+
+                    close_sidebar_mobile_across_trigger()
+
+                    let pathToFont = $(event.target).attr('data-src');
+                    let face = $(event.target).html();
+                    let title = $('.current-font').html() + '-' + face;
+
+                    $('.main-svg').children().first().prepend(`
+                        <style class="fonts-style">
+                            @font-face {
+                                font-family: ${title};
+                                src: url('${document.location.origin}/${pathToFont}') format('truetype');
+                                font-style: ${face};
+                                font-weight: 400;
+                            }
+                            @font-face {
+                                font-family: ${title};
+                                src: url('${document.location.origin}/${pathToFont}') format('truetype');
+                                font-style: ${face};
+                                font-weight: 700;
+                            }
+                        </style>
+                    `);
+
+                    $('.current-font-style').html(face);
+                    $(CURRENT_EDIT_ELEMENT).css('font-family', title);
+                    $(CURRENT_EDIT_ELEMENT).data('font-family', $('.current-font').html());
+                    $(CURRENT_EDIT_ELEMENT).data('font-style', face);
+                    draggable.updateRect();
+                    draggable.updateTarget();
+                });
+            }
+        });
+
+    });
+
+    $('.format-button').click((event) => {
+        $('.font-container').addClass('collapse');
+        $('.font-container').removeClass('show');
+    });
+
+    $('.fonts').click((event) => {
+        open_sidebar_mobile_across_trigger()
+
+        if ($('.category-section:visible').get(0)) {
+            oldSection = '.category-section';
+        }
+        if ($('.html-list-section:visible').get(0)) {
+            oldSection = '.html-list-section';
+        }
+
+        if ($('.font-section:visible').get(0) && $('aside.sidebar').attr('role') !== 'alertdialog') {
+            $('.font-section').hide();
+            $(oldSection).show();
+            return;
+        } else {
+        }
+
+        $('.category-section').hide();
+        $('.html-list-section').hide();
+        $('.font-style-section').hide();
+        $('.font-section').show();
+
+        $.ajax({
+            type: 'GET',
+            url: 'http://sizze.io/img/font',
+            data: {
+                pivot: 0
+            },
+            success: (html) => {
+                html.filter((font) => {
+                    $('.fonts-list').append(
+                        `<button data-src="${font.src}" data-weight="regular" 
+                                 type="button" class="list-group-item list-group-item-action"
+                                 style="font-family: ${font.title}">
+                                    ${font.title}
+                          </button>`);
+                    $('.all_fonts').append(
+                        `
+                            <style>
+                                @font-face {
+                                    font-family: ${font.title};
+                                    src: url('${document.location.origin}/${font.src}') format('truetype');
+                                }
+                            </style>
+                            `
+                    )
+                })
+                // font.faces[0].title
+                $('.fonts-list').click((event) => {
+
+                    close_sidebar_mobile_across_trigger()
+
+                    if (event.target.tagName != 'BUTTON') return;
+
+
+                    let pathToFont = $(event.target).attr('data-src');
+                    let title = $(event.target).html();
+                    let font_weight = event.target.dataset.weight
+
+                    if ($('.main-svg').find(`.fonts-style-${title}`).length === 0) {
+                        $('.main-svg').children().first().prepend(`
+                        <style class="fonts-style fonts-style-${title}">
+                            @font-face {
+                                font-family: ${title};
+                                src: url('${document.location.origin}/${pathToFont}') format('truetype');
+                                font-weight: ${font_weight};
+                            }
+                        </style>
+                    `);
+                    }
+
+                    $(CURRENT_EDIT_ELEMENT).css('font-family', title);
+                    $(CURRENT_EDIT_ELEMENT).css('font-weight', "");
+                    $(CURRENT_EDIT_ELEMENT).data('font-family', title);
+                    updateCurrentFont();
+                    draggable.updateRect();
+                    draggable.updateTarget();
+                });
+            }
+        });
+
+    });
+
+    $('.format-button').click((event) => {
+        $('.font-container').addClass('collapse');
+        $('.font-container').removeClass('show');
+    });
 
 })
 
