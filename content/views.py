@@ -203,6 +203,7 @@ class CreateScreenView(View):
             response['result'] = True
             response['ids_project_screens'] = list(
                 Screen.objects.filter(project=screen.project).values_list('pk', flat=True))
+            response['id'] = screen.id
         else:
             response['result'] = False
             response['errors'] = form.errors

@@ -81,11 +81,22 @@
 
 }
 
-.button-no-active:hover {
+.top-menu .button-no-active:hover {
     background-color: #f9f9f9;
     background-repeat: no-repeat;
     background-position: center center;
 
+}
+
+.tools-panel .button-no-active:hover {
+    background-color: #f9f9f9;
+    background-repeat: no-repeat;
+    background-position: center center;
+
+}
+
+.tools-panel {
+    overflow: scroll;
 }
 
 .active-style-button svg path {

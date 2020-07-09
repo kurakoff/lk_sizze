@@ -71,6 +71,7 @@ function create_screens_success($form, data) {
 
     $('.data_data').data('ids_project_screens', data['ids_project_screens'])
     slider_preview.updateInit(false)
+    saver_user_progress.getTemplate(null, 'get_screen', data['id'])
 
 }
 
