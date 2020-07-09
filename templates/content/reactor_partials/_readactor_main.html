@@ -1,3 +1,4 @@
+{% load static %}
 <div class="data_data" data-ids_project_screens="{{ ids_project_screens }}" data-project-id="{{ project.id }}"
      data-screen-id="none" style="display: none">
 
@@ -561,7 +562,7 @@
 </div>
 <div class="_fade">
     <div class="image_loader">
-        <img class="load-img" src="/uploads/810.svg">
+        <img class="load-img" src="{% static 'images/810.svg' %}">
         <div class="load_text">Download in progress</div>
     </div>
 
