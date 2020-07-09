@@ -1,5 +1,7 @@
 from django.contrib import admin
 import nested_admin
+from tinymce.widgets import TinyMCE
+
 from .models import (
     Project,
     Screen,
@@ -8,6 +10,7 @@ from .models import (
     CategoryPrototype,
     Element,
 )
+from tinymce.models import HTMLField
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -27,6 +30,9 @@ class CategoryPrototypeInline(nested_admin.NestedStackedInline):
 
 class PrototypeAdmin(nested_admin.NestedModelAdmin):
     inlines = [CategoryPrototypeInline]
+    formfield_overrides = {
+        HTMLField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
+    }
 
 
 admin.site.register(Prototype, PrototypeAdmin)

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from tinymce.models import HTMLField
 from django.utils.timezone import now
+from tinymce.widgets import TinyMCE
 
 CASCADE = models.CASCADE
 
