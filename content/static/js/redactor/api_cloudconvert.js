@@ -30,6 +30,7 @@ function create_zip() {
                         fileLinks = []
                         $('.main-svg-container ._fade').remove()
                         $('#off-canvas-1 ._fade').remove()
+                        $('#modal-select1 ._fade').remove()
                         $('button.save-button-menu').attr('disabled', false)
                     })
             }
@@ -210,11 +211,11 @@ function OnConvert(format, svg, goal) {
         fade.css('display', 'block')
         fade.appendTo('.main-svg-container')
         fade.appendTo('#off-canvas-1')
+        fade.appendTo('#modal-select1')
         $('button.save-button-menu').attr('disabled', true)
 
     }
-
-    console.log(ids_nodes)
+    // console.log(ids_nodes)
     const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
     ids_nodes.forEach((id, index, array) => {
         let data = {
