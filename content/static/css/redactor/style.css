@@ -737,8 +737,8 @@ button.save-button-menu[disabled] {
 
 .share-sent-button {
     position: absolute;
-    top: 1px;
-    right: 34px;
+    top: 4px;
+    right: -12px;
 }
 
 .w-300 {

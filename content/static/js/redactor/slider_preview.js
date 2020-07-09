@@ -1,19 +1,19 @@
 class SliderPreview {
     // Сладер, динамический
-    // updateInit Запускается каждый раз когда нажимается кнопка просмотра
+    // updateInit запустить при изменении kit screen
 
     constructor() {
         this.container = '.owl-carousel'
         this.items = []
-        this.current_root = 0
         this.ids_nodes = []
         $('#show_preview').click(() => {
-            this.updateInit()
+            this.updateInit(true)
         })
         $('.close_slider').click(() => {
             this.hideSlider()
         })
         this.owl = '';
+        this.show_now = true
     }
 
     init() {
@@ -44,9 +44,15 @@ class SliderPreview {
     }
 
     getTemplate(id, is_last) {
-        $.post(`/screen/${action}`, data, (response) => {
+        const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+        let data = {
+            csrfmiddlewaretoken: csrf_token,
+            screen_id: id,
+        }
+        $.post(`/screen/get_screen`, data, (response) => {
             $(this.container).append(`<div class="slide_container">${response['screen_html']}</div>`)
-            if (is_last) {
+            console.log(this.show_now, is_last, this.show_now && is_last)
+            if (this.show_now && is_last) {
                 setTimeout(() => {
                     this.init()
                 }, 500)
@@ -66,19 +72,17 @@ class SliderPreview {
     }
 
     getItems(ids) {
+        // TODO: Зачем делать каждый request отдельно на id??? ->>> []ids
         ids.forEach((id, index, array) => {
             this.getTemplate(id, index === array.length - 1)
         })
     }
 
-    updateInit() {
-        if (true) {
-            this.destroy()
-            this.items = []
-            this.ids_nodes = $('.data_data').data('ids_project_screens')
-            this.getItems(this.ids_nodes)
-        } else if (this.owl) {
-            this.showSlider()
-        }
+    updateInit(show_now) {
+        this.destroy()
+        this.items = []
+        this.ids_nodes = $('.data_data').data('ids_project_screens')
+        this.getItems(this.ids_nodes)
+        this.show_now = show_now
     }
 }

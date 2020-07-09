@@ -285,6 +285,7 @@ class ScreenActionView(View):
         # assert project_id
         if action == 'init_screen':
             screen = Screen.objects.order_by('-last_change').filter(project=project).first()
+            print(screen.title)
             if not screen:
                 screen = Screen(title='screen#1', project=project, layout=project.prototype.base_layout)
                 screen.save()

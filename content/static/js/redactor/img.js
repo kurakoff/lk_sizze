@@ -87,6 +87,7 @@ $(document).ready(function () {
     $(document).on('click', 'a[aria-controls="modal-select1"]', function (e) {
         $('.data_data').data('changed_screen_id', $(e.target).closest('a.menu__content').data('screen-id'))
     })
+    slider_preview = new SliderPreview()
 
     const main = () => {
         saver_user_progress.runAutoSave()

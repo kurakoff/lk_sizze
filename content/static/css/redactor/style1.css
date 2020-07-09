@@ -9098,7 +9098,7 @@ html:not(.js) .file-upload__input {
     top: 0;
     right: 0;
     cursor: pointer;
-    background: url("../img/close_button.jpg");
+    background: url("../../images/close_button.jpg");
     background-size: contain;
     background-repeat: no-repeat;
 
