@@ -175,7 +175,7 @@ class RedactorView(View):
     def get(self, request, project, *args, **kwargs):
         project = get_object_or_404(Project, pk=project, user=request.user)
         screens = project.screen_set.all()
-
+        ids_project_screens = list(Screen.objects.filter(project=project).values_list('pk', flat=True))
         return render(request, self.template_name, {
             'form_create_screen': self.form_create_screen(initial={'project': project}),
             'form_edit_screen': self.form_edit_screen,
@@ -183,6 +183,7 @@ class RedactorView(View):
             'form_copy_screen': self.form_copy_screen,
             'screens': screens,
             'project': project,
+            'ids_project_screens': ids_project_screens,
         })
 
 
@@ -200,6 +201,8 @@ class CreateScreenView(View):
             screen.save()
             response['html_screen'] = render_to_string('content/reactor_partials/_screen.html', {'screen': screen})
             response['result'] = True
+            response['ids_project_screens'] = list(
+                Screen.objects.filter(project=screen.project).values_list('pk', flat=True))
         else:
             response['result'] = False
             response['errors'] = form.errors
@@ -214,9 +217,12 @@ class DeleteScreenView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             screen = Screen.objects.filter(pk=form.cleaned_data['screen']).first()
+            project_id = screen.project.id
             response['id'] = screen.id
             screen.delete()
             response['result'] = True
+            response['ids_project_screens'] = list(
+                Screen.objects.filter(project_id=project_id).values_list('pk', flat=True))
         else:
             response['errors'] = form.errors
             response['result'] = False
@@ -250,12 +256,14 @@ class CopyScreenView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             screen = Screen.objects.filter(pk=form.cleaned_data['screen']).first()
+            project = screen.project
             screen.last_change = now()
             screen.pk = None
             screen.title = f'{screen.title}_copy'
             screen.save()
 
             response['result'] = True
+            response['ids_project_screens'] = list(Screen.objects.filter(project=project).values_list('pk', flat=True))
             response['html_screen'] = render_to_string('content/reactor_partials/_screen.html', {'screen': screen})
         else:
             response['result'] = False
@@ -272,9 +280,14 @@ class ScreenActionView(View):
     def post(self, request, action, *args, **kwargs):
         response = {}
         project_id = request.POST.get('project_id')
+        if project_id:
+            project = Project.objects.get(pk=project_id)
         # assert project_id
         if action == 'init_screen':
-            screen = Screen.objects.order_by('-last_change').filter(project_id=project_id).first()
+            screen = Screen.objects.order_by('-last_change').filter(project=project).first()
+            if not screen:
+                screen = Screen(title='screen#1', project=project, layout=project.prototype.base_layout)
+                screen.save()
             response['result'] = True
             response['screen_html'] = screen.layout
             response['screen_id'] = screen.id

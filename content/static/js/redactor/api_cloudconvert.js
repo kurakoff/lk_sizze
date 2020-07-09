@@ -29,6 +29,7 @@ function create_zip() {
                     .then(() => {
                         fileLinks = []
                         $('.main-svg-container ._fade').remove()
+                        $('#off-canvas-1 ._fade').remove()
                         $('button.save-button-menu').attr('disabled', false)
                     })
             }
@@ -114,9 +115,6 @@ function sendFormToUpload(template, task, width_cm, height_cm, format) {
 
 function sendJob(template, format, svg, pdf_url, count) {
     fileFormat = format
-    const fade = $('._fade').clone()
-    fade.appendTo('.main-svg-container')
-    $('button.save-button-menu').attr('disabled', true)
 
     let width = parseInt(template.css('width'), 10)
     let height = parseInt(template.css('height'), 10)
@@ -197,7 +195,6 @@ function sendJob(template, format, svg, pdf_url, count) {
 }
 
 function OnConvert(format, svg, goal) {
-    console.log('SL:D', goal)
     let ids_nodes = [];
     if (goal === 'active_screen') {
         ids_nodes.push(saver_user_progress.getActiveScreenID())
@@ -205,6 +202,18 @@ function OnConvert(format, svg, goal) {
     if (goal === 'changed_screen') {
         ids_nodes.push($('.data_data').data('changed_screen_id'))
     }
+    if (goal === 'all_screen') {
+        ids_nodes = Array.from($('.data_data').data('ids_project_screens'))
+    }
+    if (ids_nodes.length > 0) {
+        const fade = $('._fade').clone()
+        fade.css('display', 'block')
+        fade.appendTo('.main-svg-container')
+        fade.appendTo('#off-canvas-1')
+        $('button.save-button-menu').attr('disabled', true)
+
+    }
+
     console.log(ids_nodes)
     const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
     ids_nodes.forEach((id, index, array) => {

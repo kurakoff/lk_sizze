@@ -53,24 +53,27 @@
                     </svg>
                     Download All Screens
                 </button>
-
+                {#format, svg, goal#}
                 <menu id="menu-example" class="menu js-menu">
                     <li role="menuitem">
-                        <span class="menu__content d-flex justify-content-between js-menu__content">
+                        <span onclick="OnConvert('pdf', true, 'all_screen')"
+                              class="menu__content d-flex justify-content-between js-menu__content">
 
                               <span>SVG</span>  <span class="about_plan">FREE</span>
                             </span>
                     </li>
 
                     <li role="menuitem">
-                         <span class="menu__content d-flex justify-content-between js-menu__content">
+                         <span onclick="OnConvert('pdf', false, 'all_screen')"
+                               class="menu__content d-flex justify-content-between js-menu__content">
 
                               <span>PDF</span>  <span class="about_plan">FREE</span>
                             </span>
                     </li>
 
                     <li role="menuitem">
-                        <span class="menu__content d-flex justify-content-between js-menu__content">
+                        <span onclick="OnConvert('jpg', false, 'all_screen')"
+                              class="menu__content d-flex justify-content-between js-menu__content">
 
                           <span>JPEG</span>
                              <span class="about_plan">FREE</span>
@@ -79,7 +82,8 @@
                     </li>
 
                     <li role="menuitem">
-                          <span class="menu__content d-flex justify-content-between js-menu__content">
+                          <span onclick="OnConvert('png', false, 'all_screen')"
+                                class="menu__content d-flex justify-content-between js-menu__content">
 
                               <span>PNG</span>  <span class="about_plan">FREE</span>
                             </span>

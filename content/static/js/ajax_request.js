@@ -66,6 +66,7 @@ function create_screens_success($form, data) {
     reload_js('/static/js/menu_project.js');
     reload_js('/static/js/modal.js');
     removerDoubleClass()
+    $('.data_data').data('ids_project_screens', data['ids_project_screens'])
 }
 
 function rename_screen_success($form, data) {
@@ -79,7 +80,11 @@ function delete_screen_success($form, data) {
     let id = data.id
     $(`.screen_${id}`).remove()
     $('#dialog_delete_screen .js-dialog__close').trigger('click')
+    // TODO: условие что screen текущий
     saver_user_progress.getTemplate(undefined, 'init_screen');
+    //
+    $('.data_data').data('ids_project_screens', data['ids_project_screens'])
+
 }
 
 function copy_screen_success($form, data) {
@@ -89,6 +94,8 @@ function copy_screen_success($form, data) {
     reload_js('/static/js/menu_project.js');
     reload_js('/static/js/modal.js');
     removerDoubleClass()
+    $('.data_data').data('ids_project_screens', data['ids_project_screens'])
+
 }
 
 

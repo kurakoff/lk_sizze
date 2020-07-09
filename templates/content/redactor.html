@@ -23,10 +23,15 @@
     <link href="{% static 'css/redactor/nano.min.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/redactor/item.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/redactor/desktopHd.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/redactor/croppie.css' %}" rel="stylesheet" type="text/css">
 
     <link href="{% static 'css/normalize.css' %}" rel="stylesheet" type="text/css">
     <link href={% static 'css/webflow.css' %} rel="stylesheet" type="text/css">
     <link href="{% static 'css/sizze.webflow.css' %}" rel="stylesheet" type="text/css">
+
+    <link href="{% static 'js/libs/owlcarousel/assets/owl.carousel.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'js/libs/owlcarousel/assets/owl.theme.default.css' %}" rel="stylesheet" type="text/css">
+
     {% compress css %}
         <link type="text/x-scss" href="{% static 'css/develop.scss' %}" rel="stylesheet"
               media="screen">
@@ -63,7 +68,7 @@
 <script src="{% static 'js/libs/FileSaver.js' %}"></script>
 
 <script src="{% static 'js/redactor/croppie.js' %}"></script>
-<script src="{% static 'js/redactor/ajax_screen_data.js' %}"></script>
+<script src="{% static 'js/redactor/saver_screen_data.js' %}"></script>
 
 <script src="{% static 'js/redactor/pickr_create.js' %}"></script>
 
@@ -86,6 +91,7 @@
 {##}
 <script src="{% static 'js/ajax_request.js' %}"></script>
 <script src="{% static 'js/redactor/img.js' %}"></script>
+<script src="{% static 'js/redactor/slider_preview.js' %}"></script>
 
 
 </body>
