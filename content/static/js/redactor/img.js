@@ -28,24 +28,12 @@ $(document).ready(function () {
             $('.main-svg').css('transform', `scale(0.5)`);
         }
 
-        // $('[data-set="true"]').on('click', (event) => {
-        //     let clickCounter = +$(event.target).attr('clickCounter');
-        //     if (clickCounter == 1) return;
-        //
-        //     editableHandler(event);
-        // });
-
         $(document).on('click', '[data-set="true"]', function (event) {
-            console.log('on [data-set="true"]', $(event.target))
+            // console.log('on [data-set="true"]', $(event.target))
             let clickCounter = +$(event.target).attr('clickCounter');
             if (clickCounter == 1) return;
             editableHandler(event);
         })
-
-        // $(document).on('click', '', function (event) {
-        // })
-
-        // $('[data-set="true"]').on('click', getToolsPanel);
 
         $(document).on('click', '[data-set="true"]', getToolsPanel)
 
@@ -56,7 +44,7 @@ $(document).ready(function () {
         $('[data-type="text"]').attr('clickCounter', 0);
 
         $(document).on('click', '[data-type="text"]', function (event) {
-            console.log('on click [data-type="text"]', $(event.target))
+            // console.log('on click [data-type="text"]', $(event.target))
 
             let clickCounter = +$(event.target).attr('clickCounter');
             if (clickCounter === 1) {
@@ -68,22 +56,11 @@ $(document).ready(function () {
                 $(event.target).attr('clickCounter', clickCounter);
             }
         })
-        //
-        // $('[data-type="text"]').on('click', (event) => {
-        //     let clickCounter = +$(event.target).attr('clickCounter');
-        //     if (clickCounter === 1) {
-        //         draggable.draggable = false;
-        //         draggable.snappable = false;
-        //         $(event.target).css('cursor', 'text');
-        //     } else {
-        //         clickCounter++;
-        //         $(event.target).attr('clickCounter', clickCounter);
-        //     }
-        // });
+        
 
-        $(document).on('blur', '[data-type="text"]', function (event) {
-
+        $('[data-type="text"]').blur((event) => {
             console.log('on click blur  [data-type="text"]', $(event.target))
+
             let clickCounter = +$(event.target).attr('clickCounter');
 
             if (clickCounter == 1) {
@@ -94,17 +71,6 @@ $(document).ready(function () {
             }
         });
 
-        // $('[data-type="text"]').blur((event) => {
-        //     let clickCounter = +$(event.target).attr('clickCounter');
-        //
-        //     if (clickCounter == 1) {
-        //         draggable.draggable = true;
-        //         draggable.snappable = true;
-        //         $(event.target).css('cursor', 'move');
-        //         $(event.target).attr('clickCounter', 0);
-        //     }
-        // });
-        //
         $('.main-svg').contextmenu((event) => {
             $('.contextmenu').css('display', 'inline-block');
             $('.contextmenu').css('left', event.pageX);
