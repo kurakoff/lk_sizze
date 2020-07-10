@@ -7,6 +7,8 @@ function close_sidebar_mobile_across_trigger() {
     $(".js-sidebar__close-btn").trigger('click');
 }
 
+const fonts_origin = 'http://sizze.io'
+
 $(document).ready(function () {
     const appendTemplate = (html, screen_id) => {
         $('.main-svg').empty();
@@ -151,7 +153,7 @@ $(document).ready(function () {
                             <style>
                                 @font-face {
                                     font-family: ${html.title};
-                                    src: url('${document.location.origin}/${face.fileName}') format('truetype');
+                                    src: url('${fonts_origin}/${face.src}') format('truetype');
                                     font-style: ${face.title};
                                 }
                             </style>
@@ -171,13 +173,13 @@ $(document).ready(function () {
                         <style class="fonts-style">
                             @font-face {
                                 font-family: ${title};
-                                src: url('${document.location.origin}/${pathToFont}') format('truetype');
+                                src: url('${fonts_origin}/${pathToFont}') format('truetype');
                                 font-style: ${face};
                                 font-weight: 400;
                             }
                             @font-face {
                                 font-family: ${title};
-                                src: url('${document.location.origin}/${pathToFont}') format('truetype');
+                                src: url('${fonts_origin}/${pathToFont}') format('truetype');
                                 font-style: ${face};
                                 font-weight: 700;
                             }
@@ -231,8 +233,9 @@ $(document).ready(function () {
             },
             success: (html) => {
                 html.filter((font) => {
+                    let font_src = `${font.src}`
                     $('.fonts-list').append(
-                        `<button data-src="${font.src}" data-weight="regular" 
+                        `<button data-src="${font_src}" data-weight="regular" 
                                  type="button" class="list-group-item list-group-item-action"
                                  style="font-family: ${font.title}">
                                     ${font.title}
@@ -242,7 +245,7 @@ $(document).ready(function () {
                             <style>
                                 @font-face {
                                     font-family: ${font.title};
-                                    src: url('${document.location.origin}/${font.src}') format('truetype');
+                                    src: url('${fonts_origin}/${font_src}') format('truetype');
                                 }
                             </style>
                             `
@@ -265,7 +268,7 @@ $(document).ready(function () {
                         <style class="fonts-style fonts-style-${title}">
                             @font-face {
                                 font-family: ${title};
-                                src: url('${document.location.origin}/${pathToFont}') format('truetype');
+                                src: url('${fonts_origin}/${pathToFont}') format('truetype');
                                 font-weight: ${font_weight};
                             }
                         </style>
