@@ -58,7 +58,7 @@ $(document).ready(function () {
                 $(event.target).attr('clickCounter', clickCounter);
             }
         })
-        
+
 
         $('[data-type="text"]').blur((event) => {
             console.log('on click blur  [data-type="text"]', $(event.target))
@@ -112,27 +112,17 @@ $(document).ready(function () {
     $('.fonts-style').click((event) => {
         $(".top-menu button[aria-controls='sidebar']").trigger('click');
 
-        if ($('.category-section:visible').get(0)) {
-            oldSection = '.category-section';
-        }
-        if ($('.html-list-section:visible').get(0)) {
-            oldSection = '.html-list-section';
-        }
-
         if ($('.font-style-section:visible').get(0) && $('aside.sidebar').attr('role') !== 'alertdialog') {
             $('.font-style-section').hide();
-            $(oldSection).show();
             return;
-        } else {
-
         }
 
-
         $('.font-section').hide();
-        $('.category-section').hide();
+        $('.category-section').show();
         $('.html-list-section').hide();
         $('.fonts-style-list').empty();
         $('.font-style-section').show();
+
         $.ajax({
             type: 'GET',
             url: 'http://sizze.io/img/font-face',
@@ -196,6 +186,19 @@ $(document).ready(function () {
             }
         });
 
+    });
+    $('.font-select-button').click(() => {
+        $('.fonts-style-list').empty();
+
+        if ($('.font-style-section:visible').get(0) && oldSection == '.html-list-section') {
+            $('.font-style-section').hide();
+            $('.html-list-section').show();
+            return;
+        }
+
+        $('.font-style-section').hide();
+        $('.font-section').hide();
+        $('.category-section').show();
     });
 
     $('.format-button').click((event) => {
