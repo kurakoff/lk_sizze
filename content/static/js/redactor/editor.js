@@ -777,29 +777,6 @@ function updateView() {
     })
 }
 
-// $('.pcr-swatches').click((event) => {
-//     if (event.target.tagName != 'BUTTON') return;
-//
-//     let color = $(event.target).css('color');
-//     $('.pickr .pcr-button').css('color', color);
-//
-//     if ($(CURRENT_EDIT_ELEMENT).prop('tagName') == 'svg') {
-//         $(CURRENT_EDIT_ELEMENT).find('[data-edit-item="true"]').attr('stroke', color);
-//         $(CURRENT_EDIT_ELEMENT).find('[data-edit-item="true"]').attr('fill', color);
-//
-//         return;
-//     }
-//     if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'background-color') {
-//         $(CURRENT_EDIT_ELEMENT).css('background', $('.pcr-result').val());
-//         return;
-//     }
-//     if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'background-element') {
-//         $(CURRENT_EDIT_ELEMENT).css('background', $('.pcr-result').val());
-//         return;
-//     }
-//     $(CURRENT_EDIT_ELEMENT).css('color', color);
-// });
-
 
 $('.main-svg').click((event) => {
     let element = $(event.target);
