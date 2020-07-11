@@ -197,25 +197,28 @@ function sendJob(template, format, svg, pdf_url, count) {
 
 function OnConvert(format, svg, goal) {
     let ids_nodes = [];
+    const fade = $('._fade').clone()
+    fade.css('display', 'block')
+    $('button.save-button-menu').attr('disabled', true)
+
     if (goal === 'active_screen') {
-        ids_nodes.push(saver_user_progress.getActiveScreenID())
+        fade.appendTo('.main-svg-container')
+        let screen_html = saver_user_progress.getHtml()
+        sendJob($(screen_html), format, svg, '', 1)
+        return
     }
+
     if (goal === 'changed_screen') {
         ids_nodes.push($('.data_data').data('changed_screen_id'))
+        fade.appendTo('#modal-select1')
+
     }
     if (goal === 'all_screen') {
         ids_nodes = Array.from($('.data_data').data('ids_project_screens'))
-    }
-    if (ids_nodes.length > 0) {
-        const fade = $('._fade').clone()
-        fade.css('display', 'block')
-        fade.appendTo('.main-svg-container')
         fade.appendTo('#off-canvas-1')
-        fade.appendTo('#modal-select1')
-        $('button.save-button-menu').attr('disabled', true)
-
     }
-    // console.log(ids_nodes)
+
+
     const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
     ids_nodes.forEach((id, index, array) => {
         let data = {
