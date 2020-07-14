@@ -8,7 +8,7 @@ from django.views import View
 
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
     EditScreenForm, DeleteScreenForm, CopyScreenForm
-from content.models import Prototype, Project, Screen, Category
+from content.models import Prototype, Project, Screen, Category, Element
 from django.utils.timezone import now
 
 
@@ -176,6 +176,9 @@ class RedactorView(View):
         project = get_object_or_404(Project, pk=project, user=request.user)
         screens = project.screen_set.all()
         ids_project_screens = list(Screen.objects.filter(project=project).values_list('pk', flat=True))
+        prototype_pk = project.prototype.pk
+        categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
+
         return render(request, self.template_name, {
             'form_create_screen': self.form_create_screen(initial={'project': project}),
             'form_edit_screen': self.form_edit_screen,
@@ -184,6 +187,8 @@ class RedactorView(View):
             'screens': screens,
             'project': project,
             'ids_project_screens': ids_project_screens,
+            'categories': categories,
+            'prototype_pk': prototype_pk,
         })
 
 
@@ -312,6 +317,16 @@ class ScreenActionView(View):
             screen.last_change = now()
             screen.save()
             response['result'] = True
+        return JsonResponse(response)
+
+
+class ElementView(View):
+    def post(self, request):
+        response = {}
+        element_id = request.POST.get('element_id')
+        element = Element.objects.get(pk=element_id)
+        response['result'] = True
+        response['layout'] = element.layout
         return JsonResponse(response)
 
 

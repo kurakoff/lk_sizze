@@ -1,6 +1,8 @@
 from django import template
 from django.urls import reverse
 
+from content.models import Element
+
 register = template.Library()
 
 
@@ -25,3 +27,8 @@ def add_classes(value, arg):
             css_classes.append(a)
     # join back to single string
     return value.as_widget(attrs={'class': ' '.join(css_classes)})
+
+
+@register.filter(name='get_elements_on_prototype')
+def get_elements_on_prototype(category, prototype_pk):
+    return Element.objects.filter(category_prototype__category=category.id, category_prototype__prototype=prototype_pk)

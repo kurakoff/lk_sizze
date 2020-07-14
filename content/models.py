@@ -69,7 +69,8 @@ class Category(models.Model):
         return self.title
 
     def get_elements_on_prototype(self, prototype_id):
-        return Element.objects.filter(category_prototype__category=self.id, category_prototype__prototype=prototype_id)
+        return Element.objects.filter(category_prototype__category=self.id,
+                                      category_prototype__prototype=prototype_id).all()
 
 
 class CategoryPrototype(models.Model):

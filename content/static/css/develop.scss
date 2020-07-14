@@ -103,3 +103,10 @@
 .font-select-button {
   width: auto !important;
 }
+
+.view-container__wrap {
+
+  &.drag_border {
+    border: 5px dashed #ff4fb9;
+  }
+}
