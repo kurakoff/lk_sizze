@@ -204,4 +204,20 @@ $(document).ready(function () {
     $('.submit_copy_screen').click(() => {
         $('#copy_screen_form').submit()
     })
+    //    show-more
+    $('.show-more').click(function (e) {
+        const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+        let event_target = $(e.target)
+        const prototype_pk = $('.data_data').data('prototype-pk')
+        let data = {
+            csrfmiddlewaretoken: csrf_token,
+            category_id: event_target.data('category-id'),
+            page: event_target.data('page'),
+            prototype_id: prototype_pk
+        }
+
+        $.post('element/show_more', data, function (data) {
+
+        }, 'json');
+    })
 })

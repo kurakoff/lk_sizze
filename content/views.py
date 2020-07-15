@@ -6,10 +6,12 @@ from django.shortcuts import render, get_object_or_404
 from django.template.loader import get_template, render_to_string
 from django.views import View
 
+# from auth_users.templatetags.custom_tags import LIMIT_SHOW_MORE
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
     EditScreenForm, DeleteScreenForm, CopyScreenForm
 from content.models import Prototype, Project, Screen, Category, Element
 from django.utils.timezone import now
+from django.core.paginator import Paginator
 
 
 class IndexView(View):
@@ -327,6 +329,29 @@ class ElementView(View):
         element = Element.objects.get(pk=element_id)
         response['result'] = True
         response['layout'] = element.layout
+        return JsonResponse(response)
+
+
+class ElementShowMoreView(View):
+    def post(self, request):
+        LIMIT_SHOW_MORE = 1
+
+        response = {}
+        category_id = request.POST.get('category_id')
+        prototype_id = request.POST.get('prototype_id')
+        page = request.POST.get('page')
+        category = Category.objects.get(pk=category_id)
+        elements = Element.objects.filter(category_prototype__category=category.id,
+                                          category_prototype__prototype=prototype_id)
+        paginator_elements = Paginator(elements, LIMIT_SHOW_MORE)
+
+        if paginator_elements.page(page).has_next():
+            more_elements = paginator_elements.page(page + 1)
+            response['elements_block'] = render_to_string('')
+            if more_elements.has_next():
+                response['hide_button'] = True
+
+            response['result'] = True
         return JsonResponse(response)
 
 

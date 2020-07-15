@@ -3,7 +3,7 @@ from django.urls import path
 from .views import IndexView, ProfileView, ProfileSaveDetailsView, CreateProjectView, DeleteProjectView, \
     CopyProjectView, \
     EditProjectView, RedactorView, TestView, CreateScreenView, DeleteScreenView, CopyScreenView, EditScreenView, \
-    ScreenActionView, ElementView
+    ScreenActionView, ElementView, ElementShowMoreView
 
 # CONTENT URLS
 urlpatterns = [
@@ -21,6 +21,7 @@ urlpatterns = [
     path('screen/<str:action>', login_required(ScreenActionView.as_view()), name='screen_action'),
 
     path('element/get', login_required(ElementView.as_view()), name='element_view'),
+    path('element/show_more', login_required(ElementShowMoreView.as_view()), name='element_show_more'),
 
     path('redactor/<int:project>', login_required(RedactorView.as_view()), name='redactor'),
 
