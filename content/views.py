@@ -339,19 +339,22 @@ class ElementShowMoreView(View):
         response = {}
         category_id = request.POST.get('category_id')
         prototype_id = request.POST.get('prototype_id')
-        page = request.POST.get('page')
+        page = int(request.POST.get('page'))
         category = Category.objects.get(pk=category_id)
         elements = Element.objects.filter(category_prototype__category=category.id,
                                           category_prototype__prototype=prototype_id)
         paginator_elements = Paginator(elements, LIMIT_SHOW_MORE)
+        response['hide_button'] = True
+        response['result'] = True
 
         if paginator_elements.page(page).has_next():
             more_elements = paginator_elements.page(page + 1)
-            response['elements_block'] = render_to_string('')
-            if more_elements.has_next():
-                response['hide_button'] = True
+            response['elements_block'] = render_to_string('content/reactor_partials/_elements_paginator.html',
+                                                          {'elements': more_elements.object_list})
+            response['page'] = page + 1
 
-            response['result'] = True
+            if more_elements.has_next():
+                response['hide_button'] = False
         return JsonResponse(response)
 
 

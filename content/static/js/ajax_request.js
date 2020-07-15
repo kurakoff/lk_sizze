@@ -216,8 +216,17 @@ $(document).ready(function () {
             prototype_id: prototype_pk
         }
 
-        $.post('element/show_more', data, function (data) {
-
+        $.post('/element/show_more', data, function (response) {
+            if (response.result) {
+                const elements_block = event_target.siblings('.accordion__panel-content').find('.show_more_block')
+                if (response.elements_block) {
+                    event_target.data('page', response.page)
+                    elements_block.append($(response.elements_block))
+                }
+                if (response.hide_button) {
+                    event_target.remove()
+                }
+            }
         }, 'json');
     })
 })

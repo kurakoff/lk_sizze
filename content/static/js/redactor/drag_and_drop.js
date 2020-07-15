@@ -73,8 +73,9 @@ function handleDragEnd(e) {
 let elem = document.querySelector('.drag_elem')
 let destination = document.querySelector('.canvas-wrap')
 
-elem.addEventListener('dragstart', handleDragStart, false);
-elem.addEventListener('touchstart', handleDragStart, false);
+
+addDynamicEventListener(document.body, 'dragstart', '.drag_elem', handleDragStart);
+addDynamicEventListener(document.body, 'touchstart', '.drag_elem', handleDragStart);
 
 
 destination.addEventListener('dragenter', handleDragEnter, false);
@@ -82,9 +83,9 @@ destination.addEventListener('dragenter', handleDragEnter, false);
 destination.addEventListener('dragleave', handleDragLeave, false);
 
 destination.addEventListener('drop', handleDrop, false);
-// elem.addEventListener('drop', handleDrop, false);
 
-elem.addEventListener('dragend', handleDragEnd, false);
+addDynamicEventListener(document.body, 'dragend', '.drag_elem', handleDragEnd);
+
 // canvas-wrap
 
 document.addEventListener("dragover", function (event) {

@@ -34,7 +34,7 @@
                                 <li class="accordion__item accordion__item--is-open js-accordion__item"
                                     data-id-category="{{ category.id }}">
                                     <button class="accordion__header js-tab-focus pl-0 pr-0" type="button">
-                                        <span class="accordion__header-title">{{ category.title }} 1 {{ data_elements.has_next }}</span>
+                                        <span class="accordion__header-title">{{ category.title }}</span>
                                         <em aria-hidden="true" class="accordion__header-icon"><i></i></em>
                                     </button>
                                     {% with data_element=category|get_elements_on_prototype:prototype_pk %}
@@ -42,7 +42,7 @@
                                         <div class="accordion__panel js-accordion__panel">
                                             <div class="accordion__panel-content p-0">
                                                 <div class="text-component margin-bottom-md">
-                                                    <div class="row d-flex justify-content-around p-0 inner-container block-{{ category.slug }}">
+                                                    <div class="row d-flex justify-content-around p-0 inner-container block-{{ category.slug }} show_more_block">
                                                         {% for element in data_element.elements %}
                                                             <div class="drag_elem" id="element_{{ element.id }}">
                                                                 <img draggable="true" data-element-id="{{ element.id }}"

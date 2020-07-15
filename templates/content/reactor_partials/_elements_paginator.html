@@ -1,0 +1,6 @@
+{% for element in elements %}
+    <div class="drag_elem" id="element_{{ element.id }}">
+        <img draggable="true" data-element-id="{{ element.id }}"
+             src="{{ element.image.url }}" alt="">
+    </div>
+{% endfor %}
