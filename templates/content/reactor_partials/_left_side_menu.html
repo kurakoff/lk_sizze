@@ -19,12 +19,15 @@
         <div class="sidebar__content">
             <!-- start sidebar content -->
             <div class="text-component padding-md">
-
-                <img class="ml-0" src="{% static 'images/SizzeLogo.svg' %}">
-                <button aria-controls="off-canvas-1" class="btn--color btn btn--primary">All screens</button>
-                <a href="" aria-controls="dialog_create_screen">
-                    <button class="btn">Add screen</button>
-                </a>
+                <div class="head_control_button">
+                    <img class="ml-0" src="{% static 'images/SizzeLogo.svg' %}">
+                    <button aria-controls="off-canvas-1" class="btn--color btn btn--primary"><img
+                            src="{% static 'images/layers.svg' %}" alt="">All screens
+                    </button>
+                    <a href="" aria-controls="dialog_create_screen">
+                        <button class="btn"><img src="{% static 'images/circle-plus.svg' %}" alt=""> Add screen</button>
+                    </a>
+                </div>
                 <section class="category-section">
                     <div class="container m-0 p-0 max-width-sm">
 

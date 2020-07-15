@@ -570,7 +570,7 @@ const addTextNode = (event) => {
     new_row.setAttribute('data-type', 'text');
     new_row.setAttribute('clickCounter', '0');
     new_row.setAttribute('contenteditable', true);
-    new_row.setAttribute('style', `position: absolute; left: ${width}; top: ${height}; font-size: 50px;  color: #000; cursor: move;`);
+    new_row.setAttribute('style', `position: absolute; left: ${width}; top: ${height}; font-size: 50px;  color: #000; cursor: move; line-height: normal;`);
     new_row.classList.add('draggable');
     new_row.innerHTML = defaultText;
     $('.main-svg div').eq(1).prepend(new_row);

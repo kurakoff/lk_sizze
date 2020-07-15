@@ -10,6 +10,25 @@ function close_sidebar_mobile_across_trigger() {
 const fonts_origin = 'http://sizze.io'
 
 $(document).ready(function () {
+    // Модалка для back to original, yes_or_no
+
+    $('.show_yes_or_no').click(function () {
+        $('._fade_yes_or_no').css('display', 'block');
+        $('.dropdown-menu-keep').removeClass('keep-menu');
+
+    });
+
+    $('.yes_or_no_button_no').click(function () {
+        $('._fade_yes_or_no').css('display', 'none');
+        $('.dropdown-menu-keep').removeClass('keep-menu');
+
+    });
+
+    $('.yes_or_no_button_yes').click(function () {
+        $('._fade_yes_or_no').css('display', 'none');
+    });
+
+
     const appendTemplate = (html, screen_id) => {
         $('.main-svg').empty();
         $('.main-svg').append(html);

@@ -78,10 +78,6 @@
   }
 }
 
-.sidebar__content button {
-  width: 100%;
-}
-
 
 .no-main-svg {
   .top-menu {
@@ -108,5 +104,73 @@
 
   &.drag_border {
     border: 5px dashed #ff4fb9;
+  }
+}
+
+.card__content {
+  .flex_h4 {
+    margin-left: 10px;
+  }
+}
+
+
+.text-component {
+  .btn {
+    font-size: 14px
+  }
+}
+
+
+.head_control_button {
+  font-size: 14px;
+
+  button {
+    width: 45%;
+  }
+
+
+  a {
+    color: #7D2BE5 !important;
+    font-weight: 600;
+
+    &:hover {
+      color: #7D2BE5 !important;
+    }
+  }
+
+  img {
+    margin: 0 !important;
+    padding-right: 5px;
+  }
+}
+
+.button_download_all_screen {
+  font-size: 14px !important;
+
+}
+
+li {
+  .menu__content:hover {
+    background-color: #f2f2f2 !important;
+  }
+}
+
+.tools-panel-text {
+  button {
+    font-size: 14px;
+
+  }
+}
+
+.plus_btn {
+  position: absolute;
+  right: 0;
+  margin-right: 17px;
+}
+
+.add-item {
+  img {
+    margin: 0 !important;
+    padding-right: 5px;
   }
 }

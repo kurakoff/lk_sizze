@@ -21,14 +21,14 @@
 
             <div class="card__content">
                 <div class="h4_group d-flex align-items-center">
-                    <img alt="" class="type_img_screen " src="{% static 'images/layers.svg' %}">
+                    <img alt="" class="type_img_screen " src="{% static 'images/layers_black.svg' %}">
                     <h4 class="flex_h4">{{ screen.title }}</h4>
                 </div>
                 <button class="btn btn--primary else-button" aria-controls="menu_screen{{ screen.id }}"></button>
 
                 <menu id="menu_screen{{ screen.id }}" class="menu js-menu display_normal">
                     <li role="menuitem">
-                        <a href="#0" class="menu__content js-menu__content" aria-controls="modal-select1"
+                        <a class="menu__content js-menu__content" aria-controls="modal-select1"
                            data-screen-id="{{ screen.id }}">
                            <span class="p-0 menu__content js-menu__content">
                                 <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
