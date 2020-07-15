@@ -480,7 +480,11 @@ const getToolsPanel = (event) => {
     if (type == 'multicolored-element') {
         let g_svg_changed_color = $(CURRENT_EDIT_ELEMENT).find('g.color_polete');
         let g_path_changed_color = $(CURRENT_EDIT_ELEMENT).find('path.color_polete');
+        let g_line_changed_color = $(CURRENT_EDIT_ELEMENT).find('line.color_polete');
+        let g_rect_changed_color = $(CURRENT_EDIT_ELEMENT).find('rect.color_polete');
         let svg_pickers = [];
+        
+        
 
         g_svg_changed_color.each(function (index) {
             const source = $(this)
@@ -493,6 +497,38 @@ const getToolsPanel = (event) => {
                 })
                 .on('change', (color, instance) => {
                     source.attr('fill', color.toHEXA())
+                });
+
+            svg_pickers.push(pic)
+        })
+        
+        g_rect_changed_color.each(function (index) {
+            const source = $(this)
+            let button = $('<button>', {class: `color-picker-${index}`})
+            let color = source.attr('stroke')
+            button.appendTo($('.color-swatches'));
+            const pic = create_palet(index)
+                .on('init', instance => {
+                    const is_set = instance.setColor(color);
+                })
+                .on('change', (color, instance) => {
+                    source.attr('stroke', color.toHEXA())
+                });
+
+            svg_pickers.push(pic)
+        })
+        
+        g_line_changed_color.each(function (index) {
+            const source = $(this)
+            let button = $('<button>', {class: `color-picker-${index}`})
+            let color = source.attr('stroke')
+            button.appendTo($('.color-swatches'));
+            const pic = create_palet(index)
+                .on('init', instance => {
+                    const is_set = instance.setColor(color);
+                })
+                .on('change', (color, instance) => {
+                    source.attr('stroke', color.toHEXA())
                 });
 
             svg_pickers.push(pic)
@@ -891,15 +927,3 @@ $(document).mouseup(function (e) {
     }
 });
 
-
-// Мы прослушиваем событие resize
-//window.addEventListener('resize', () => {
-// Выполняем тот же скрипт, что и раньше
-//  let vh = window.innerHeight * 0.01;
-//  document.documentElement.style.setProperty('--vh', `${vh}px`);
-//});
-
-// Сначала мы получаем высоту окна просмотра и умножаемы ее на 1%, чтобы получить значение для единицы vh
-let vh = window.innerHeight * 0.01;
-// Затем мы присваиваем это значение пользовательскому свойству --vh для корневого элемента документа
-document.documentElement.style.setProperty('--vh', `${vh}px`);
