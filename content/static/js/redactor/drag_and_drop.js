@@ -52,14 +52,21 @@ function handleDrop(e) {
 
         $.post(`/element/get`, data, (response) => {
             if (response.result) {
-                console.log('result127')
                 let width = (parseInt($('.main-svg').css('width')) / 2) + 'px';
                 let height = (parseInt($('.main-svg').css('height')) / 2) + 'px';
-                let new_elem = document.createElement("div");
-                new_elem.classList.add('draggable');
-                new_elem.classList.add('test_drag');
-                new_elem.setAttribute('style', `position: absolute; left: ${width}; top: ${height}; cursor: move; background-color: aquamarine;`)
-                $(new_elem).append($(response.layout))
+                // let new_elem = document.createElement("div");
+                // new_elem.setAttribute('contenteditable', false);
+                // new_elem.setAttribute('data-set', 'true');
+                //
+                // $(new_elem).css('cursor', 'move');
+                //
+                //
+                // new_elem.classList.add('draggable');
+                // new_elem.setAttribute('style', `position: absolute; left: ${width}; top: ${height}; cursor: move; background-color: aquamarine;`)
+                // $(new_elem).append($(response.layout))
+                // $('.main-svg div').eq(1).prepend(new_elem);
+                const new_elem = $(response.layout)
+                new_elem.attr('style', `position: absolute; left: 10px; top: ${height};`)
                 $('.main-svg div').eq(1).prepend(new_elem);
             }
         }, 'json')
