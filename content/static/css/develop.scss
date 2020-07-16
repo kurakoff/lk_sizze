@@ -125,7 +125,12 @@
   font-size: 14px;
 
   button {
-    width: 45%;
+    width: 47%;
+    margin-left: 0;
+
+    &.btn_add_screen {
+      float: right;
+    }
   }
 
 
@@ -190,42 +195,51 @@ li {
   }
 }
 
+$width_elem: 167px;
+
 .two_in_row {
   display: flex;
-  //Ширирна мобильного аккордиона = 300px
-  // Элементы по 145px + 5margin
+
   .drag_elem {
-    width: 147px;
+    width: $width_elem;
+
+    &.in_right {
+      margin-left: 6px;
+    }
 
     img {
       margin-bottom: 5px;
-
-      &.in_right {
-        margin-left: 6px;
-      }
-
-      //max-width: 161px;
     }
-  }
-}
-
-.drag_elem {
-  img {
-    //margin: 0 !important;
   }
 }
 
 
 @media screen and (min-width: 1024px) {
   .two_in_row {
+    display: flex;
+
     .drag_elem {
-      width: 138px;
-      float: left;
+      width: $width_elem;
+
+      &.in_right {
+        margin-left: 6px;
+      }
 
       img {
-        //max-width: 138px;
+        margin-bottom: 5px;
       }
     }
   }
 }
 
+.text-component {
+  padding: 20px;
+}
+
+.logo {
+  padding-bottom: 3px;
+}
+
+.one_in_row {
+  margin-bottom: 6px;
+}

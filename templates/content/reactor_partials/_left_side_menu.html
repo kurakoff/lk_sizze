@@ -18,84 +18,81 @@
 
         <div class="sidebar__content">
             <!-- start sidebar content -->
-            <div class="text-component padding-md">
+            <div class="text-component">
                 <div class="head_control_button">
-                    <img class="ml-0" src="{% static 'images/SizzeLogo.svg' %}">
-                    <button aria-controls="off-canvas-1" class="btn--color btn btn--primary"><img
+                    <img class="logo" src="{% static 'images/SizzeLogo.svg' %}">
+                    <button aria-controls="off-canvas-1" class="btn--color btn btn--primary btn_all_screen"><img
                             src="{% static 'images/layers.svg' %}" alt="">All screens
                     </button>
                     <a href="" aria-controls="dialog_create_screen">
-                        <button class="btn"><img src="{% static 'images/circle-plus.svg' %}" alt=""> Add screen</button>
+                        <button class="btn btn_add_screen"><img src="{% static 'images/circle-plus.svg' %}" alt=""> Add
+                            screen
+                        </button>
                     </a>
                 </div>
                 <section class="category-section">
-                    <div class="container m-0 p-0 max-width-sm">
-
-                        <ul class="accordion  js-accordion category-container mb-0" data-animation="on"
-                            data-multi-items="off">
-                            {% for category in categories %}
-                                <li class="accordion__item accordion__item--is-open js-accordion__item"
-                                    data-id-category="{{ category.id }}">
-                                    <button class="accordion__header js-tab-focus pl-0 pr-0" type="button">
-                                        <span class="accordion__header-title">{{ category.title }}</span>
-                                        <em aria-hidden="true" class="accordion__header-icon"><i></i></em>
-                                    </button>
-                                    <div class="accordion__panel js-accordion__panel">
-                                        <div class="accordion__panel-content p-0">
-                                            <div class="text-component margin-bottom-md">
-                                                <div class="row d-flex justify-content-around p-0 inner-container block-{{ category.slug }} show_more_block">
-                                                    {% if category.two_in_row %}
-                                                        {% with data_element=category|get_elements_on_prototype:prototype_pk|two_in_row %}
-                                                            {% for element in data_element.elements %}
-                                                                <div class="two_in_row">
-                                                                    <div class="drag_elem"
-                                                                         id="element_{{ element.0.id }}">
-                                                                        <img draggable="true"
-                                                                             data-element-id="{{ element.0.id }}"
-                                                                             src="{{ element.0.image.url }}" alt="">
-                                                                    </div>
-                                                                    <div class="drag_elem"
-                                                                         id="element_{{ element.1.id }}">
-                                                                        <img draggable="true" class="in_right"
-                                                                             data-element-id="{{ element.1.id }}"
-                                                                             src="{{ element.1.image.url }}" alt="">
-                                                                    </div>
-                                                                </div>
-                                                            {% endfor %}
-                                                            {% if data_element.has_next %}
-                                                                <button class="btn btn-succrss show-more else"
-                                                                        data-page="1"
-                                                                        data-category-id="{{ category.id }}">Show more
-                                                                </button>
-                                                            {% endif %}
-                                                        {% endwith %}
-                                                    {% else %}
-                                                        {% with data_element=category|get_elements_on_prototype:prototype_pk %}
-                                                            {% for element in data_element.elements %}
-                                                                <div class="drag_elem" id="element_{{ element.id }}">
-                                                                    <img draggable="true"
-                                                                         data-element-id="{{ element.id }}"
-                                                                         src="{{ element.image.url }}" alt="">
-                                                                </div>
-                                                            {% endfor %}
-                                                            {% if data_element.has_next %}
-                                                                <button class="btn btn-succrss show-more else"
-                                                                        data-page="1"
-                                                                        data-category-id="{{ category.id }}">Show more
-                                                                </button>
-                                                            {% endif %}
-                                                        {% endwith %}
+                    <ul class="accordion  js-accordion category-container mb-0" data-animation="on"
+                        data-multi-items="off">
+                        {% for category in categories %}
+                            <li class="accordion__item accordion__item--is-open js-accordion__item"
+                                data-id-category="{{ category.id }}">
+                                <button class="accordion__header js-tab-focus pl-0 pr-0" type="button">
+                                    <span class="accordion__header-title">{{ category.title }}</span>
+                                    <em aria-hidden="true" class="accordion__header-icon"><i></i></em>
+                                </button>
+                                <div class="accordion__panel js-accordion__panel">
+                                    <div class="accordion__panel-content p-0">
+                                        <div class="block-{{ category.slug }} show_more_block">
+                                            {% if category.two_in_row %}
+                                                {% with data_element=category|get_elements_on_prototype:prototype_pk|two_in_row %}
+                                                    {% for element in data_element.elements %}
+                                                        <div class="two_in_row">
+                                                            <div class="drag_elem"
+                                                                 id="element_{{ element.0.id }}">
+                                                                <img draggable="true"
+                                                                     data-element-id="{{ element.0.id }}"
+                                                                     src="{{ element.0.image.url }}" alt="">
+                                                            </div>
+                                                            <div class="drag_elem in_right"
+                                                                 id="element_{{ element.1.id }}">
+                                                                <img draggable="true"
+                                                                     data-element-id="{{ element.1.id }}"
+                                                                     src="{{ element.1.image.url }}" alt="">
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    {% if data_element.has_next %}
+                                                        <button class="btn btn-succrss show-more else"
+                                                                data-page="1"
+                                                                data-category-id="{{ category.id }}">Show more
+                                                        </button>
                                                     {% endif %}
-                                                </div>
-                                            </div>
+                                                {% endwith %}
+                                            {% else %}
+                                                {% with data_element=category|get_elements_on_prototype:prototype_pk %}
+                                                    {% for element in data_element.elements %}
+                                                        <div class="drag_elem one_in_row" id="element_{{ element.id }}">
+                                                            <img draggable="true"
+                                                                 data-element-id="{{ element.id }}"
+                                                                 src="{{ element.image.url }}" alt="">
+                                                        </div>
+                                                    {% endfor %}
+                                                    {% if data_element.has_next %}
+                                                        <button class="btn btn-succrss show-more else"
+                                                                data-page="1"
+                                                                data-category-id="{{ category.id }}">Show more
+                                                        </button>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% endif %}
                                         </div>
-
                                     </div>
 
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                                </div>
+
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </section>
 
                 <section class="font-section" style="display: none;">
