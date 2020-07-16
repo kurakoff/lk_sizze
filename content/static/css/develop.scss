@@ -189,3 +189,43 @@ li {
     margin: 7px;
   }
 }
+
+.two_in_row {
+  display: flex;
+  //Ширирна мобильного аккордиона = 300px
+  // Элементы по 145px + 5margin
+  .drag_elem {
+    width: 147px;
+
+    img {
+      margin-bottom: 5px;
+
+      &.in_right {
+        margin-left: 6px;
+      }
+
+      //max-width: 161px;
+    }
+  }
+}
+
+.drag_elem {
+  img {
+    //margin: 0 !important;
+  }
+}
+
+
+@media screen and (min-width: 1024px) {
+  .two_in_row {
+    .drag_elem {
+      width: 138px;
+      float: left;
+
+      img {
+        //max-width: 138px;
+      }
+    }
+  }
+}
+

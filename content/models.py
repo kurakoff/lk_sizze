@@ -60,6 +60,7 @@ class Prototype(models.Model):
 class Category(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
     slug = models.CharField(max_length=64, verbose_name='slug')
+    two_in_row = models.BooleanField(verbose_name='По 2 элемента', default=False)
 
     class Meta:
         verbose_name = 'картегория'

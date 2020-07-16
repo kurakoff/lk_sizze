@@ -30,7 +30,7 @@ def add_classes(value, arg):
     return value.as_widget(attrs={'class': ' '.join(css_classes)})
 
 
-LIMIT_SHOW_MORE = 1
+LIMIT_SHOW_MORE = 3
 
 
 @register.filter(name='get_elements_on_prototype')
@@ -41,3 +41,16 @@ def get_elements_on_prototype(category, prototype_pk):
     page1 = paginator_elements.page(1)
     return {'elements': page1.object_list,
             'has_next': page1.has_next()}
+
+
+@register.filter(name='two_in_row')
+def two_in_row(data_element):
+    new_data_element = data_element
+    elements = data_element['elements'][:]
+    new_data_element['elements'] = [[]]
+
+    for i in range(0, len(elements)):
+        if len(new_data_element['elements'][-1]) == 2:
+            new_data_element['elements'].append([])
+        new_data_element['elements'][-1].append(elements[i])
+    return new_data_element
