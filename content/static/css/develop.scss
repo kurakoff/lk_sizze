@@ -176,10 +176,16 @@ li {
 }
 
 .number-input {
-    margin-bottom: 0px!important;
+  margin-bottom: 0px !important;
 }
 
 .number_style {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+}
+
+.size-tool {
+  .number-input {
+    margin: 7px;
+  }
 }
