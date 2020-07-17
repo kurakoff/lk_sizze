@@ -130,6 +130,7 @@
 
     &.btn_add_screen {
       float: right;
+      margin-right: 0;
     }
   }
 
@@ -242,4 +243,13 @@ $width_elem: 167px;
 
 .one_in_row {
   margin-bottom: 6px;
+}
+
+.font-section, .font-style-section {
+  .container {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
 }
