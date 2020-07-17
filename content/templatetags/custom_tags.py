@@ -2,7 +2,7 @@ from django import template
 from django.core.paginator import Paginator
 from django.urls import reverse
 
-from content.models import Element
+from content.models import Element, Settings
 from content.utils import separate_by_n
 
 register = template.Library()
@@ -31,14 +31,13 @@ def add_classes(value, arg):
     return value.as_widget(attrs={'class': ' '.join(css_classes)})
 
 
-LIMIT_SHOW_MORE = 2
-
-
 @register.filter(name='get_elements_on_prototype')
 def get_elements_on_prototype(category, prototype_pk):
+    limit_show_more = Settings.objects.get(slug='limit_show_more').value
+
     elements = Element.objects.filter(category_prototype__category=category.id,
                                       category_prototype__prototype=prototype_pk)
-    paginator_elements = Paginator(elements, LIMIT_SHOW_MORE)
+    paginator_elements = Paginator(elements, limit_show_more)
     page1 = paginator_elements.page(1)
     return {'elements': page1.object_list,
             'has_next': page1.has_next()}

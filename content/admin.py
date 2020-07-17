@@ -9,12 +9,20 @@ from .models import (
     Category,
     CategoryPrototype,
     Element,
+    Settings
 )
 from tinymce.models import HTMLField
 
 
 class CategoryAdmin(admin.ModelAdmin):
     pass
+
+
+class SettingsAdmin(admin.ModelAdmin):
+    list_display = ('slug', 'value')
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class ElementInline(nested_admin.NestedTabularInline):
@@ -49,3 +57,4 @@ class PrototypeAdmin(nested_admin.NestedModelAdmin):
 
 admin.site.register(Prototype, PrototypeAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Settings, SettingsAdmin)

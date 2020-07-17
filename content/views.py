@@ -3,13 +3,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.template.loader import get_template, render_to_string
+from django.template.loader import render_to_string
 from django.views import View
 
-# from auth_users.templatetags.custom_tags import LIMIT_SHOW_MORE
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
     EditScreenForm, DeleteScreenForm, CopyScreenForm
-from content.models import Prototype, Project, Screen, Category, Element
+from content.models import Prototype, Project, Screen, Category, Element, Settings
 from django.utils.timezone import now
 from django.core.paginator import Paginator
 
@@ -336,7 +335,7 @@ class ElementView(View):
 
 class ElementShowMoreView(View):
     def post(self, request):
-        LIMIT_SHOW_MORE = 2
+        limit_show_more = Settings.objects.get(slug='limit_show_more').value
 
         response = {}
         category_id = request.POST.get('category_id')
@@ -347,7 +346,7 @@ class ElementShowMoreView(View):
         category = Category.objects.get(pk=category_id)
         elements = Element.objects.filter(category_prototype__category=category.id,
                                           category_prototype__prototype=prototype_id)
-        paginator_elements = Paginator(elements, LIMIT_SHOW_MORE)
+        paginator_elements = Paginator(elements, limit_show_more)
         response['hide_button'] = True
         response['result'] = True
         response['view'] = element_view

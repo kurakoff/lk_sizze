@@ -100,3 +100,15 @@ class Element(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Settings(models.Model):
+    value = models.PositiveIntegerField(verbose_name='Значение', blank=False)
+    slug = models.CharField(max_length=64, verbose_name='slug')
+
+    class Meta:
+        verbose_name = 'настройка'
+        verbose_name_plural = 'настройки'
+
+    def __str__(self):
+        return self.slug
