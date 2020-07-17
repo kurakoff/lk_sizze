@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 
 from content.models import Element
+from content.utils import separate_by_n
 
 register = template.Library()
 
@@ -30,7 +31,7 @@ def add_classes(value, arg):
     return value.as_widget(attrs={'class': ' '.join(css_classes)})
 
 
-LIMIT_SHOW_MORE = 3
+LIMIT_SHOW_MORE = 2
 
 
 @register.filter(name='get_elements_on_prototype')
@@ -46,11 +47,5 @@ def get_elements_on_prototype(category, prototype_pk):
 @register.filter(name='two_in_row')
 def two_in_row(data_element):
     new_data_element = data_element
-    elements = data_element['elements'][:]
-    new_data_element['elements'] = [[]]
-
-    for i in range(0, len(elements)):
-        if len(new_data_element['elements'][-1]) == 2:
-            new_data_element['elements'].append([])
-        new_data_element['elements'][-1].append(elements[i])
+    new_data_element['elements'] = separate_by_n(data_element['elements'])
     return new_data_element

@@ -207,22 +207,46 @@ $(document).ready(function () {
     //    show-more
     $('.show-more').click(function (e) {
         const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
-        let event_target = $(e.target)
+        const event_target = $(e.target)
         const prototype_pk = $('.data_data').data('prototype-pk')
+        const view = event_target.data('view')
+        const last_cont_full = event_target.siblings('.two_in_row').last().find('.drag_elem').length === 2
+        // last_cont_full
+        // При подгрузке в две строки, требуется понимать кол-во элементов в поледнем контейнере [e1, e2] or [e1, ]
         let data = {
             csrfmiddlewaretoken: csrf_token,
             category_id: event_target.data('category-id'),
             page: event_target.data('page'),
-            prototype_id: prototype_pk
+            view: view,
+            prototype_id: prototype_pk,
+            last_cont_full: last_cont_full,
         }
 
         $.post('/element/show_more', data, function (response) {
             if (response.result) {
-                const elements_block = event_target.siblings('.accordion__panel-content').find('.show_more_block')
                 if (response.elements_block) {
-                    event_target.data('page', response.page)
-                    elements_block.append($(response.elements_block))
+                    if (response.view == 'one_in_row') {
+                        const elements_block = event_target.closest('.show_more_block')
+                        elements_block.append($(response.elements_block))
+                    }
+                    if (response.view == 'two_in_row') {
+                        if (last_cont_full) {
+                            console.log(1)
+                            event_target.before($(response.elements_block))
+                        } else {
+                            event_target.siblings('.two_in_row').last().append(`<div class="drag_elem in_right"
+                                                                                     id="element_${response.last_elem.id}">
+                                                                                    <img draggable="true"
+                                                                                         data-element-id="${response.last_elem.id}"
+                                                                                         src="${response.last_elem.url}" alt="">
+                                                                                </div>`)
+                            event_target.before($(response.elements_block))
+
+                        }
+                    }
                 }
+
+                event_target.data('page', response.page)
                 if (response.hide_button) {
                     event_target.remove()
                 }

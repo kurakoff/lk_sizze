@@ -13,6 +13,8 @@ from content.models import Prototype, Project, Screen, Category, Element
 from django.utils.timezone import now
 from django.core.paginator import Paginator
 
+from content.utils import separate_by_n
+
 
 class IndexView(View):
     template_name = 'content/index.html'
@@ -334,23 +336,40 @@ class ElementView(View):
 
 class ElementShowMoreView(View):
     def post(self, request):
-        LIMIT_SHOW_MORE = 1
+        LIMIT_SHOW_MORE = 2
 
         response = {}
         category_id = request.POST.get('category_id')
         prototype_id = request.POST.get('prototype_id')
         page = int(request.POST.get('page'))
+        element_view = request.POST.get('view')
+        last_cont_full = True if request.POST.get('last_cont_full') == 'true' else False
         category = Category.objects.get(pk=category_id)
         elements = Element.objects.filter(category_prototype__category=category.id,
                                           category_prototype__prototype=prototype_id)
         paginator_elements = Paginator(elements, LIMIT_SHOW_MORE)
         response['hide_button'] = True
         response['result'] = True
-
+        response['view'] = element_view
         if paginator_elements.page(page).has_next():
             more_elements = paginator_elements.page(page + 1)
-            response['elements_block'] = render_to_string('content/reactor_partials/_elements_paginator.html',
-                                                          {'elements': more_elements.object_list})
+            if element_view == 'one_in_row':
+                response['elements_block'] = render_to_string(
+                    'content/reactor_partials/_elements_paginator_one_row.html',
+                    {'elements': more_elements.object_list})
+            if element_view == 'two_in_row':
+                print(last_cont_full, type(last_cont_full))
+                if not last_cont_full:
+                    last_elem = more_elements.object_list[0]
+                    response['last_elem'] = {'id': last_elem.id, 'url': last_elem.image.url}
+                    response['elements_block'] = render_to_string(
+                        'content/reactor_partials/_elements_paginator_two_row.html',
+                        {'elements': separate_by_n(more_elements.object_list[1:])})
+                else:
+                    response['elements_block'] = render_to_string(
+                        'content/reactor_partials/_elements_paginator_two_row.html',
+                        {'elements': separate_by_n(more_elements.object_list)})
+
             response['page'] = page + 1
 
             if more_elements.has_next():

@@ -1,0 +1,18 @@
+{% for element in elements %}
+    <div class="two_in_row">
+        <div class="drag_elem"
+             id="element_{{ element.0.id }}">
+            <img draggable="true"
+                 data-element-id="{{ element.0.id }}"
+                 src="{{ element.0.image.url }}" alt="">
+        </div>
+        {% if element.1 %}
+            <div class="drag_elem in_right"
+                 id="element_{{ element.1.id }}">
+                <img draggable="true"
+                     data-element-id="{{ element.1.id }}"
+                     src="{{ element.1.image.url }}" alt="">
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}

@@ -53,16 +53,19 @@
                                                                      data-element-id="{{ element.0.id }}"
                                                                      src="{{ element.0.image.url }}" alt="">
                                                             </div>
-                                                            <div class="drag_elem in_right"
-                                                                 id="element_{{ element.1.id }}">
-                                                                <img draggable="true"
-                                                                     data-element-id="{{ element.1.id }}"
-                                                                     src="{{ element.1.image.url }}" alt="">
-                                                            </div>
+                                                            {% if element.1 %}
+                                                                <div class="drag_elem in_right"
+                                                                     id="element_{{ element.1.id }}">
+                                                                    <img draggable="true"
+                                                                         data-element-id="{{ element.1.id }}"
+                                                                         src="{{ element.1.image.url }}" alt="">
+                                                                </div>
+                                                            {% endif %}
                                                         </div>
                                                     {% endfor %}
                                                     {% if data_element.has_next %}
                                                         <button class="btn btn-succrss show-more else"
+                                                                data-view="two_in_row"
                                                                 data-page="1"
                                                                 data-category-id="{{ category.id }}">Show more
                                                         </button>
@@ -79,6 +82,7 @@
                                                     {% endfor %}
                                                     {% if data_element.has_next %}
                                                         <button class="btn btn-succrss show-more else"
+                                                                data-view="one_in_row"
                                                                 data-page="1"
                                                                 data-category-id="{{ category.id }}">Show more
                                                         </button>
