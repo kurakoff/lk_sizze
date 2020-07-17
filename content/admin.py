@@ -20,7 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class SettingsAdmin(admin.ModelAdmin):
     list_display = ('slug', 'value')
-    readonly_fields = ('slug',)
+    # readonly_fields = ('slug',)
 
     def has_delete_permission(self, request, obj=None):
         return False
