@@ -24,6 +24,15 @@ const updateCurrentFontSize = () => {
     $('.current-font-size').val($(CURRENT_EDIT_ELEMENT).css('font-size').replace('px', ''));
 };
 
+const updateCurrentBorderSize = () => {
+    $('.current-border-size').val($(CURRENT_EDIT_ELEMENT).find('rect.rect_stroke').attr('stroke-width'));
+};
+
+const updateCurrentBorderRadius = () => {
+    $('.current-radius-size').val($(CURRENT_EDIT_ELEMENT).find('rect.rect_radius').attr('rx'));
+};
+
+
 const divToBr = () => {
     let content = $(CURRENT_EDIT_ELEMENT).html();
 
@@ -114,6 +123,7 @@ const frame = new Scene.Frame({
 function setTransform(target) {
     target.style.transform = frame.toCSS().match(new RegExp(/transform:(.+);/))[1];
     target.style.left = frame.get('left');
+    target.style.zIndex = frame.get('z-index');
     target.style.top = frame.get('top');
     target.style.width = frame.get('width');
     target.style.height = frame.get('height');
@@ -258,8 +268,8 @@ const editableHandler = (event) => {
             setPickable(true);
         });
 
-    frame.set('left', target.css('left'));
     frame.set('top', target.css('top'));
+    frame.set('z-index', target.css('z-index'));
     frame.set('width', target.css('width'));
     frame.set('height', target.css('height'));
 
@@ -284,6 +294,11 @@ const editableHandler = (event) => {
 
     if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'img') {
         draggable.keepRatio = true;
+    }
+    
+    if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'multicolored-element') {
+        updateCurrentBorderSize();
+        updateCurrentBorderRadius();
     }
 
     if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'text') {
@@ -383,6 +398,19 @@ const editSizeText = (event) => {
     draggable.updateTarget();
 }
 
+const editBorderElement = (event) => {
+    $(CURRENT_EDIT_ELEMENT).find('rect.rect_stroke').attr('stroke-width', $('.quantity-border').val());
+    if (!draggable) return;
+    draggable.updateRect();
+    draggable.updateTarget();
+}
+
+const editBorderRadiusElement = (event) => {
+    $(CURRENT_EDIT_ELEMENT).find('rect.rect_radius').attr('rx', $('.quantity-radius').val());
+    if (!draggable) return;
+    draggable.updateRect();
+    draggable.updateTarget();
+}
 
 /**
  * Масштаба
@@ -549,11 +577,16 @@ const getToolsPanel = (event) => {
                 })
             svg_pickers.push(pic)
         });
-
+        
+        
+        updateCurrentBorderSize();
+        updateCurrentBorderRadius();
         $('.multicolored-tool').show();
         $('.color-tool').hide();
         $('.delete-tool').show();
         $('.rotate-input').show();
+        $('.border-size-tool').show();
+        $('.border-radius-tool').show();
         $('.c').css('min-width', '100%');
         return;
     }
@@ -619,6 +652,7 @@ const addTextNode = (event) => {
     });
     $(new_row).on('click', getToolsPanel);
     $(new_row).css('cursor', 'move');
+   
 }
 
 //    Загрузка файлов
@@ -755,6 +789,10 @@ $('#style').click(editItalicText);
 $('#underline').click(editUnderlineText);
 $('.quantity').keyup(editSizeText);
 $('.size-tool').click(editSizeText);
+$('.quantity-border').keyup(editBorderElement);
+$('.border-size-tool').click(editBorderElement);
+$('.quantity-radius').keyup(editBorderRadiusElement);
+$('.border-radius-tool').click(editBorderRadiusElement);
 $('.scale').keyup(scaleCanvas);
 $('.delete-button').click(removeNode);
 
