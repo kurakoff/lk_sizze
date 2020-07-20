@@ -815,6 +815,7 @@ function updateView() {
 
 
 $('.main-svg').click((event) => {
+    event.stopPreventDefault
     let element = $(event.target);
 
     if (element.attr('data-set')) return;

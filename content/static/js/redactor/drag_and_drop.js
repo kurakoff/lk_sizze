@@ -56,7 +56,8 @@ function handleDrop(e) {
                 let width = (parseInt($('.main-svg').css('width')) / 2) + 'px';
                 let height = (parseInt($('.main-svg').css('height')) / 2) + 'px';
                 let new_elem = document.createElement("div");
-                new_elem.setAttribute('style', `padding: 20px; position: absolute; left: ${width}; top: ${height}; cursor: move; `)
+                new_elem.setAttribute('style', `padding: 20px; position: absolute; left: ${width}; top: ${height}; cursor: move; overflow: hidden;`)
+                new_elem.classList.add('element_container')
                 $(new_elem).css('cursor', 'move');
                 $(new_elem).append($(response.layout))
 
