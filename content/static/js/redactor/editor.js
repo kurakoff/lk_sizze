@@ -626,7 +626,7 @@ const removeNode = (event) => {
     $(CURRENT_EDIT_ELEMENT).remove();
 }
 
-const addTextNode = (event) => {
+addTextNode = (event) => {
     // Создание элемента через js
     // Установка обработчиков с img-events.renderHtml()
 
@@ -853,6 +853,7 @@ function updateView() {
 
 
 $('.main-svg').click((event) => {
+    event.stopPreventDefault
     let element = $(event.target);
 
     if (element.attr('data-set')) return;

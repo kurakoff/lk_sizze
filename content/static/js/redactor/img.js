@@ -129,16 +129,19 @@ $(document).ready(function () {
     saver_user_progress.runAutoSave()
 
     $('.fonts-style').click((event) => {
-        $(".top-menu button[aria-controls='sidebar']").trigger('click');
+        open_sidebar_mobile_across_trigger()
 
-        if ($('.font-style-section:visible').get(0) && $('aside.sidebar').attr('role') !== 'alertdialog') {
-            $('.font-style-section').hide();
-            return;
+        if ($('.category-section:visible').get(0)) {
+            oldSection = '.category-section';
         }
 
+        if ($('.font-section:visible').get(0) && $('aside.sidebar').attr('role') !== 'alertdialog') {
+            $('.font-section').hide();
+            $(oldSection).show();
+            return;
+        }
+        $('.category-section').hide();
         $('.font-section').hide();
-        $('.category-section').show();
-        $('.html-list-section').hide();
         $('.fonts-style-list').empty();
         $('.font-style-section').show();
 
@@ -231,17 +234,12 @@ $(document).ready(function () {
         if ($('.category-section:visible').get(0)) {
             oldSection = '.category-section';
         }
-        if ($('.html-list-section:visible').get(0)) {
-            oldSection = '.html-list-section';
-        }
 
         if ($('.font-section:visible').get(0) && $('aside.sidebar').attr('role') !== 'alertdialog') {
             $('.font-section').hide();
             $(oldSection).show();
             return;
-        } else {
         }
-
         $('.category-section').hide();
         $('.html-list-section').hide();
         $('.font-style-section').hide();
