@@ -616,7 +616,9 @@ const getToolsPanel = (event) => {
         return;
 
     }
-    draggable.target = '';
+    if (draggable) {
+        draggable.target = '';
+    }
     $('.tools-panel-text').hide();
     $('.tool-item').hide();
     $('.tools-panel-default').show();
