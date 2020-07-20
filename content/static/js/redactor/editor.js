@@ -593,7 +593,7 @@ const removeNode = (event) => {
     $(CURRENT_EDIT_ELEMENT).remove();
 }
 
-const addTextNode = (event) => {
+addTextNode = (event) => {
     // Создание элемента через js
     // Установка обработчиков с img-events.renderHtml()
 

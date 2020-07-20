@@ -51,24 +51,22 @@ function handleDrop(e) {
         }
 
         $.post(`/element/get`, data, (response) => {
+
             if (response.result) {
                 let width = (parseInt($('.main-svg').css('width')) / 2) + 'px';
                 let height = (parseInt($('.main-svg').css('height')) / 2) + 'px';
-                // let new_elem = document.createElement("div");
-                // new_elem.setAttribute('contenteditable', false);
-                // new_elem.setAttribute('data-set', 'true');
-                //
-                // $(new_elem).css('cursor', 'move');
-                //
-                //
-                // new_elem.classList.add('draggable');
-                // new_elem.setAttribute('style', `position: absolute; left: ${width}; top: ${height}; cursor: move; background-color: aquamarine;`)
-                // $(new_elem).append($(response.layout))
-                // $('.main-svg div').eq(1).prepend(new_elem);
-                const new_elem = $(response.layout)
-                new_elem.attr('style', `position: absolute; left: 10px; top: ${height};`)
+                let new_elem = document.createElement("div");
+                new_elem.setAttribute('style', `padding: 20px; position: absolute; left: ${width}; top: ${height}; cursor: move; `)
+                $(new_elem).css('cursor', 'move');
+                $(new_elem).append($(response.layout))
+
+                $(new_elem).on('click', (event) => {
+                    editableHandler(event);
+                });
+
                 $('.main-svg div').eq(1).prepend(new_elem);
             }
+
         }, 'json')
     }
 }
