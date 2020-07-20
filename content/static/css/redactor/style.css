@@ -2,8 +2,8 @@
     font-family: "SFPro Medium";
     font-weight: 400;
     font-style: normal;
-    src: url(../fonts/SFPro/SFProDisplay-Medium.eot);
-    src: url(../fonts/SFPro/SFProDisplay-Medium.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Medium.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Medium.ttf) format("truetype")
+    /*src: url(../fonts/SFPro/SFProDisplay-Medium.eot);*/
+    /*src: url(../fonts/SFPro/SFProDisplay-Medium.eot?#iefix) format("embedded-opentype"), url(../fonts/SFPro/SFProDisplay-Medium.woff) format("woff"), url(../fonts/SFPro/SFProDisplay-Medium.ttf) format("truetype")*/
 }
 
 .accordion__header {
@@ -451,12 +451,6 @@ main.no-main-svg {
 }
 
 
-.canvas_height {
-    height: 100vh; /* Резервный вариант для браузеров, которые не поддерживают пользовательские свойства */
-    height: calc(var(--vh, 1vh) * 100);
-}
-
-
 .canvas-wrap {
     position: relative;
     /*  overflow: hidden;*/
@@ -534,6 +528,13 @@ svg[currenteditable="true"], div[currenteditable="true"], img[currenteditable="t
     border: 2px solid transparent;
 }
 
+div.element_container {
+    box-sizing: border-box;
+}
+
+.element_container:hover {
+    outline: 3px solid coral;
+}
 
 /*.html-list-container img{
     border: 2px solid #F9F9FA;
