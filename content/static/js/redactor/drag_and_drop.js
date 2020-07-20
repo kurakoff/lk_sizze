@@ -8,6 +8,8 @@
 //         }
 //     })
 // })
+
+
 function close_sidebar_mobile_across_trigger() {
     $(".js-sidebar__close-btn").trigger('click');
 }
@@ -57,6 +59,10 @@ function handleDrop(e) {
                 let height = (parseInt($('.main-svg').css('height')) / 2) + 'px';
                 let new_elem = document.createElement("div");
                 new_elem.setAttribute('style', `padding: 20px; position: absolute; left: 10px; top: ${height}; cursor: move; overflow: hidden;`)
+                new_elem.setAttribute('data-set', true)
+                new_elem.setAttribute('data-type', 'img')
+                new_elem.classList.add('draggable')
+
                 new_elem.classList.add('element_container')
                 $(new_elem).css('cursor', 'move');
                 $(new_elem).append($(response.layout))
@@ -98,3 +104,37 @@ document.addEventListener("dragover", function (event) {
     event.preventDefault();
 });
 
+//
+$(document).on('dblclick', '.drag_elem', function (e) {
+    const element_id = $(e.target).data('element-id')
+    const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+
+    let data = {
+        element_id: element_id,
+        csrfmiddlewaretoken: csrf_token,
+    }
+
+    $.post(`/element/get`, data, (response) => {
+
+        if (response.result) {
+            let width = (parseInt($('.main-svg').css('width')) / 2) + 'px';
+            let height = (parseInt($('.main-svg').css('height')) / 2) + 'px';
+            let new_elem = document.createElement("div");
+            new_elem.setAttribute('style', `padding: 20px; position: absolute; left: 10px; top: ${height}; cursor: move; overflow: hidden;`)
+            new_elem.setAttribute('data-set', true)
+            new_elem.setAttribute('data-type', 'img')
+            new_elem.classList.add('draggable')
+
+            new_elem.classList.add('element_container')
+            $(new_elem).css('cursor', 'move');
+            $(new_elem).append($(response.layout))
+
+            $(new_elem).on('click', (event) => {
+                editableHandler(event);
+            });
+
+            $('.main-svg div').eq(1).prepend(new_elem);
+        }
+
+    }, 'json')
+})

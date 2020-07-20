@@ -86,7 +86,7 @@ const defaultBackgroundRect = () => {
  * Обновление панели инструментов
  * @param {object} event
  */
-const updateTools = (event) => {
+const updateTools = () => {
     const attrs = {
         'data-style-italic': '#style',
         'data-style-underline': '#underline',
@@ -148,6 +148,7 @@ function setPickable(bool) {
  * События начала редактирования текста
  */
 const editableHandler = (event) => {
+    console.log('init')
     event.stopPropagation();
     if (!pickable) return;
 
@@ -267,6 +268,7 @@ const editableHandler = (event) => {
         .on("warpEnd", () => {
             setPickable(true);
         });
+    console.log('draggable', draggable)
 
     frame.set('top', target.css('top'));
     frame.set('z-index', target.css('z-index'));
@@ -285,7 +287,6 @@ const editableHandler = (event) => {
     target.attr(CURRENT_EDIT, 'true');
     draggable.target = $(CURRENT_EDIT_ELEMENT).get(0);
 
-    updateTools();
 
     draggable.draggable = true;
     draggable.resizable = true;
@@ -295,10 +296,10 @@ const editableHandler = (event) => {
     if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'img') {
         draggable.keepRatio = true;
     }
-    
+
     if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'multicolored-element') {
-        updateCurrentBorderSize();
-        updateCurrentBorderRadius();
+        // updateCurrentBorderSize();
+        // updateCurrentBorderRadius();
     }
 
     if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'text') {
@@ -306,6 +307,8 @@ const editableHandler = (event) => {
         updateCurrentFontSize();
         textRect();
     } else {
+        // updateTools();
+
         defaultRect();
     }
 
@@ -314,10 +317,16 @@ const editableHandler = (event) => {
         draggable.resizable = false;
         backgroundRect();
     }
+    console.log('$(CURRENT_EDIT_ELEMENT)', $(CURRENT_EDIT_ELEMENT))
+    if ($(CURRENT_EDIT_ELEMENT).attr('data-type') == 'block') {
+        draggable.draggable = true;
+        draggable.resizable = true;
+    }
 
-    $(CURRENT_EDIT_ELEMENT).keyup((event) => {
-        draggable.updateRect();
-    });
+
+    // $(CURRENT_EDIT_ELEMENT).keyup((event) => {
+    //     draggable.updateRect();
+    // });
 
 };
 
@@ -511,8 +520,7 @@ const getToolsPanel = (event) => {
         let g_line_changed_color = $(CURRENT_EDIT_ELEMENT).find('line.color_polete');
         let g_rect_changed_color = $(CURRENT_EDIT_ELEMENT).find('rect.color_polete');
         let svg_pickers = [];
-        
-        
+
 
         g_svg_changed_color.each(function (index) {
             const source = $(this)
@@ -529,7 +537,7 @@ const getToolsPanel = (event) => {
 
             svg_pickers.push(pic)
         })
-        
+
         g_rect_changed_color.each(function (index) {
             const source = $(this)
             let button = $('<button>', {class: `color-picker-${index}`})
@@ -545,7 +553,7 @@ const getToolsPanel = (event) => {
 
             svg_pickers.push(pic)
         })
-        
+
         g_line_changed_color.each(function (index) {
             const source = $(this)
             let button = $('<button>', {class: `color-picker-${index}`})
@@ -577,8 +585,8 @@ const getToolsPanel = (event) => {
                 })
             svg_pickers.push(pic)
         });
-        
-        
+
+
         updateCurrentBorderSize();
         updateCurrentBorderRadius();
         $('.multicolored-tool').show();
@@ -654,7 +662,7 @@ addTextNode = (event) => {
     });
     $(new_row).on('click', getToolsPanel);
     $(new_row).css('cursor', 'move');
-   
+
 }
 
 //    Загрузка файлов
@@ -855,7 +863,6 @@ function updateView() {
 
 
 $('.main-svg').click((event) => {
-    event.stopPreventDefault
     let element = $(event.target);
 
     if (element.attr('data-set')) return;
