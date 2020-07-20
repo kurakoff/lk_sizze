@@ -486,7 +486,7 @@ pickr
         // console.log('changestop', instance);
     });
 
-const getToolsPanel = (event) => {
+const openToolsPanel = (event) => {
     $('.color-swatches').empty();
     let type = $(CURRENT_EDIT_ELEMENT).attr('data-type');
     $('.tools-panel-default').hide();
@@ -660,7 +660,7 @@ addTextNode = (event) => {
 
         editableHandler(event);
     });
-    $(new_row).on('click', getToolsPanel);
+    $(new_row).on('click', openToolsPanel);
     $(new_row).css('cursor', 'move');
 
 }
@@ -690,7 +690,7 @@ const addImgNode = () => {
     file_input.trigger('click');
 
     $('[data-set="true"]').click(editableHandler);
-    $('[data-set="true"]').click(getToolsPanel);
+    $('[data-set="true"]').click(openToolsPanel);
 }
 
 $('#upload1').change((event) => {

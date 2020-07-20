@@ -56,7 +56,7 @@ $(document).ready(function () {
             editableHandler(event);
         })
 
-        $(document).on('click', '[data-set="true"]', getToolsPanel)
+        $(document).on('click', '[data-set="true"]', openToolsPanel)
 
 
         $('.draggable').css('cursor', 'move');

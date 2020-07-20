@@ -71,7 +71,13 @@ function handleDrop(e) {
                     editableHandler(event);
                 });
 
+
                 $('.main-svg div').eq(1).prepend(new_elem);
+
+                let elementssss = $(new_elem).find(`.draggable`)
+                for (let elem of elementssss) {
+                    $(elem).on('click', openToolsPanel)
+                }
             }
 
         }, 'json')
@@ -117,6 +123,7 @@ $(document).on('dblclick', '.drag_elem', function (e) {
     $.post(`/element/get`, data, (response) => {
 
         if (response.result) {
+            close_sidebar_mobile_across_trigger()
             let width = (parseInt($('.main-svg').css('width')) / 2) + 'px';
             let height = (parseInt($('.main-svg').css('height')) / 2) + 'px';
             let new_elem = document.createElement("div");
@@ -133,7 +140,12 @@ $(document).on('dblclick', '.drag_elem', function (e) {
                 editableHandler(event);
             });
 
+
             $('.main-svg div').eq(1).prepend(new_elem);
+            let elementssss = $(new_elem).find(`.draggable`)
+            for (let elem of elementssss) {
+                $(elem).on('click', openToolsPanel)
+            }
         }
 
     }, 'json')
