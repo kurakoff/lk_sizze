@@ -532,8 +532,8 @@ div.element_container {
     box-sizing: border-box;
 }
 
-div.element_container:hover {
-    border: 4px dashed coral;
+.element_container:hover {
+    outline: 3px solid coral;
 }
 
 /*.html-list-container img{
