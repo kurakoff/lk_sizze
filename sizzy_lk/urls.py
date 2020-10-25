@@ -18,10 +18,13 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+# from api_redactor_app.urls import router
+
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', include('content.urls')),
                   path('user/', include('auth_users.urls')),
+                  # path('redactor_api/', include(router.urls)),
                   path('nested_admin/', include('nested_admin.urls')),
                   path('tinymce/', include('tinymce.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

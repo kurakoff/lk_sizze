@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
@@ -381,3 +383,27 @@ class TestView(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+
+class InitRedactorApi(View):
+    def get(self, request, project, *args, **kwargs):
+        response = {}
+        project = get_object_or_404(Project, pk=project, user=request.user)
+        prototype_pk = project.prototype.pk
+        categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
+        for category in categories:
+            response['title'] = category.title
+            response['two_in_row'] = category.two_in_row
+            elements = response['elements'] = []
+            for element in category.get_elements_on_prototype(prototype_pk).all():
+                j_element = {}
+                j_element['title'] = element.title
+                j_element['image'] = str(element.image)
+                j_element['layout'] = element.layout
+                j_element['active'] = element.active
+                print(j_element, type(j_element))
+                elements.append(j_element)
+        return JsonResponse(response)
+
+
+
