@@ -388,7 +388,7 @@ class TestView(View):
 class InitRedactorApi(View):
     def get(self, request, project, *args, **kwargs):
         response = {}
-        project = get_object_or_404(Project, pk=project, user=request.user)
+        project = get_object_or_404(Project, pk=project)
         prototype_pk = project.prototype.pk
         categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
         for category in categories:
