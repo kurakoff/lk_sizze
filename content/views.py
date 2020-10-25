@@ -387,14 +387,16 @@ class TestView(View):
 
 class InitRedactorApi(View):
     def get(self, request, project, *args, **kwargs):
-        response = {}
+        response = []
         project = get_object_or_404(Project, pk=project)
         prototype_pk = project.prototype.pk
         categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
         for category in categories:
-            response['title'] = category.title
-            response['two_in_row'] = category.two_in_row
-            elements = response['elements'] = []
+            category_j = {}
+            category_j['title'] = category.title
+            category_j['two_in_row'] = category.two_in_row
+            elements = category_j['elements'] = []
+            response.append(category_j)
             for element in category.get_elements_on_prototype(prototype_pk).all():
                 j_element = {}
                 j_element['title'] = element.title
@@ -403,7 +405,7 @@ class InitRedactorApi(View):
                 j_element['active'] = element.active
                 print(j_element, type(j_element))
                 elements.append(j_element)
-        return JsonResponse(response)
+        return JsonResponse({'categories    ': response})
 
 
 
