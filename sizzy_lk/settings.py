@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'auth_users.apps.AuthConfig',
     'content.apps.ContentConfig',
-    # 'api_redactor_app',
+    'api_redactor_app',
     'compressor',
     'tinymce',
     'nested_admin',

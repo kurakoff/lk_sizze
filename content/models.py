@@ -26,7 +26,7 @@ class Screen(models.Model):
     title = models.CharField(max_length=32, verbose_name='название', default='')
     layout = models.TextField(verbose_name='макет', default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
-    last_change = models.DateTimeField(verbose_name='последние изменение', default=now())
+    last_change = models.DateTimeField(verbose_name='последние изменение', default=now)
 
     class Meta:
         verbose_name = 'экран'
