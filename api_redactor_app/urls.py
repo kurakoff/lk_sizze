@@ -44,26 +44,20 @@ class ScreenView(APIView):
         if screen_id:
             payload = json.loads(request.body)
             screen = Screen.objects.filter(id=screen_id).first()
-            screen.title = payload['title']
+            if payload['title']:
+                screen.title = payload['title']
+            if payload['layout']:
+                screen.layout = payload['layout']
             screen.save()
             serializer = ScreenSerializer(screen)
             return JsonResponse({'screen': serializer.data})
         else:
             return JsonResponse({'result': False})
 
-    def post(self, request, project_id, screen_id=None, action=None):
-        if screen_id and project_id:
+    def post(self, request, project_id, screen_id=None):
+        if project_id:
             payload = json.loads(request.body)
-
-            if action == "save":
-                screen = Screen.objects.filter(id=screen_id, project_id=project_id).first()
-                screen.layout = payload['layout']
-                screen.save()
-                serializer = ScreenSerializer(screen)
-                return JsonResponse({'screen': serializer.data})
-
             project = Project.objects.get(id=project_id)
-
             screen = Screen(
                 title=payload['title'],
                 project=project,
