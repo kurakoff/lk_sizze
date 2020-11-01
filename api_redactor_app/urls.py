@@ -1,10 +1,9 @@
 import json
-
 from django.urls import path
-from rest_framework import routers, serializers
+from rest_framework import serializers
 from rest_framework.views import APIView
 
-from content.models import Screen, Project
+from content.models import Screen, Project, Prototype
 from django.http import JsonResponse
 
 
@@ -16,6 +15,20 @@ class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
         fields = ['id', 'title', 'layout']
+
+
+class PrototypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prototype
+        fields = ['device_name', 'base_layout', 'image', 'image_hover']
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    prototype = PrototypeSerializer(read_only=True)
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'prototype']
 
 
 class ScreenView(APIView):
@@ -30,9 +43,6 @@ class ScreenView(APIView):
                 serializer = ScreenSerializer(screens, many=True)
             return JsonResponse({'screens': serializer.data})
         else:
-            if action == 'original_layout':
-                project = Project.objects.get(id=project_id)
-                return JsonResponse({'layout': project.prototype.base_layout})
             if action == 'duplicate':
                 screen = Screen.objects.filter(id=screen_id, project=project_id).first()
                 screen.id = None
@@ -76,8 +86,16 @@ class ScreenView(APIView):
             return JsonResponse({'result': True})
 
 
+class ProjectApiView(APIView):
+    def get(self, request, project_id):
+        project = Project.objects.get(pk=project_id)
+        serializer = ProjectSerializer(project)
+        return JsonResponse({'project': serializer.data})
+
+
 urlpatterns = [
-    path('project/<int:project_id>/screens/', ScreenView.as_view()),
-    path('project/<int:project_id>/screens/<int:screen_id>/', ScreenView.as_view()),
-    path('project/<int:project_id>/screens/<int:screen_id>/<str:action>/', ScreenView.as_view()),
+    path('project/<int:project_id>', ProjectApiView.as_view()),
+    path('project/<int:project_id>/screens', ScreenView.as_view()),
+    path('project/<int:project_id>/screens/<int:screen_id>', ScreenView.as_view()),
+    path('project/<int:project_id>/screens/<int:screen_id>/<str:action>', ScreenView.as_view()),
 ]
