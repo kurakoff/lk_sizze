@@ -89,9 +89,11 @@ class CategoryPrototype(models.Model):
 class Element(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
     category_prototype = models.ForeignKey('CategoryPrototype', on_delete=CASCADE, default=1)
-    image = models.FileField(upload_to='images_elements/', verbose_name='изображение')
+    light_image = models.FileField(upload_to='images_elements/', verbose_name='light_cover')
+    dark_image = models.FileField(upload_to='images_elements/', verbose_name='dark_cover')
     # TODO: сделать редактор кода
-    layout = models.TextField(verbose_name='макет')
+    light_layout = models.TextField(verbose_name='light_макет')
+    dark_layout = models.TextField(verbose_name='dark_макет')
     active = models.BooleanField(verbose_name='on', default=True)
 
     class Meta:
