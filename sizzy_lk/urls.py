@@ -24,7 +24,7 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', include('content.urls')),
                   path('user/', include('auth_users.urls')),
-                  # path('redactor_api/', include(router.urls)),
+                  path('api/editor/', include('api_redactor_app.urls')),
                   path('nested_admin/', include('nested_admin.urls')),
                   path('tinymce/', include('tinymce.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
