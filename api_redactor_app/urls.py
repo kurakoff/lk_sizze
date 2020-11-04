@@ -32,19 +32,17 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class ScreenView(APIView):
-
     def get(self, request, project_id, screen_id=None, action=None):
-
         try:
             project = Project.objects.get(id=project_id)
         except Project.DoesNotExist:
-            return JsonResponse({'message': 'Project not found'})
+            return JsonResponse({'message': 'Project not found', "result": False})
 
         if screen_id:
             try:
                 screen = project.screen_set.get(id=screen_id)
             except Screen.DoesNotExist:
-                return JsonResponse({'message': 'Screen not found'})
+                return JsonResponse({'message': 'Screen not found', "result": False})
 
             if action == 'duplicate':
                 screen = Screen.objects.filter(id=screen_id, project=project_id).first()
@@ -53,46 +51,60 @@ class ScreenView(APIView):
                 serializer = ScreenSerializer(screen)
             else:
                 serializer = ScreenSerializer(screen)
-            return JsonResponse({'screen': serializer.data})
+            return JsonResponse({'screen': serializer.data, "result": True})
         else:
             screens = project.screen_set
             serializer = ScreenSerializer(screens, many=True)
-        return JsonResponse({'screens': serializer.data})
+        return JsonResponse({'screens': serializer.data, "result": True})
 
     def put(self, request, project_id, screen_id=None):
-        if screen_id:
-            payload = json.loads(request.body)
-            screen = Screen.objects.filter(id=screen_id).first()
-            if payload['title']:
-                screen.title = payload['title']
-            if payload['layout']:
-                screen.layout = payload['layout']
-            screen.save()
-            serializer = ScreenSerializer(screen)
-            return JsonResponse({'screen': serializer.data})
-        else:
-            return JsonResponse({'result': False})
-
-    def post(self, request, project_id, screen_id=None):
-        if project_id:
-            payload = json.loads(request.body)
+        try:
             project = Project.objects.get(id=project_id)
-            screen = Screen(
-                title=payload['title'],
-                project=project,
-                layout=project.prototype.base_layout
-            )
-            screen.save()
-            serializer = ScreenSerializer(screen)
-            return JsonResponse({'screen': serializer.data})
-        else:
-            return JsonResponse({'result': False})
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+        try:
+            screen = project.screen_set.get(id=screen_id)
+        except Screen.DoesNotExist:
+            return JsonResponse({'message': 'Screen not found', "result": False})
+
+        payload = json.loads(request.body)
+        if payload['title']:
+            screen.title = payload['title']
+        if payload['layout']:
+            screen.layout = payload['layout']
+        screen.save()
+        serializer = ScreenSerializer(screen)
+        return JsonResponse({'screen': serializer.data, "result": True})
+
+    def post(self, request, project_id):
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+
+        payload = json.loads(request.body)
+        screen = Screen(
+            title=payload['title'],
+            project=project,
+            layout=project.prototype.base_layout
+        )
+        screen.save()
+        serializer = ScreenSerializer(screen)
+        return JsonResponse({'screen': serializer.data, "result": True})
 
     def delete(self, request, project_id, screen_id=None):
-        if project_id and screen_id:
-            screen = Screen.objects.filter(project_id=project_id, id=screen_id).first()
-            screen.delete()
-            return JsonResponse({'result': True})
+
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+        try:
+            screen = project.screen_set.get(id=screen_id)
+        except Screen.DoesNotExist:
+            return JsonResponse({'message': 'Screen not found', "result": False})
+
+        screen.delete()
+        return JsonResponse({'result': True})
 
 
 class ProjectApiView(APIView):
