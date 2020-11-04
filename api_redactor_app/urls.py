@@ -68,9 +68,9 @@ class ScreenView(APIView):
             return JsonResponse({'message': 'Screen not found', "result": False})
 
         payload = json.loads(request.body)
-        if payload['title']:
+        if payload.get('title'):
             screen.title = payload['title']
-        if payload['layout']:
+        if payload.get('layout'):
             screen.layout = payload['layout']
         screen.save()
         serializer = ScreenSerializer(screen)
