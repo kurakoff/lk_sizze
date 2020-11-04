@@ -109,7 +109,10 @@ class ScreenView(APIView):
 
 class ProjectApiView(APIView):
     def get(self, request, project_id):
-        project = Project.objects.get(pk=project_id)
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
         serializer = ProjectSerializer(project)
         return JsonResponse({'project': serializer.data})
 
