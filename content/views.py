@@ -400,10 +400,8 @@ class InitRedactorApi(View):
             for element in category.get_elements_on_prototype(prototype_pk).all():
                 j_element = {}
                 j_element['title'] = element.title
-                j_element['light_layout'] = element.light_layout
-                j_element['light_image'] = str(element.light_image)
-                j_element['dark_layout'] = element.dark_layout
-                j_element['dark_image'] = str(element.dark_image)
+                j_element['layout'] = [element.light_layout, element.dark_layout]
+                j_element['image'] = [str(element.light_image), str(element.dark_image)]
                 j_element['active'] = element.active
                 print(j_element, type(j_element))
                 elements.append(j_element)
