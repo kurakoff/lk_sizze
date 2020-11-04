@@ -34,21 +34,30 @@ class ProjectSerializer(serializers.ModelSerializer):
 class ScreenView(APIView):
 
     def get(self, request, project_id, screen_id=None, action=None):
-        if not action:
-            if screen_id:
-                screens = Screen.objects.filter(id=screen_id, project=project_id).first()
-                serializer = ScreenSerializer(screens)
-            else:
-                screens = Screen.objects.filter(project=project_id).all()
-                serializer = ScreenSerializer(screens, many=True)
-            return JsonResponse({'screens': serializer.data})
-        else:
+
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found'})
+
+        if screen_id:
+            try:
+                screen = project.screen_set.get(id=screen_id)
+            except Screen.DoesNotExist:
+                return JsonResponse({'message': 'Screen not found'})
+
             if action == 'duplicate':
                 screen = Screen.objects.filter(id=screen_id, project=project_id).first()
                 screen.id = None
                 screen.save()
                 serializer = ScreenSerializer(screen)
-                return JsonResponse({'screen': serializer.data})
+            else:
+                serializer = ScreenSerializer(screen)
+            return JsonResponse({'screen': serializer.data})
+        else:
+            screens = project.screen_set
+            serializer = ScreenSerializer(screens, many=True)
+        return JsonResponse({'screens': serializer.data})
 
     def put(self, request, project_id, screen_id=None):
         if screen_id:
