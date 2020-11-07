@@ -26,7 +26,7 @@ class ScreenSerializer(serializers.ModelSerializer):
 class PrototypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prototype
-        fields = ['device_name', 'base_layout', 'image', 'image_hover']
+        fields = '__all__'
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -122,8 +122,31 @@ class ProjectApiView(APIView):
         serializer = ProjectSerializer(project)
         return JsonResponse({'project': serializer.data})
 
+    def post(self, request):
+
+        payload = json.loads(request.body)
+        try:
+            prototype = Prototype.objects.get(id=payload['prototype_id'])
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Prototype not found', "result": False})
+        project = Project()
+        project.prototype = prototype
+        project.name = payload['name']
+        project.user = request.user
+        project.save()
+        serializer = ProjectSerializer(project)
+        return JsonResponse({'project': serializer.data, "result": True})
+
+
+class PrototypeApiView(generics.ListAPIView):
+    serializer_class = PrototypeSerializer
+    queryset = Prototype.objects.all()
+
 
 urlpatterns = [
+    path('prototype', PrototypeApiView.as_view()),
+
+    path('project', ProjectApiView.as_view()),
     path('project/<int:project_id>', ProjectApiView.as_view()),
     path('project/<int:project_id>/screens', ScreenView.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>', ScreenView.as_view()),
