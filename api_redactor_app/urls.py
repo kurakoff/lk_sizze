@@ -123,47 +123,7 @@ class ProjectApiView(APIView):
         return JsonResponse({'project': serializer.data})
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        Token.objects.create(user=user)
-        return user
-
-
-class LoginView(APIView):
-    permission_classes = ()
-
-    def post(self, request,):
-        password = request.data.get("password")
-        email = request.data.get("email")
-        user = authenticate(username=email, password=password)
-        if user:
-            return JsonResponse({"token": user.auth_token.key})
-        else:
-            return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class UserCreate(generics.CreateAPIView):
-    authentication_classes = ()
-    permission_classes = ()
-    serializer_class = UserSerializer
-
-
 urlpatterns = [
-    path('users', UserCreate.as_view()),
-    path('login', LoginView.as_view()),
-
-
     path('project/<int:project_id>', ProjectApiView.as_view()),
     path('project/<int:project_id>/screens', ScreenView.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>', ScreenView.as_view()),
