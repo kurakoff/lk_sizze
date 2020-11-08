@@ -70,8 +70,8 @@ class ScreenView(APIView):
         payload = json.loads(request.body)
         if payload.get('title'): screen.title = payload['title']
         if payload.get('layout'): screen.layout = payload['layout']
-        if payload.get('width'): screen.layout = payload['width']
-        if payload.get('height'): screen.layout = payload['height']
+        if payload.get('width'): screen.width = payload['width']
+        if payload.get('height'): screen.height = payload['height']
         screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
