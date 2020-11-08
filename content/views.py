@@ -102,7 +102,7 @@ class CreateProjectView(View):
             project.user = request.user
             project.save()
 
-            screen = Screen(title='screen#1', project=project, layout=project.prototype.base_layout)
+            screen = Screen(title='screen#1', project=project, layout="")
             screen.save()
 
             response['result'] = True
@@ -207,7 +207,7 @@ class CreateScreenView(View):
         if form.is_valid():
             screen = form.save(commit=False)
             screen.user = request.user
-            screen.layout = screen.project.prototype.base_layout
+            screen.layout = ""
             screen.save()
             response['html_screen'] = render_to_string('content/reactor_partials/_screen.html', {'screen': screen})
             response['result'] = True
@@ -297,7 +297,7 @@ class ScreenActionView(View):
         if action == 'init_screen':
             screen = Screen.objects.order_by('-last_change').filter(project=project).first()
             if not screen:
-                screen = Screen(title='screen#1', project=project, layout=project.prototype.base_layout)
+                screen = Screen(title='screen#1', project=project, layout="")
                 screen.save()
             response['result'] = True
             response['screen_html'] = screen.layout
@@ -313,7 +313,7 @@ class ScreenActionView(View):
             screen_id = request.POST.get('screen_id')
             screen = Screen.objects.get(pk=int(screen_id))
             response['result'] = True
-            response['screen_html'] = screen.base_layout()
+            response['screen_html'] = ""
             response['screen_id'] = screen.id
         if action == 'save_screen':
             screen_id = request.POST.get('screen_id')

@@ -27,6 +27,8 @@ class Screen(models.Model):
     layout = models.TextField(verbose_name='макет', default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
     last_change = models.DateTimeField(verbose_name='последние изменение', default=now)
+    width = models.IntegerField(verbose_name='ширина', default=0)
+    height = models.IntegerField(verbose_name='высота', default=0)
 
     class Meta:
         verbose_name = 'экран'
@@ -35,13 +37,11 @@ class Screen(models.Model):
     def __str__(self):
         return self.pk
 
-    def base_layout(self):
-        return self.project.prototype.base_layout
-
 
 class Prototype(models.Model):
     device_name = models.CharField(max_length=64, verbose_name='название')
-    base_layout = HTMLField(verbose_name='начальный макет', default='')
+    width = models.IntegerField(verbose_name='ширина', default=0)
+    height = models.IntegerField(verbose_name='высота', default=0)
     image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
     image_hover = models.FileField(upload_to='images_prototypes/hover/', verbose_name='hover', default='')
 

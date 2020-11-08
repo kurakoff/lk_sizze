@@ -14,13 +14,13 @@ from django.http import JsonResponse
 class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
-        fields = ['id', 'title', 'layout']
+        fields = ['id', 'title', 'layout', 'width', 'height']
 
 
 class PrototypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prototype
-        fields = ['device_name', 'base_layout', 'image', 'image_hover']
+        fields = ['device_name', 'image', 'image_hover', 'width', 'height']
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -68,10 +68,10 @@ class ScreenView(APIView):
             return JsonResponse({'message': 'Screen not found', "result": False})
 
         payload = json.loads(request.body)
-        if payload.get('title'):
-            screen.title = payload['title']
-        if payload.get('layout'):
-            screen.layout = payload['layout']
+        if payload.get('title'): screen.title = payload['title']
+        if payload.get('layout'): screen.layout = payload['layout']
+        if payload.get('width'): screen.layout = payload['width']
+        if payload.get('height'): screen.layout = payload['height']
         screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
@@ -86,7 +86,9 @@ class ScreenView(APIView):
         screen = Screen(
             title=payload['title'],
             project=project,
-            layout=project.prototype.base_layout
+            layout="",
+            width=project.prototype.width,
+            height=project.prototype.height,
         )
         screen.save()
         serializer = ScreenSerializer(screen)
