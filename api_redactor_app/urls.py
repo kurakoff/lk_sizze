@@ -80,6 +80,7 @@ class ScreenView(APIView):
             screen.layout = payload['layout']
         screen.save()
         serializer = ScreenSerializer(screen)
+
         return JsonResponse({'screen': serializer.data, "result": True})
 
     def post(self, request, project_id):
@@ -123,12 +124,12 @@ class ProjectApiView(APIView):
         return JsonResponse({'project': serializer.data})
 
     def post(self, request):
-
         payload = json.loads(request.body)
         try:
             prototype = Prototype.objects.get(id=payload['prototype_id'])
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Prototype not found', "result": False})
+
         project = Project()
         project.prototype = prototype
         project.name = payload['name']
@@ -136,6 +137,27 @@ class ProjectApiView(APIView):
         project.save()
         serializer = ProjectSerializer(project)
         return JsonResponse({'project': serializer.data, "result": True})
+
+    def put(self, request, project_id):
+        payload = json.loads(request.body)
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+
+        project.name = payload['name']
+        project.save()
+        serializer = ProjectSerializer(project)
+        return JsonResponse({'project': serializer.data, "result": True})
+
+    def delete(self, request, project_id):
+
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+        project.delete()
+        return JsonResponse({'result': True})
 
 
 class PrototypeApiView(generics.ListAPIView):
@@ -148,6 +170,7 @@ urlpatterns = [
 
     path('project', ProjectApiView.as_view()),
     path('project/<int:project_id>', ProjectApiView.as_view()),
+
     path('project/<int:project_id>/screens', ScreenView.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>', ScreenView.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>/<str:action>', ScreenView.as_view()),
