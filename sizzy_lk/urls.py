@@ -25,6 +25,7 @@ urlpatterns = [
                   path('', include('content.urls')),
                   path('user/', include('auth_users.urls')),
                   path('api/editor/', include('api_redactor_app.urls')),
+                  path('api/auth/', include('auth_users.urls')),
                   path('nested_admin/', include('nested_admin.urls')),
                   path('tinymce/', include('tinymce.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

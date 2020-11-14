@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'tinymce',
     'nested_admin',
     'rest_framework',
+    'rest_framework.authtoken'
     # 'corsheaders',
 ]
 
@@ -172,3 +173,15 @@ TINYMCE_DEFAULT_CONFIG = {
     'custom_undo_redo_levels': 10,
     'extended_valid_elements': "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+APPEND_SLASH = False
