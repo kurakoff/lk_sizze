@@ -18,6 +18,7 @@ from .views import (
     CustomPasswordResetView,
 )
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -43,7 +44,9 @@ class ApiLoginView(APIView):
         email = request.data.get("email")
         user = authenticate(username=email, password=password)
         if user:
-            return JsonResponse({"token": user.auth_token.key})
+            response = JsonResponse({"result": True})
+            response.set_cookie('token', user.auth_token.key, httponly=True)
+            return response
         else:
             return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -54,6 +57,7 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 # AUTH URLS
+
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
