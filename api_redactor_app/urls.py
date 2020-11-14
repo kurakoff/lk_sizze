@@ -1,21 +1,37 @@
 import json
-
-from django.contrib.auth import authenticate
-from django.http import JsonResponse
-
 from django.urls import path
-from django.contrib.auth.models import User
-
-from rest_framework import serializers, generics, status
-from rest_framework.authtoken.models import Token
+from rest_framework import serializers, generics
 from rest_framework.views import APIView
-
 from content.models import Screen, Project, Prototype
 from django.http import JsonResponse
-
+from django.shortcuts import get_object_or_404
+from content.models import Project, Category
 
 # router = routers.DefaultRouter()
 # router.register(r'screen/<int:id>', ScreenView, basename='screens')
+
+
+class InitProject(APIView):
+    def get(self, request, project, *args, **kwargs):
+        response = []
+        project = get_object_or_404(Project, pk=project)
+        prototype_pk = project.prototype.pk
+        categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
+        for category in categories:
+            category_j = {}
+            category_j['title'] = category.title
+            category_j['two_in_row'] = category.two_in_row
+            elements = category_j['elements'] = []
+            response.append(category_j)
+            for element in category.get_elements_on_prototype(prototype_pk).all():
+                j_element = {}
+                j_element['title'] = element.title
+                j_element['layout'] = [element.light_layout, element.dark_layout]
+                j_element['image'] = [str(element.light_image), str(element.dark_image)]
+                j_element['active'] = element.active
+                print(j_element, type(j_element))
+                elements.append(j_element)
+        return JsonResponse({'categories    ': response})
 
 
 class ScreenSerializer(serializers.ModelSerializer):
@@ -113,7 +129,10 @@ class ScreenView(APIView):
             return JsonResponse({'message': 'Screen not found', "result": False})
 
         screen.delete()
-        return JsonResponse({'result': True})
+        screens = project.screen_set.all()
+        serializer = ScreenSerializer(screens, many=True)
+
+        return JsonResponse({'result': True, 'screen': serializer.data})
 
 
 class ProjectApiView(APIView):
@@ -168,6 +187,8 @@ class PrototypeApiView(generics.ListAPIView):
 
 
 urlpatterns = [
+    path('init/<int:project>', InitProject.as_view()),
+
     path('prototype', PrototypeApiView.as_view()),
 
     path('project', ProjectApiView.as_view()),

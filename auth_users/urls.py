@@ -6,6 +6,7 @@ from rest_framework import serializers, generics, status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 
+
 from .views import (
     LoginView,
     CustomLogoutView,

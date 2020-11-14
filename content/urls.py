@@ -3,7 +3,7 @@ from django.urls import path
 from .views import IndexView, ProfileView, ProfileSaveDetailsView, CreateProjectView, DeleteProjectView, \
     CopyProjectView, \
     EditProjectView, RedactorView, TestView, CreateScreenView, DeleteScreenView, CopyScreenView, EditScreenView, \
-    ScreenActionView, ElementView, ElementShowMoreView, InitRedactorApi
+    ScreenActionView, ElementView, ElementShowMoreView
 
 # CONTENT URLS
 urlpatterns = [
@@ -25,8 +25,6 @@ urlpatterns = [
 
     path('redactor/<int:project>', login_required(RedactorView.as_view()), name='redactor'),
 
-
-    path('redactor/api/init/<int:project>', InitRedactorApi.as_view(), name='init_api'),
 
     path('profile/change_password', login_required(ProfileView.as_view()), name='change_password'),
     path('profile/save_details', login_required(ProfileSaveDetailsView.as_view()), name='user_save_details'),
