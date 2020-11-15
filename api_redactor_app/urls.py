@@ -136,10 +136,13 @@ class ScreenView(APIView):
 
 class ProjectApiView(APIView):
     def get(self, request, project_id):
-        try:
-            project = Project.objects.get(id=project_id)
-        except Project.DoesNotExist:
-            return JsonResponse({'message': 'Project not found', "result": False})
+        if project_id:
+            try:
+                project = Project.objects.get(id=project_id)
+            except Project.DoesNotExist:
+                return JsonResponse({'message': 'Project not found', "result": False})
+        else:
+            project = Project.objects.filter(user=request.user).all()
         serializer = ProjectSerializer(project)
         return JsonResponse({'project': serializer.data})
 
@@ -186,11 +189,11 @@ class PrototypeApiView(generics.ListAPIView):
 
 
 urlpatterns = [
-    path('prototype', PrototypeApiView.as_view()),
     path('init/<int:project>', InitProject.as_view()),
-
     path('project', ProjectApiView.as_view()),
     path('project/<int:project_id>', ProjectApiView.as_view()),
+
+    path('prototype', PrototypeApiView.as_view()),
 
     path('project/<int:project_id>/screens', ScreenView.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>', ScreenView.as_view()),
