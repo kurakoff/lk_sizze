@@ -135,7 +135,7 @@ class ScreenView(APIView):
 
 
 class ProjectApiView(APIView):
-    def get(self, request, project_id):
+    def get(self, request, project_id=None):
         if project_id:
             try:
                 project = Project.objects.get(id=project_id)
