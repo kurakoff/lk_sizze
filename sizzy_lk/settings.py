@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'compressor',
     'tinymce',
     'nested_admin',
-    'corsheaders',
+    # 'corsheaders',
 
     'rest_framework',
     'rest_framework.authtoken'
@@ -54,8 +54,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
 
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'api_redactor_app.middleware.cors_middleware.open_access_middleware',
+
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -182,7 +182,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'api_redactor_app.helpers.is_auth.IsAuthenticated',
     )
 }
 
