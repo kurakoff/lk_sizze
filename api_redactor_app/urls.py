@@ -141,9 +141,12 @@ class ProjectApiView(APIView):
                 project = Project.objects.get(id=project_id)
             except Project.DoesNotExist:
                 return JsonResponse({'message': 'Project not found', "result": False})
+            serializer = ProjectSerializer(project)
+
         else:
             project = Project.objects.filter(user=request.user).all()
-        serializer = ProjectSerializer(project)
+            serializer = ProjectSerializer(project, many=True)
+
         return JsonResponse({'project': serializer.data})
 
     def post(self, request):
