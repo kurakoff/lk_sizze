@@ -32,7 +32,6 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
-        Token.objects.create(user=user)
         return user
 
 
@@ -44,6 +43,8 @@ class ApiLoginView(APIView):
         email = request.data.get("email")
         user = authenticate(username=email, password=password)
         if user:
+            user.auth_token.delete()
+            Token.objects.create(user=user)
             response = JsonResponse({"result": True})
             response.set_cookie('token', user.auth_token.key, httponly=True)
             return response
