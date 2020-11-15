@@ -187,9 +187,8 @@ class PrototypeApiView(generics.ListAPIView):
 
 
 urlpatterns = [
-    path('init/<int:project>', InitProject.as_view()),
-
     path('prototype', PrototypeApiView.as_view()),
+    path('init/<int:project>', InitProject.as_view()),
 
     path('project', ProjectApiView.as_view()),
     path('project/<int:project_id>', ProjectApiView.as_view()),
