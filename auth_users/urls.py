@@ -45,7 +45,7 @@ class ApiLoginView(APIView):
         if user:
             user.auth_token.delete()
             Token.objects.create(user=user)
-            response = JsonResponse({"result": True})
+            response = JsonResponse({"result": True, "token": user.auth_token.key})
             response.set_cookie('token', user.auth_token.key, httponly=True)
             return response
         else:
