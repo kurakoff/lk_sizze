@@ -43,7 +43,10 @@ class ApiLoginView(APIView):
         email = request.data.get("email")
         user = authenticate(username=email, password=password)
         if user:
-            user.auth_token.delete()
+            try:
+                user.auth_token.delete()
+            except Exception as e:
+                pass
             Token.objects.create(user=user)
             response = JsonResponse({"result": True, "token": user.auth_token.key})
             response.set_cookie('token', user.auth_token.key, httponly=True)
