@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from content.models import Project, Category
 
+
 # router = routers.DefaultRouter()
 # router.register(r'screen/<int:id>', ScreenView, basename='screens')
 
@@ -161,8 +162,17 @@ class ProjectApiView(APIView):
         project.name = payload['name']
         project.user = request.user
         project.save()
+        screen = Screen(
+            title='first_page',
+            project=project,
+            width=project.prototype.width,
+            height=project.prototype.height
+        )
+        screen.save()
         serializer = ProjectSerializer(project)
-        return JsonResponse({'project': serializer.data, "result": True})
+        data = serializer.data
+        data['screen'] = ScreenSerializer(screen).data
+        return JsonResponse({'project': data, "result": True})
 
     def put(self, request, project_id):
         payload = json.loads(request.body)
