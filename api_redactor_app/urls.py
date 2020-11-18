@@ -31,7 +31,7 @@ class InitProject(APIView):
                 j_element['image'] = [str(element.light_image), str(element.dark_image)]
                 j_element['active'] = element.active
                 elements.append(j_element)
-        return JsonResponse({'categories    ': response})
+        return JsonResponse({'categories': response})
 
 
 class ScreenSerializer(serializers.ModelSerializer):
