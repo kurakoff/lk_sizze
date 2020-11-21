@@ -91,6 +91,13 @@ class UserUpdate(APIView):
         return JsonResponse({"result": True, 'user': serialize.data})
 
 
+class UserProfile(APIView):
+
+    def get(self, request):
+        user = request.user
+        serialize = UserSerializer(user)
+        return JsonResponse({"result": True, 'user': serialize.data})
+
 # AUTH URLS
 
 
@@ -101,6 +108,7 @@ urlpatterns = [
     path('users', UserCreate.as_view()),
 
     path('users/change', UserUpdate.as_view()),
+    path('users/profile', UserProfile.as_view()),
 
     path('login', ApiLoginView.as_view()),
 
