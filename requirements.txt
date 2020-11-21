@@ -4,4 +4,5 @@ django-libsass
 django-tinymce
 pillow
 django-nested-admin==3.2.2
+django-jsonfield
 # django-cors-headers==3.5.0
