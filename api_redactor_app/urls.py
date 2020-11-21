@@ -31,7 +31,7 @@ class InitProject(APIView):
                 j_element['layout'] = [element.light_layout, element.dark_layout]
                 j_element['image'] = [str(element.light_image), str(element.dark_image)]
                 j_element['active'] = element.active
-                if 'icon_' in category.title:
+                if 'icons_' in category.title:
                     icons.append(j_element)
                 else:
                     elements.append(j_element)
