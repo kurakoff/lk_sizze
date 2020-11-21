@@ -51,7 +51,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'prototype']
+        fields = ['id', 'name', 'prototype', 'colors']
 
 
 class ScreenView(APIView):
@@ -160,6 +160,8 @@ class ProjectApiView(APIView):
         project = Project()
         project.prototype = prototype
         project.name = payload['name']
+        if payload.get('colors'):
+            project.colors = payload['colors']
         project.user = request.user
         project.save()
         screen = Screen(
@@ -181,7 +183,11 @@ class ProjectApiView(APIView):
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Project not found', "result": False})
 
-        project.name = payload['name']
+        if payload.get('name'):
+            project.name = payload['name']
+        if payload.get('colors'):
+            project.colors = payload['colors']
+
         project.save()
         serializer = ProjectSerializer(project)
         return JsonResponse({'project': serializer.data, "result": True})

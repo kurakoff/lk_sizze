@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import jsonfield
 from django.contrib.auth.models import User
 from django.db import models
 from tinymce.models import HTMLField
@@ -9,10 +10,17 @@ from tinymce.widgets import TinyMCE
 CASCADE = models.CASCADE
 
 
+class UserElement(models.Model):
+    title = models.CharField(max_length=36,  blank=False)
+    layout = models.TextField(default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 class Project(models.Model):
     name = models.CharField(max_length=16, verbose_name='название', blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
+    colors = jsonfield.JSONField()
 
     class Meta:
         verbose_name = 'проект'
