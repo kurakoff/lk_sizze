@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -5,7 +7,6 @@ from django.urls import path
 from rest_framework import serializers, generics, status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-
 
 from .views import (
     LoginView,
@@ -38,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ApiLoginView(APIView):
     permission_classes = ()
 
-    def post(self, request,):
+    def post(self, request, ):
         password = request.data.get("password")
         email = request.data.get("email")
         user = authenticate(username=email, password=password)
@@ -60,6 +61,36 @@ class UserCreate(generics.CreateAPIView):
     permission_classes = ()
     serializer_class = UserSerializer
 
+
+class UserUpdate(APIView):
+
+    def put(self, request):
+        payload = json.loads(request.body)
+        user = request.user
+
+        name = payload.get("username")
+        email = payload.get("email")
+
+        password_1 = payload.get("password_1")
+        password_2 = payload.get("password_2")
+        old_password = payload.get("old_password")
+
+        if name:
+            user.username = name
+        if email:
+            user.email = email
+
+        if old_password:
+            if user.check_password(old_password) and password_1 == password_2:
+                user.set_password(password_1)
+            else:
+                return JsonResponse({"result": False, 'message': 'Data error'})
+
+        user.save()
+        serialize = UserSerializer(user)
+        return JsonResponse({"result": True, 'user': serialize.data})
+
+
 # AUTH URLS
 
 
@@ -68,6 +99,9 @@ urlpatterns = [
     path('logout/', CustomLogoutView.as_view(), name='logout'),
 
     path('users', UserCreate.as_view()),
+
+    path('users/change', UserUpdate.as_view()),
+
     path('login', ApiLoginView.as_view()),
 
     path('create_account/', CreateAccount.as_view(), name='create_account'),
