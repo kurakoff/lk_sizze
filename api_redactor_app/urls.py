@@ -2,7 +2,7 @@ import json
 from django.urls import path
 from rest_framework import serializers, generics
 from rest_framework.views import APIView
-from content.models import Screen, Project, Prototype
+from content.models import Screen, Project, Prototype, UserElement
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from content.models import Project, Category
@@ -207,12 +207,66 @@ class PrototypeApiView(generics.ListAPIView):
     queryset = Prototype.objects.all()
 
 
+class UserElementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserElement
+        fields = ['title', 'layout']
+
+
+class UserElementApiView(APIView):
+    def get(self, request):
+        user = request.user
+        elements = UserElement.objects.filter(user=user).all()
+        serialize = UserElementSerializer(elements, many=True)
+        return JsonResponse({"elements": serialize.data, "result": True})
+
+    def post(self, request):
+        user = request.user
+        payload = json.loads(request.body)
+        if not payload.get('title'):
+            return JsonResponse({"message": 'Element dont has  title', "result": False})
+        element = UserElement(title=payload['title'], user=user)
+        if payload.get('layout'):
+            element.layout = payload['layout']
+        element.save()
+        serialize = UserElementSerializer(element)
+        return JsonResponse({"elements": serialize.data, "result": True})
+
+    def put(self, request, id):
+        try:
+            element = UserElement.objects.get(id=id)
+        except UserElement.DoesNotExist:
+            return JsonResponse({'message': 'Element not found', "result": False})
+
+        payload = json.loads(request.body)
+
+        if payload.get('title'):
+            element.title = payload['title']
+        if payload.get('layout'):
+            element.layout = payload['layout']
+        element.save()
+        serialize = UserElementSerializer(element)
+        return JsonResponse({"elements": serialize.data, "result": True})
+
+    def delete(self, request, id):
+        try:
+            element = UserElement.objects.get(id=id)
+        except UserElement.DoesNotExist:
+            return JsonResponse({'message': 'Element not found', "result": False})
+        element.delete()
+        elements = UserElement.objects.filter(user=request.user).all()
+        serialize = UserElementSerializer(elements, many=True)
+        return JsonResponse({"result": True, "elements": serialize.data})
+
+
 urlpatterns = [
     path('init/<int:project>', InitProject.as_view()),
     path('project', ProjectApiView.as_view()),
     path('project/<int:project_id>', ProjectApiView.as_view()),
 
     path('prototype', PrototypeApiView.as_view()),
+    path('userelements', UserElementApiView.as_view()),
+    path('userelements/<int:id>', UserElementApiView.as_view()),
 
     path('project/<int:project_id>/screens', ScreenView.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>', ScreenView.as_view()),
