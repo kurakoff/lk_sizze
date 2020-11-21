@@ -23,6 +23,7 @@ class InitProject(APIView):
             category_j['title'] = category.title
             category_j['two_in_row'] = category.two_in_row
             elements = category_j['elements'] = []
+            icons = category_j['icons'] = []
             response.append(category_j)
             for element in category.get_elements_on_prototype(prototype_pk).all():
                 j_element = {}
@@ -30,7 +31,10 @@ class InitProject(APIView):
                 j_element['layout'] = [element.light_layout, element.dark_layout]
                 j_element['image'] = [str(element.light_image), str(element.dark_image)]
                 j_element['active'] = element.active
-                elements.append(j_element)
+                if 'icon_' in category.title:
+                    icons.append(j_element)
+                else:
+                    elements.append(j_element)
         return JsonResponse({'categories': response})
 
 
