@@ -214,7 +214,7 @@ class PrototypeApiView(generics.ListAPIView):
 class UserElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserElement
-        fields = ['title', 'layout']
+        fields = ['id', 'title', 'layout']
 
 
 class UserElementApiView(APIView):
