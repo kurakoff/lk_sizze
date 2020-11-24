@@ -189,7 +189,7 @@ class ProjectApiView(APIView):
 
         if payload.get('name'):
             project.name = payload['name']
-        if payload.get('colors'):
+        if 'colors' in payload.keys():
             project.colors = payload['colors']
 
         project.save()
