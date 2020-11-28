@@ -37,7 +37,7 @@ class Screen(models.Model):
     last_change = models.DateTimeField(verbose_name='последние изменение', default=now)
     width = models.IntegerField(verbose_name='ширина', default=0)
     height = models.IntegerField(verbose_name='высота', default=0)
-    background_color = models.TextField(verbose_name='макет', default='#232323')
+    background_color = models.TextField(default='#232323')
 
     class Meta:
         verbose_name = 'экран'

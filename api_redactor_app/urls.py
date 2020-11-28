@@ -41,7 +41,7 @@ class InitProject(APIView):
 class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
-        fields = ['id', 'title', 'layout', 'width', 'height']
+        fields = ['id', 'title', 'layout', 'width', 'height', 'background_color']
 
 
 class PrototypeSerializer(serializers.ModelSerializer):
@@ -99,7 +99,7 @@ class ScreenView(APIView):
         if payload.get('layout'): screen.layout = payload['layout']
         if payload.get('width'): screen.width = payload['width']
         if payload.get('height'): screen.height = payload['height']
-        if payload.get('background_color'): screen.height = payload['background_color']
+        if payload.get('background_color'): screen.background_color = payload['background_color']
         screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
