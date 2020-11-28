@@ -99,6 +99,7 @@ class ScreenView(APIView):
         if payload.get('layout'): screen.layout = payload['layout']
         if payload.get('width'): screen.width = payload['width']
         if payload.get('height'): screen.height = payload['height']
+        if payload.get('background_color'): screen.height = payload['background_color']
         screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
