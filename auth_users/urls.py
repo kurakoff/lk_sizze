@@ -1,8 +1,11 @@
 import json
 
+from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.urls import path
 from rest_framework import serializers, generics, status
 from rest_framework.authtoken.models import Token
@@ -33,12 +36,20 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+        send_mail(
+            f"Добро пожаловать на sizze",
+            msg_html,
+            getattr(settings, "EMAIL_HOST_USER"),
+            [user.email],
+            html_message=msg_html,
+            fail_silently=True
+        )
         return user
 
 
 class ApiLoginView(APIView):
     permission_classes = ()
-
     def post(self, request, ):
         password = request.data.get("password")
         email = request.data.get("email")
