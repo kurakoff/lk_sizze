@@ -56,7 +56,6 @@ MIDDLEWARE = [
 
     'api_redactor_app.middleware.cors_middleware.open_access_middleware',
 
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -188,3 +187,9 @@ REST_FRAMEWORK = {
 
 APPEND_SLASH = False
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+
+GOOGLE_PHOTO_API = {"web": {"client_id": "334729455720-v3rk8a7n810m2u52d7ekn5gr2q2rkqua.apps.googleusercontent.com",
+                            "project_id": "sizze-photo", "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                            "token_uri": "https://oauth2.googleapis.com/token",
+                            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                            "client_secret": "6QHX7jQht8kLwY1PlXntC1pL", "redirect_uris": ["https://sizze.io/"]}}

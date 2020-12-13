@@ -50,6 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ApiLoginView(APIView):
     permission_classes = ()
+
     def post(self, request, ):
         password = request.data.get("password")
         email = request.data.get("email")

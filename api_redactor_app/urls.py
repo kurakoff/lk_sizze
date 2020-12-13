@@ -1,11 +1,24 @@
 import json
+import os
+
+import googleapiclient
+from django.conf import settings
 from django.urls import path
+from gphotospy import authorize
+from gphotospy.media import Media
+from gphotospy.album import Album
+
 from rest_framework import serializers, generics
 from rest_framework.views import APIView
-from content.models import Screen, Project, Prototype, UserElement
+from content.models import Screen, Project, Prototype, UserElement, UserProfile
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from content.models import Project, Category
+
+
+CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
+print(settings.BASE_DIR)
+service = authorize.init(CLIENT_SECRET_FILE)
 
 
 # router = routers.DefaultRouter()
@@ -264,7 +277,51 @@ class UserElementApiView(APIView):
         return JsonResponse({"result": True, "elements": serialize.data})
 
 
+class GoogleImageView(APIView):
+
+    def post(self, request):
+        payload = json.loads(request.body)
+        try:
+            user_profile = UserProfile.objects.get(user_id=request.user.id)
+        except UserProfile.DoesNotExist:
+            user_profile = UserProfile(user=request.user)
+        print(user_profile)
+
+        album_manager = Album(service)
+        media_manager = Media(service)
+        if not bool(user_profile.google_album_id):
+            new_album = album_manager.create(f'user#{request.user.id}')
+            album_id = new_album.get("id")
+            user_profile.google_album_id = album_id
+            user_profile.save()
+
+        # image = payload['image']
+        # media_manager.stage_media(image) # Как туда картинку из буфера заливать?
+
+        img_id = media_manager.batchCreate(album_id=user_profile.google_album_id)[0]['mediaItem']['id']
+        img_url = media_manager.get(img_id)['baseUrl']
+
+        return JsonResponse({"result": True, "img_id": img_id, "img_url": img_url})
+
+    def delete(self, request):
+        payload = json.loads(request.body)
+        id_photo = payload['image_id']
+
+        album_manager = Album(service)
+
+        error = None
+        user_profile = UserProfile.objects.get(user_id=request.user.id)
+        try:
+            album_manager.batchRemoveMediaItems(album_id=user_profile.google_album_id, items=[id_photo])
+        except googleapiclient.errors.HttpError as e:
+            print(e)
+            error = str(e)
+        return JsonResponse({'result': True, "error": error})
+
+
 urlpatterns = [
+    path('image', GoogleImageView.as_view()),
+
     path('init/<int:project>', InitProject.as_view()),
     path('project', ProjectApiView.as_view()),
     path('project/<int:project_id>', ProjectApiView.as_view()),

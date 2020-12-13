@@ -5,4 +5,5 @@ django-tinymce
 pillow
 django-nested-admin==3.2.2
 django-jsonfield
+gphotospy
 # django-cors-headers==3.5.0

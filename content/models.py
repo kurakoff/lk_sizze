@@ -10,6 +10,11 @@ from tinymce.widgets import TinyMCE
 CASCADE = models.CASCADE
 
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    google_album_id = models.CharField(max_length=100)
+
+
 class UserElement(models.Model):
     title = models.CharField(max_length=36,  blank=False)
     layout = models.TextField(default='')
