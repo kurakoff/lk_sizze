@@ -1,5 +1,9 @@
+import base64
 import json
 import os
+import random
+import string
+from mimetypes import guess_extension, guess_type
 
 import googleapiclient
 from django.conf import settings
@@ -20,6 +24,11 @@ CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
 print(settings.BASE_DIR)
 service = authorize.init(CLIENT_SECRET_FILE)
 
+
+def get_random_string(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
 
 # router = routers.DefaultRouter()
 # router.register(r'screen/<int:id>', ScreenView, basename='screens')
@@ -295,8 +304,16 @@ class GoogleImageView(APIView):
             user_profile.google_album_id = album_id
             user_profile.save()
 
-        # image = payload['image']
-        # media_manager.stage_media(image) # Как туда картинку из буфера заливать?
+        data = payload['image'].split('base64,')[1].replace(' ', '+')
+        ext = guess_extension(guess_type("data:image/png;base64,")[0])
+
+        img_data = base64.b64decode(data)
+        file = f'{settings.BASE_DIR}/{get_random_string(10)}{ext}'
+        with open(file, 'wb') as f:
+            f.write(img_data)
+
+        media_manager.stage_media(file)
+        os.remove(file)
 
         img_id = media_manager.batchCreate(album_id=user_profile.google_album_id)[0]['mediaItem']['id']
         img_url = media_manager.get(img_id)['baseUrl']
