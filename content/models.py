@@ -18,7 +18,7 @@ class UserProfile(models.Model):
 class UserElement(models.Model):
     title = models.CharField(max_length=36,  blank=False)
     layout = models.TextField(default='')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, default=None)
 
 
 class Project(models.Model):

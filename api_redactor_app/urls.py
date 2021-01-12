@@ -243,16 +243,36 @@ class UserElementSerializer(serializers.ModelSerializer):
 class UserElementApiView(APIView):
     def get(self, request):
         user = request.user
-        elements = UserElement.objects.filter(user=user).all()
+        payload = json.loads(request.body)
+
+        if not payload.get('project_id'):
+            return JsonResponse({"message": 'Missing project_id', "result": False})
+
+        try:
+            project = Project.objects.get(id=payload.get('project_id'), user=user)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': f'Project for user {user.username} not found', "result": False})
+
+        elements = UserElement.objects.filter(project=project).all()
         serialize = UserElementSerializer(elements, many=True)
         return JsonResponse({"elements": serialize.data, "result": True})
 
     def post(self, request):
         user = request.user
         payload = json.loads(request.body)
+
         if not payload.get('title'):
-            return JsonResponse({"message": 'Element dont has  title', "result": False})
-        element = UserElement(title=payload['title'], user=user)
+            return JsonResponse({"message": 'Missing title', "result": False})
+
+        if not payload.get('project_id'):
+            return JsonResponse({"message": 'Missing project_id', "result": False})
+
+        try:
+            project = Project.objects.get(id=payload.get('project_id'), user=user)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+
+        element = UserElement(title=payload['title'], project=project)
         if payload.get('layout'):
             element.layout = payload['layout']
         element.save()
@@ -260,8 +280,19 @@ class UserElementApiView(APIView):
         return JsonResponse({"elements": serialize.data, "result": True})
 
     def put(self, request, id):
+        user = request.user
+        payload = json.loads(request.body)
+
+        if not payload.get('project_id'):
+            return JsonResponse({"message": 'Missing project_id', "result": False})
+
         try:
-            element = UserElement.objects.get(id=id)
+            project = Project.objects.get(id=payload.get('project_id'), user=user)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+
+        try:
+            element = UserElement.objects.get(id=id, project=project)
         except UserElement.DoesNotExist:
             return JsonResponse({'message': 'Element not found', "result": False})
 
@@ -276,12 +307,23 @@ class UserElementApiView(APIView):
         return JsonResponse({"elements": serialize.data, "result": True})
 
     def delete(self, request, id):
+        user = request.user
+        payload = json.loads(request.body)
+
+        if not payload.get('project_id'):
+            return JsonResponse({"message": 'Missing project_id', "result": False})
+
         try:
-            element = UserElement.objects.get(id=id)
+            project = Project.objects.get(id=payload.get('project_id'), user=user)
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found', "result": False})
+
+        try:
+            element = UserElement.objects.get(id=id, project=project)
         except UserElement.DoesNotExist:
             return JsonResponse({'message': 'Element not found', "result": False})
         element.delete()
-        elements = UserElement.objects.filter(user=request.user).all()
+        elements = UserElement.objects.filter(project=project).all()
         serialize = UserElementSerializer(elements, many=True)
         return JsonResponse({"result": True, "elements": serialize.data})
 
