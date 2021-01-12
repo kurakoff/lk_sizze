@@ -1,11 +1,7 @@
-from datetime import datetime
-
 import jsonfield
 from django.contrib.auth.models import User
 from django.db import models
-from tinymce.models import HTMLField
 from django.utils.timezone import now
-from tinymce.widgets import TinyMCE
 
 CASCADE = models.CASCADE
 
@@ -128,3 +124,11 @@ class Settings(models.Model):
 
     def __str__(self):
         return self.slug
+
+
+class SharedProject(models.Model):
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    permission = jsonfield.JSONField() # permission = {permission: ['edit' and etc. ]}
+    all_users = models.BooleanField()
