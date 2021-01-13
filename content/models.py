@@ -126,9 +126,9 @@ class Settings(models.Model):
         return self.slug
 
 
-class SharedProject(models.Model):
-    from_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    to_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    permission = jsonfield.JSONField() # permission = {permission: ['edit' and etc. ]}
-    all_users = models.BooleanField()
+# class SharedProject(models.Model):
+#     from_user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     to_user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+#     permission = jsonfield.JSONField() # permission = {permission: ['edit' and etc. ]}
+#     all_users = models.BooleanField()
