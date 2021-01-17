@@ -241,15 +241,12 @@ class UserElementSerializer(serializers.ModelSerializer):
 
 
 class UserElementApiView(APIView):
-    def get(self, request):
-        user = request.user
-        payload = json.loads(request.body)
 
-        if not payload.get('project_id'):
-            return JsonResponse({"message": 'Missing project_id', "result": False})
+    def get(self, request, project_id):
+        user = request.user
 
         try:
-            project = Project.objects.get(id=payload.get('project_id'), user=user)
+            project = Project.objects.get(id=project_id, user=user)
         except Project.DoesNotExist:
             return JsonResponse({'message': f'Project for user {user.username} not found', "result": False})
 
@@ -257,18 +254,15 @@ class UserElementApiView(APIView):
         serialize = UserElementSerializer(elements, many=True)
         return JsonResponse({"elements": serialize.data, "result": True})
 
-    def post(self, request):
+    def post(self, request, project_id):
         user = request.user
         payload = json.loads(request.body)
 
         if not payload.get('title'):
             return JsonResponse({"message": 'Missing title', "result": False})
 
-        if not payload.get('project_id'):
-            return JsonResponse({"message": 'Missing project_id', "result": False})
-
         try:
-            project = Project.objects.get(id=payload.get('project_id'), user=user)
+            project = Project.objects.get(id=project_id, user=user)
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Project not found', "result": False})
 
@@ -279,20 +273,16 @@ class UserElementApiView(APIView):
         serialize = UserElementSerializer(element)
         return JsonResponse({"elements": serialize.data, "result": True})
 
-    def put(self, request, id):
+    def put(self, request, project_id, element_id):
         user = request.user
-        payload = json.loads(request.body)
-
-        if not payload.get('project_id'):
-            return JsonResponse({"message": 'Missing project_id', "result": False})
 
         try:
-            project = Project.objects.get(id=payload.get('project_id'), user=user)
+            project = Project.objects.get(id=project_id, user=user)
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Project not found', "result": False})
 
         try:
-            element = UserElement.objects.get(id=id, project=project)
+            element = UserElement.objects.get(id=element_id, project=project)
         except UserElement.DoesNotExist:
             return JsonResponse({'message': 'Element not found', "result": False})
 
@@ -306,20 +296,16 @@ class UserElementApiView(APIView):
         serialize = UserElementSerializer(element)
         return JsonResponse({"elements": serialize.data, "result": True})
 
-    def delete(self, request, id):
+    def delete(self, request, project_id, element_id):
         user = request.user
-        payload = json.loads(request.body)
-
-        if not payload.get('project_id'):
-            return JsonResponse({"message": 'Missing project_id', "result": False})
 
         try:
-            project = Project.objects.get(id=payload.get('project_id'), user=user)
+            project = Project.objects.get(id=project_id, user=user)
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Project not found', "result": False})
 
         try:
-            element = UserElement.objects.get(id=id, project=project)
+            element = UserElement.objects.get(id=element_id, project=project)
         except UserElement.DoesNotExist:
             return JsonResponse({'message': 'Element not found', "result": False})
         element.delete()
@@ -387,7 +373,9 @@ urlpatterns = [
 
     path('prototype', PrototypeApiView.as_view()),
     path('userelements', UserElementApiView.as_view()),
-    path('userelements/<int:id>', UserElementApiView.as_view()),
+
+    path('userelements/<int:project_id>', UserElementApiView.as_view()),
+    path('userelements/<int:project_id>/<int:element_id>', UserElementApiView.as_view()),
 
     path('project/<int:project_id>/screens', ScreenView.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>', ScreenView.as_view()),
