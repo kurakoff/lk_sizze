@@ -11,7 +11,7 @@ CASCADE = models.CASCADE
 
 class Project(models.Model):
     name = models.CharField(max_length=16, verbose_name='название', blank=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
 
     class Meta:
@@ -114,3 +114,31 @@ class Settings(models.Model):
 
     def __str__(self):
         return self.slug
+
+
+class ProjectPermissions(models.Model):
+    permission = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = 'права проекта'
+        verbose_name_plural = 'права проектов'
+        db_table = "project_permissions"
+
+    def __str__(self):
+        return self.permission
+
+
+class ShareProject(models.Model):
+    permissions = models.ManyToManyField(ProjectPermissions, verbose_name='права', related_name='permissions')
+    project_user_id = models.IntegerField(verbose_name='автор проекта')
+    project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE, verbose_name='проект')
+    user = models.ForeignKey(User, verbose_name='получатели', on_delete=models.CASCADE, related_name='user_reverse',
+                                null=True)
+
+    class Meta:
+        verbose_name = 'Поделиться проектом'
+        verbose_name_plural = 'Поделиться проектами'
+        db_table = "share_projects"
+
+    def __str__(self):
+        return str(self.project.id)

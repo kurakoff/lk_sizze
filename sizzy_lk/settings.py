@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     # 'corsheaders',
 
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -183,7 +184,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'api_redactor_app.helpers.is_auth.IsAuthenticated',
-    )
+    ),
 }
 
 APPEND_SLASH = False

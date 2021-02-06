@@ -6,7 +6,9 @@ from content.models import Screen, Project, Prototype
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from content.models import Project, Category
-
+from .views import ProjectShareView, ProjectShareToUserView
+from .permissions import ReadPermission, IsAuthor, EditPermission, DeletePermission
+from rest_framework.permissions import IsAuthenticated
 
 # router = routers.DefaultRouter()
 # router.register(r'screen/<int:id>', ScreenView, basename='screens')
@@ -136,6 +138,9 @@ class ScreenView(APIView):
 
 
 class ProjectApiView(APIView):
+    #Установил пару прав для теста
+    permission_classes = [IsAuthor | ReadPermission]
+
     def get(self, request, project_id=None):
         if project_id:
             try:
@@ -187,7 +192,6 @@ class ProjectApiView(APIView):
         return JsonResponse({'project': serializer.data, "result": True})
 
     def delete(self, request, project_id):
-
         try:
             project = Project.objects.get(id=project_id)
         except Project.DoesNotExist:
@@ -205,6 +209,10 @@ urlpatterns = [
     path('init/<int:project>', InitProject.as_view()),
     path('project', ProjectApiView.as_view()),
     path('project/<int:project_id>', ProjectApiView.as_view()),
+
+    path('project/<int:project_id>/share/', ProjectShareView.as_view({'post': 'post', 'get': 'get', 'delete': 'delete'})),
+    path('project/<int:project_id>/share/<int:user>/', ProjectShareToUserView.as_view({'get': 'get', 'put': 'put',
+                                                                                       'delete': 'delete'})),
 
     path('prototype', PrototypeApiView.as_view()),
 
