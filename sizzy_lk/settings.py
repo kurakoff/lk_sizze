@@ -42,14 +42,12 @@ INSTALLED_APPS = [
     'compressor',
     'tinymce',
     'nested_admin',
-    'drf_yasg',
 
     'rest_framework',
     'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
-    "social_django.middleware.SocialAuthExceptionMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
