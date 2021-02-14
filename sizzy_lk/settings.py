@@ -42,13 +42,14 @@ INSTALLED_APPS = [
     'compressor',
     'tinymce',
     'nested_admin',
-    # 'corsheaders',
+    'drf_yasg',
 
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
+    "social_django.middleware.SocialAuthExceptionMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,8 +76,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                # 'content.context_processors.context',
 
             ],
         },
@@ -126,7 +125,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-AUTHENTICATION_BACKENDS = ['auth_users.auth_helpers.helpers.EmailBackend']
+AUTHENTICATION_BACKENDS = (
+    'auth_users.auth_helpers.helpers.EmailBackend',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -155,7 +156,7 @@ STATIC_ROOT = 'static'
 
 MEDIA_ROOT = './media/'
 MEDIA_URL = '/media/'
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # ПОКА ТЕСТ
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '465'

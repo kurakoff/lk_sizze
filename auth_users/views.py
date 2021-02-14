@@ -46,7 +46,7 @@ class LoginView(TemplateView):
         password = request.POST['password']
         user = authenticate(username=email, password=password)
         if user:
-            login(request, user)
+            login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
             response['redirect_url'] = '/'
         else:
@@ -74,7 +74,7 @@ class CreateAccount(View):
             user = User.objects.create_user(username=request.POST['username'],
                                             email=request.POST['email'],
                                             password=request.POST['password'])
-            login(request, user)
+            login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
             response['redirect_url'] = '/'
 
