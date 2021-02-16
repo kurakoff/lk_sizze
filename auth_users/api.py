@@ -1,5 +1,7 @@
 import os, json
 from .utils import Util
+from .social.backend import PasswordlessAuthBackend
+from content import models
 
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -27,7 +29,8 @@ from .serializers import \
     ChangePasswordSerializer, \
     SetNewPasswordSerializer, \
     ResetPasswordEmailRequestSerializer, \
-    UserSerializer
+    UserSerializer,\
+    GoogleSocialAuthSerializer
 
 
 class ApiLoginView(APIView):
@@ -192,3 +195,54 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({"success": True, "message": "Password reset success"}, status=status.HTTP_200_OK)
+
+
+class GoogleSocialAuthView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = GoogleSocialAuthSerializer
+
+    def auth(self, email):
+        backend = PasswordlessAuthBackend()
+        user = backend.authenticate(email=email)
+        try:
+            user.auth_token.delete()
+        except Exception as e:
+            pass
+        Token.objects.create(user=user)
+        return user
+
+    def generate_username(self, email):
+
+        username = email.split("@")[0]
+        if not User.objects.filter(username=username).exists():
+            return username
+        else:
+            random_username = username + str(random.randint(0, 1000))
+            return generate_username(random_username)
+
+    def post(self, request):
+        """
+        POST with "auth_token"
+        Send an idtoken as from google to get user information
+        """
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = (serializer.validated_data['auth_token'])
+        email = data['email']
+        name = data['name']
+        full_name = name.split()
+        queryset = User.objects.filter(email=email)
+        if queryset.exists() is False:
+            user = User.objects.create_user(email=email, username=self.generate_username(email),
+                                            first_name=full_name[0], last_name=full_name[1])
+            models.SocialUser.objects.create(user=user, provider='google')
+            user.set_unusable_password()
+            user.is_verified = True
+            user.save()
+        user = self.auth(email)
+        response = JsonResponse({"result": True, "token": user.auth_token.key})
+        response.set_cookie('token', user.auth_token.key, httponly=True)
+        return response
+
+

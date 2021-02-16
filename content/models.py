@@ -126,9 +126,21 @@ class Settings(models.Model):
         return self.slug
 
 
-# class SharedProject(models.Model):
-#     from_user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     to_user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-#     permission = jsonfield.JSONField() # permission = {permission: ['edit' and etc. ]}
-#     all_users = models.BooleanField()
+class SocialUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='social_user')
+    provider = models.CharField(verbose_name='Провайдер', max_length=50)
+
+    class Meta:
+        verbose_name = 'Социальный пользователь'
+        verbose_name_plural = 'Социальные пользователи'
+
+    def __str__(self):
+        return self.provider
+
+
+class SharedProject(models.Model):
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_user')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='share_project')
+    permission = jsonfield.JSONField() # permission = {permission: ['edit' and etc. ]}
+    all_users = models.BooleanField()

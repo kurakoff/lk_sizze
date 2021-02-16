@@ -4,6 +4,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
+from .social import google
+from sizzy_lk import settings
+import os
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -76,3 +79,27 @@ class SetNewPasswordSerializer(serializers.Serializer):
         except Exception as e:
             raise AuthenticationFailed('The reset link is invalid', 401)
         return super().validate(attrs)
+
+
+class GoogleSocialAuthSerializer(serializers.Serializer):
+    auth_token = serializers.CharField()
+
+    def validate_auth_token(self, auth_token):
+        user_data = google.Google.validate(auth_token)
+        try:
+            user_data['sub']
+        except:
+            raise serializers.ValidationError(
+                'The token is invalid or expired. Please login again.'
+            )
+
+        if user_data['aud'] != settings.GOOGLE_CLIENT_ID:
+
+            raise AuthenticationFailed('oops, who are you?')
+
+        user_id = user_data['sub']
+        email = user_data['email']
+        name = user_data['name']
+        provider = 'google'
+
+        return {'user_id': user_id, 'email': email, 'name': name}

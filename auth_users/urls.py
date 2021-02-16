@@ -7,16 +7,17 @@ urlpatterns = [
     # path('', include('social_django.urls', namespace='social')),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
-
     path('users', api.UserCreate.as_view()),
     path('login', api.ApiLoginView.as_view()),
+    path('login/google/', api.GoogleSocialAuthView.as_view()),
+
     path('users/change', api.UserUpdate.as_view()),
     path('users/profile', api.UserProfile.as_view()),
     path('password-reset/', api.RequestPasswordResetEmail.as_view(),
          name="request-reset-email"),
     path('password-reset/<uidb64>/<token>/',
          api.PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
-    path('password-reset-complete', api.SetNewPasswordAPIView.as_view(),
+    path('password-reset-complete/', api.SetNewPasswordAPIView.as_view(),
          name='password-reset-complete'),
     path('change_password', api.ChangePassword.as_view({'post': 'post'})),
 
