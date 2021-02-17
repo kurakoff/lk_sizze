@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '$#@!4_9^kzr-9+0-@ob-5=cx(!bv7lu*hzi0w(ayq+*2ltay)n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['sizze.io', 'www.sizze.io', 'lk.sizze.io', 'www.lk.sizze.io', '127.0.0.1']
 
@@ -195,3 +195,5 @@ GOOGLE_PHOTO_API = {"web": {"client_id": "334729455720-v3rk8a7n810m2u52d7ekn5gr2
 
 GOOGLE_CLIENT_SECRET = 'EPN6zbdU-_r_xI5d-SrWMQ3k'
 GOOGLE_CLIENT_ID = '334729455720-d4pno273r6kaoe49cjautkg9isov59ke.apps.googleusercontent.com'
+
+SILENCED_SYSTEM_CHECKS = ["auth.W004"]

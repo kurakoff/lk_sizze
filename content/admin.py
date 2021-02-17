@@ -9,7 +9,7 @@ from .models import (
     Category,
     CategoryPrototype,
     Element,
-    Settings
+    Settings,
 )
 from tinymce.models import HTMLField
 
@@ -59,3 +59,4 @@ class PrototypeAdmin(nested_admin.NestedModelAdmin):
 admin.site.register(Prototype, PrototypeAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
+admin.site.register(Project)

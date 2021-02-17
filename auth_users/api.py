@@ -244,5 +244,3 @@ class GoogleSocialAuthView(generics.GenericAPIView):
         response = JsonResponse({"result": True, "token": user.auth_token.key})
         response.set_cookie('token', user.auth_token.key, httponly=True)
         return response
-
-

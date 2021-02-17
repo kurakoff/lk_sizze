@@ -142,5 +142,5 @@ class SharedProject(models.Model):
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user')
     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_user')
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='share_project')
-    permission = jsonfield.JSONField() # permission = {permission: ['edit' and etc. ]}
+    permission = jsonfield.JSONField()
     all_users = models.BooleanField()
