@@ -218,7 +218,7 @@ class GoogleSocialAuthView(generics.GenericAPIView):
             return username
         else:
             random_username = username + str(random.randint(0, 1000))
-            return generate_username(random_username)
+            return self.generate_username(random_username)
 
     def post(self, request):
         """
