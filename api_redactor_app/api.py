@@ -389,6 +389,9 @@ class ProjectCopyView(APIView):
         copy = self.copy_project(request=request,project_id=kwargs['project_id'])
         copy_element = self.copy_element(copy=copy, project_id=kwargs['project_id'])
         copy_screen = self.copy_screen(copy=copy, project_id=kwargs['project_id'])
-        copy_serializer = ProjectSerializer(copy, many=False)
-        return JsonResponse({'result': True, 'copy_project': copy_serializer.data,
-                             'copy_element': copy_element, 'copy_screen': copy_screen})
+        try:
+            copy_serializer = ProjectSerializer(copy, many=False)
+            return JsonResponse({'result': True, 'copy_project': copy_serializer.data,
+                                 'copy_element': copy_element, 'copy_screen': copy_screen})
+        except:
+            return copy
