@@ -96,7 +96,7 @@ class UserProfile(APIView):
         return JsonResponse({"result": True, 'user': serialize.data})
 
 
-class ChangePassword(ModelViewSet):
+class ChangePassword(generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = ChangePasswordSerializer
     permission_classes = [IsAuthenticated]
@@ -212,7 +212,6 @@ class GoogleSocialAuthView(generics.GenericAPIView):
         return user
 
     def generate_username(self, email):
-
         username = email.split("@")[0]
         if not User.objects.filter(username=username).exists():
             return username
