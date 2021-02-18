@@ -1,4 +1,4 @@
-import os, json
+import os, json, random
 from .utils import Util
 from .social.backend import PasswordlessAuthBackend
 from content import models

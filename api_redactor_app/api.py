@@ -351,7 +351,6 @@ class ProjectCopyView(APIView):
 
     def copy_element(self, copy, project_id):
         elements = UserElement.objects.filter(project_id=project_id)
-        print(elements)
         if elements.count() > 0:
             for element in elements:
                 copy_element = UserElement.objects.create(
