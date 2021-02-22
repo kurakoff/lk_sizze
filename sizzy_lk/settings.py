@@ -42,23 +42,25 @@ INSTALLED_APPS = [
     'compressor',
     'tinymce',
     'nested_admin',
+    'corsheaders',
 
     'rest_framework',
     'rest_framework.authtoken',
 ]
-
+#'api_redactor_app.middleware.cors_middleware.open_access_middleware',
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-
-    'api_redactor_app.middleware.cors_middleware.open_access_middleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'sizzy_lk.urls'
 
