@@ -4,6 +4,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
+from django.core.mail import send_mail
 from .social import google
 from sizzy_lk import settings
 import os

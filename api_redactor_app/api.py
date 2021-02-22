@@ -5,16 +5,21 @@ from django.conf import settings
 from django.urls import path
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.db.models import Q
 
 from gphotospy import authorize
 from gphotospy.media import Media
 from gphotospy.album import Album
 
-from rest_framework import generics, viewsets, permissions
+from rest_framework import generics, viewsets, permissions, status
 from rest_framework.views import APIView
 
-from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer
-from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category
+from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
+    ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer
+from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject
+from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
 
 
 CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
@@ -55,6 +60,8 @@ class InitProject(APIView):
 
 
 class ScreenView(APIView):
+    permission_classes = [IsAuthor | ReadPermission]
+
     def get(self, request, project_id, screen_id=None, action=None):
         try:
             project = Project.objects.get(id=project_id)
@@ -137,6 +144,8 @@ class ScreenView(APIView):
 
 
 class ProjectApiView(APIView):
+    permission_classes = [IsAuthor | ReadPermission]
+
     def get(self, request, project_id=None):
         if project_id:
             try:
@@ -209,6 +218,7 @@ class PrototypeApiView(generics.ListAPIView):
 
 
 class UserElementApiView(APIView):
+    permission_classes = [IsAuthor | ReadPermission]
 
     def get(self, request, project_id):
         user = request.user
@@ -333,7 +343,7 @@ class GoogleImageView(APIView):
 
 
 class ProjectCopyView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [EditPermission | IsAuthor]
     '''Копирование проекта'''
     def copy_project(self, request, project_id):
         try:
@@ -395,3 +405,95 @@ class ProjectCopyView(APIView):
                                  'copy_element': copy_element, 'copy_screen': copy_screen})
         except:
             return copy
+
+
+class ShareProjectAllView(viewsets.ModelViewSet):
+    queryset = SharedProject.objects.none()
+    serializer_class = ShareProjectSerializer
+    permission_classes = [IsAuthor | DeletePermission]
+
+    def post(self, request, *args, **kwargs):
+        if request.data['all_users'] is True and request.user.is_superuser or request.user.is_staff:
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            all_users = request.data.get('all_users')
+            if all_users == "False":
+                to_user = serializer.validated_data['to_user']
+                share_project = SharedProject.objects.filter(project=kwargs['project_id'], to_user=to_user)
+                if len(share_project) > 0:
+                    return JsonResponse({'result': False, 'message': 'This project has already been shared'})
+            if all_users == "True":
+                serializer.validated_data['to_user'] = None
+                share_project = SharedProject.objects.filter(project=kwargs['project_id'], all_users=True)
+                if len(share_project) > 0:
+                    return JsonResponse({'result': False, 'message': 'This project has already been shared'})
+            serializer.save(project_id=kwargs['project_id'], from_user=request.user)
+            msg_html = render_to_string('mail/Share.html', {'to_user': serializer.data['to_user'],
+                                                            'from_user': serializer.data['from_user'],
+                                                            'project': serializer.data['project']
+                                                            })
+            send_mail(
+                f"Shared project with you",
+                msg_html,
+                getattr(settings, "EMAIL_HOST_USER"),
+                [serializer.data['to_user']],
+                html_message=msg_html,
+                fail_silently=True
+            )
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return JsonResponse({'result': False, 'message': 'You are not superuser'}, status=status.HTTP_403_FORBIDDEN)
+
+    def list(self, request, *args, **kwargs):
+        shared_projects = SharedProject.objects.filter(project=kwargs['project_id'])
+        serializer = self.get_serializer(shared_projects, many=True)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
+
+    def delete(self, requset, *args, **kwargs):
+        serializer = SharedProjectDeleteUserSerializer(data=requset.data)
+        serializer.is_valid(raise_exception=True)
+        all_users = requset.data.get('all_users')
+        if all_users == 'True':
+            shared_project = SharedProject.objects.filter(
+                project=kwargs['project_id'], all_users=serializer.data['all_users']
+            )
+        elif serializer.data.get('to_user'):
+            shared_project = SharedProject.objects.filter(
+                project=kwargs['project_id'], to_user=serializer.data['to_user']
+            )
+        else:
+            shared_project = SharedProject.objects.filter(project=kwargs['project_id'])
+        if len(shared_project) > 0:
+            shared_project.delete()
+        else:
+            return JsonResponse({"result": False, "message": "project permission not found"},
+                                status=status.HTTP_200_OK)
+        return JsonResponse({"result": True, "message": "All rights to the project have been removed"},
+                            status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        serializer = ShareProjectBaseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        all_users = request.data.get('all_users')
+        if all_users == 'False':
+            shared_project = SharedProject.objects.get(to_user=serializer.data['to_user'],
+                                                       project=kwargs['project_id'])
+            shared_project.permission = serializer.data['permission']
+        else:
+            serializer.validated_data['to_user'] = None
+            shared_project = SharedProject.objects.get(all_users="True", project=kwargs['project_id'])
+            shared_project.permission = serializer.data['permission']
+        shared_project.save()
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserShareProjectsView(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    queryset = SharedProject.objects.none()
+
+    def list(self, request, *args, **kwargs):
+        project = Project.objects.filter(
+            Q(share_project__to_user=request.user.email)
+        )
+        serializer = self.get_serializer(project, many=True)
+        return JsonResponse({"project": serializer.data}, status=status.HTTP_200_OK, safe=False)

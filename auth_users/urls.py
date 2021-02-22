@@ -19,7 +19,7 @@ urlpatterns = [
          api.PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
     path('password-reset-complete/', api.SetNewPasswordAPIView.as_view(),
          name='password-reset-complete'),
-    path('change_password', api.ChangePassword.as_view()),
+    path('change-password/', api.ChangePassword.as_view()),
 
     path('create_account/', views.CreateAccount.as_view(), name='create_account'),
     # Reset password
