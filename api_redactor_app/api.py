@@ -60,7 +60,6 @@ class InitProject(APIView):
 
 
 class ScreenView(APIView):
-    permission_classes = [ReadPermission]
 
     def get(self, request, project_id, screen_id=None, action=None):
         try:
@@ -217,7 +216,6 @@ class PrototypeApiView(generics.ListAPIView):
 
 
 class UserElementApiView(APIView):
-    permission_classes = [ReadPermission]
 
     def get(self, request, project_id):
         user = request.user
