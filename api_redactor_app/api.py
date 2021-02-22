@@ -413,36 +413,38 @@ class ShareProjectAllView(viewsets.ModelViewSet):
     permission_classes = [IsAuthor | DeletePermission]
 
     def post(self, request, *args, **kwargs):
-        if request.data['all_users'] is True and request.user.is_superuser or request.user.is_staff:
-            serializer = self.serializer_class(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            all_users = request.data.get('all_users')
-            if all_users == "False":
-                to_user = serializer.validated_data['to_user']
-                share_project = SharedProject.objects.filter(project=kwargs['project_id'], to_user=to_user)
-                if len(share_project) > 0:
-                    return JsonResponse({'result': False, 'message': 'This project has already been shared'})
-            if all_users == "True":
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        all_users = request.data.get('all_users')
+        if all_users == "False":
+            to_user = serializer.validated_data['to_user']
+            share_project = SharedProject.objects.filter(project=kwargs['project_id'], to_user=to_user)
+            if len(share_project) > 0:
+                return JsonResponse({'result': False, 'message': 'This project has already been shared'})
+        if all_users == "True":
+            if request.user.is_superuser or request.user.is_staff:
                 serializer.validated_data['to_user'] = None
                 share_project = SharedProject.objects.filter(project=kwargs['project_id'], all_users=True)
                 if len(share_project) > 0:
                     return JsonResponse({'result': False, 'message': 'This project has already been shared'})
-            serializer.save(project_id=kwargs['project_id'], from_user=request.user)
-            msg_html = render_to_string('mail/Share.html', {'to_user': serializer.data['to_user'],
-                                                            'from_user': serializer.data['from_user'],
-                                                            'project': serializer.data['project']
-                                                            })
-            send_mail(
-                f"Shared project with you",
-                msg_html,
-                getattr(settings, "EMAIL_HOST_USER"),
-                [serializer.data['to_user']],
-                html_message=msg_html,
-                fail_silently=True
-            )
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return JsonResponse({'result': False, 'message': 'You are not superuser'}, status=status.HTTP_403_FORBIDDEN)
+            else:
+                return JsonResponse({'result': False, 'message': 'You are not superuser'},
+                                    status=status.HTTP_403_FORBIDDEN)
+
+        serializer.save(project_id=kwargs['project_id'], from_user=request.user)
+        msg_html = render_to_string('mail/Share.html', {'to_user': serializer.data['to_user'],
+                                                        'from_user': serializer.data['from_user'],
+                                                        'project': serializer.data['project']
+                                                        })
+        send_mail(
+            f"Shared project with you",
+            msg_html,
+            getattr(settings, "EMAIL_HOST_USER"),
+            [serializer.data['to_user']],
+            html_message=msg_html,
+            fail_silently=True
+        )
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
         shared_projects = SharedProject.objects.filter(project=kwargs['project_id'])
