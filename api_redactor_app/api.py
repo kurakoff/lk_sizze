@@ -20,7 +20,7 @@ from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSeri
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject
 from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
-
+from .helpers.is_auth import IsAuthenticated
 
 CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
 print(settings.BASE_DIR)
@@ -340,7 +340,8 @@ class GoogleImageView(APIView):
 
 
 class ProjectCopyView(APIView):
-    permission_classes = [EditPermission | IsAuthor]
+    permission_classes = [IsAuthor | EditPermission]
+
     '''Копирование проекта'''
     def copy_project(self, request, project_id):
         try:
@@ -393,7 +394,7 @@ class ProjectCopyView(APIView):
             pass
 
     def post(self, request, *args, **kwargs):
-        copy = self.copy_project(request=request,project_id=kwargs['project_id'])
+        copy = self.copy_project(request=request, project_id=kwargs['project_id'])
         copy_element = self.copy_element(copy=copy, project_id=kwargs['project_id'])
         copy_screen = self.copy_screen(copy=copy, project_id=kwargs['project_id'])
         try:
@@ -404,13 +405,11 @@ class ProjectCopyView(APIView):
             return copy
 
 
-class ShareProjectAllView(viewsets.ModelViewSet):
-    queryset = SharedProject.objects.none()
-    serializer_class = ShareProjectSerializer
+class ShareProjectAllView(APIView):
     permission_classes = [IsAuthor | DeletePermission]
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = ShareProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         all_users = request.data.get('all_users')
         if all_users == "False":
@@ -443,9 +442,9 @@ class ShareProjectAllView(viewsets.ModelViewSet):
         )
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
-    def list(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         shared_projects = SharedProject.objects.filter(project=kwargs['project_id'])
-        serializer = self.get_serializer(shared_projects, many=True)
+        serializer = ShareProjectSerializer(shared_projects, many=True)
         return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
     def delete(self, requset, *args, **kwargs):

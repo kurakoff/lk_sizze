@@ -96,32 +96,30 @@ class UserProfile(APIView):
         return JsonResponse({"result": True, 'user': serialize.data})
 
 
-class ChangePassword(generics.GenericAPIView):
-    serializer_class = ChangePasswordSerializer
-    permission_classes = [IsAuthenticated]
+class ChangePassword(APIView):
 
     def get_object(self, queryset=None):
         obj = self.request.user
         return obj
 
-    def post(self, request):
+    def put(self, request):
         self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
+        serializer = ChangePasswordSerializer(data=request.data)
 
-        if serializer.is_valid():
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return JsonResponse({"result": False, "message": "Old password is not correct"},
-                                    status=status.HTTP_400_BAD_REQUEST)
-            if serializer.data.get("new_password_1") != serializer.data.get("new_password_2"):
-                return JsonResponse({"result": False, "message": "Password mismatch"},
-                                    status=status.HTTP_400_BAD_REQUEST)
-            self.object.set_password(serializer.data.get("new_password_1"))
-            self.object.save()
-            response = {
-                "result": True,
-                "message": "Password updated successfully",
-            }
-            return JsonResponse(response, status=status.HTTP_200_OK)
+        serializer.is_valid(raise_exception=True)
+        if not self.object.check_password(serializer.data.get("old_password")):
+            return JsonResponse({"result": False, "message": "Old password is not correct"},
+                                status=status.HTTP_400_BAD_REQUEST)
+        if serializer.data.get("new_password_1") != serializer.data.get("new_password_2"):
+            return JsonResponse({"result": False, "message": "Password mismatch"},
+                                status=status.HTTP_400_BAD_REQUEST)
+        self.object.set_password(serializer.data.get("new_password_1"))
+        self.object.save()
+        response = {
+            "result": True,
+            "message": "Password updated successfully",
+        }
+        return JsonResponse(response, status=status.HTTP_200_OK)
 
 
 class CustomRedirect(HttpResponsePermanentRedirect):
@@ -139,7 +137,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
         try:
             user = User.objects.get(email=email)
         except:
-            return Response({"result": False, "failed": "User with this email does not exist"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"result": False, "failed": "User with this email does not exist"})
         if user:
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id)) #закодированный id
             token = PasswordResetTokenGenerator().make_token(user) #токен
@@ -154,7 +152,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             data = {"email_body": email_body, "to_email": user.email,
                     "email_subject": "Reset your passsword"}
             Util.send_email(data)
-        return Response({"result": True, "success": "We have sent you a link to reset your password"},
+        return JsonResponse({"result": True, "success": "We have sent you a link to reset your password"},
                         status=status.HTTP_200_OK)
 
 
@@ -182,18 +180,17 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
                     return CustomRedirect(redirect_url + "?token_valid=False")
 
             except UnboundLocalError as e:
-                return Response({"error": "Token is not valid, please request a new one"},
+                return JsonResponse({"error": "Token is not valid, please request a new one"},
                                 status=status.HTTP_400_BAD_REQUEST)
 
 
-class SetNewPasswordAPIView(generics.GenericAPIView):
-    serializer_class = SetNewPasswordSerializer
+class SetNewPasswordAPIView(APIView):
     permission_classes = [AllowAny]
 
     def put(self, request):
-        serializer = self.serializer_class(data=request.data)
+        serializer = SetNewPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response({"success": True, "message": "Password reset success"}, status=status.HTTP_200_OK)
+        return JsonResponse({"success": True, "message": "Password reset success"}, status=status.HTTP_200_OK)
 
 
 class GoogleSocialAuthView(generics.GenericAPIView):

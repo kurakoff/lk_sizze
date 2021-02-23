@@ -10,8 +10,7 @@ urlpatterns = [
     path('other-project/', api.UserShareProjectsView.as_view({'get': 'list'})),
     path('project/<int:project_id>', api.ProjectApiView.as_view()),
     path('project/<int:project_id>/copy/', api.ProjectCopyView.as_view()),
-    path('project/<int:project_id>/share/', api.ShareProjectAllView.as_view({'post': 'post', 'get': 'list',
-                                                                             'delete': 'delete', 'put': 'put'})),
+    path('project/<int:project_id>/share/', api.ShareProjectAllView.as_view()),
 
     path('prototype', api.PrototypeApiView.as_view()),
     path('userelements', api.UserElementApiView.as_view()),

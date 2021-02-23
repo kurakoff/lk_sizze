@@ -8,11 +8,13 @@ class IsAuthor(BasePermission):
     message = "Only the author of the project can share it"
 
     def has_permission(self, request, view):
+        if request.method == 'OPTIONS':
+            return True
         try:
-            permission = Project.objects.get(id=view.kwargs['project_id'], user=request.user)
-            return permission
+            if Project.objects.get(id=view.kwargs['project_id'], user=request.user):
+                return True
         except:
-            pass
+            return False
 
 
 class BasePermission(BasePermission):
@@ -20,6 +22,8 @@ class BasePermission(BasePermission):
     permission = ""
 
     def has_permission(self, request, view):
+        if request.method == 'OPTIONS':
+            return True
         try:
             project = SharedProject.objects.get(Q(to_user=request.user, project=view.kwargs['project_id']) |
                                                 Q(all_users=True, project=view.kwargs['project_id']))
@@ -34,6 +38,8 @@ class ReadPermission(BasePermission):
     permission = "read"
 
     def has_permission(self, request, view):
+        if request.method == 'OPTIONS':
+            return True
         try:
             project = SharedProject.objects.get(Q(to_user=request.user, project=view.kwargs['project_id']) |
                                                 Q(all_users=True, project=view.kwargs['project_id']))
@@ -53,6 +59,8 @@ class DeletePermission(BasePermission):
     permission = "delete"
 
     def has_permission(self, request, view):
+        if request.method == 'OPTIONS':
+            return True
         try:
             project = SharedProject.objects.get(Q(to_user=request.user, project=view.kwargs['project_id']) |
                                                 Q(all_users=True, project=view.kwargs['project_id']))
