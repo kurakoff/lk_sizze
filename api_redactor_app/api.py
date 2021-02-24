@@ -406,7 +406,7 @@ class ProjectCopyView(APIView):
 
 
 class ShareProjectAllView(APIView):
-    permission_classes = [IsAuthor | DeletePermission]
+    permission_classes = [IsAuthor]
 
     def post(self, request, *args, **kwargs):
         serializer = ShareProjectSerializer(data=request.data)
@@ -495,3 +495,22 @@ class UserShareProjectsView(viewsets.ModelViewSet):
         )
         serializer = self.get_serializer(project, many=True)
         return JsonResponse({"project": serializer.data}, status=status.HTTP_200_OK, safe=False)
+
+
+class UserShareProjectDeleteView(viewsets.ModelViewSet):
+
+    serializer_class = SharedProjectDeleteUserSerializer
+    queryset = SharedProject.objects.none()
+    permission_classes = [DeletePermission]
+    def delete(self, request, *args, **kwargs):
+        serializer = SharedProjectDeleteUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        shared_project = SharedProject.objects.filter(project=kwargs['project_id'], to_user=request.user)
+        if len(shared_project) > 0:
+            shared_project.delete()
+            return JsonResponse({"result": True, "message": "All rights to the project have been removed"},
+                                status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({"result": False, "message": "project permission not found"},
+                                status=status.HTTP_200_OK)
+
