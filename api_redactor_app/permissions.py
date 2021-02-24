@@ -5,7 +5,7 @@ from django.db.models import Q
 
 class IsAuthor(BasePermission):
     '''Проверка права на авторство проекта'''
-    message = "Only the author of the project can share it"
+    message = "Only the author can do this"
 
     def has_permission(self, request, view):
         if request.method == 'OPTIONS':
