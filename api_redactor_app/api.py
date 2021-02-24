@@ -143,16 +143,23 @@ class ScreenView(APIView):
 
 
 class ProjectApiView(APIView):
-    permission_classes = []
 
     def get(self, request, project_id=None):
         if project_id:
             try:
-                project = Project.objects.get(id=project_id)
+                project_permission = SharedProject.objects.get(Q(to_user=request.user, project=project_id) |
+                                                           Q(all_users=True, project=project_id))
+                if "read" in project_permission.permission:
+                        project = Project.objects.get(id=project_id)
+                        serializer = ProjectSerializer(project)
+                        return JsonResponse({'project': serializer.data})
+            except:
+                pass
+            try:
+                project = Project.objects.get(id=project_id, user=request.user)
             except Project.DoesNotExist:
                 return JsonResponse({'message': 'Project not found', "result": False})
             serializer = ProjectSerializer(project)
-
         else:
             project = Project.objects.filter(user=request.user).all()
             serializer = ProjectSerializer(project, many=True)
@@ -188,7 +195,7 @@ class ProjectApiView(APIView):
     def put(self, request, project_id):
         payload = json.loads(request.body)
         try:
-            project = Project.objects.get(id=project_id)
+            project = Project.objects.get(id=project_id, user=request.user)
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Project not found', "result": False})
 
@@ -204,7 +211,7 @@ class ProjectApiView(APIView):
     def delete(self, request, project_id):
 
         try:
-            project = Project.objects.get(id=project_id)
+            project = Project.objects.get(id=project_id, user=request.user)
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Project not found', "result": False})
         project.delete()
@@ -503,6 +510,7 @@ class UserShareProjectDeleteView(viewsets.ModelViewSet):
     serializer_class = SharedProjectDeleteUserSerializer
     queryset = SharedProject.objects.none()
     permission_classes = [DeletePermission]
+
     def delete(self, request, *args, **kwargs):
         serializer = SharedProjectDeleteUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
