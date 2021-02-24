@@ -143,7 +143,7 @@ class ScreenView(APIView):
 
 
 class ProjectApiView(APIView):
-    permission_classes = [IsAuthor | ReadPermission]
+    permission_classes = [IsAuthor]
 
     def get(self, request, project_id=None):
         if project_id:
