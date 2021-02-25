@@ -165,7 +165,7 @@ class ProjectApiView(APIView):
                 Q(share_project__to_user=request.user.email)
             )
             project = Project.objects.filter(user=request.user).all()
-            serializer = ProjectSerializer(project_new, many=True)
+            serializer = ProjectSerializer(project, many=True)
 
         return JsonResponse({'project': serializer.data})
 
