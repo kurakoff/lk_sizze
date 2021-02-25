@@ -108,7 +108,7 @@ class ScreenView(APIView):
 
     def post(self, request, project_id):
         try:
-            project = Project.objects.get(id=project_id)
+            project = Project.objects.get(id=project_id, user=request.user)
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Project not found', "result": False})
 
