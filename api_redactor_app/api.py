@@ -230,7 +230,16 @@ class UserElementApiView(APIView):
 
     def get(self, request, project_id):
         user = request.user
-
+        try:
+            project_permission = SharedProject.objects.get(Q(to_user=request.user, project=project_id) |
+                                                           Q(all_users=True, project=project_id))
+            if "read" in project_permission.permission:
+                project = Project.objects.get(id=project_id)
+                elements = UserElement.objects.filter(project=project).all()
+                serialize = UserElementSerializer(elements, many=True)
+                return JsonResponse({"elements": serialize.data, "result": True})
+        except:
+            pass
         try:
             project = Project.objects.get(id=project_id, user=user)
         except Project.DoesNotExist:
