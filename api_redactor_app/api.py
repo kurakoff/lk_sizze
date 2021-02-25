@@ -161,8 +161,11 @@ class ProjectApiView(APIView):
                 return JsonResponse({'message': 'Project not found', "result": False})
             serializer = ProjectSerializer(project)
         else:
+            project_new = Project.objects.filter(
+                Q(share_project__to_user=request.user.email)
+            )
             project = Project.objects.filter(user=request.user).all()
-            serializer = ProjectSerializer(project, many=True)
+            serializer = ProjectSerializer(project_new, many=True)
 
         return JsonResponse({'project': serializer.data})
 
