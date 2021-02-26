@@ -155,6 +155,10 @@ class ResetPasswordEmailView(generics.GenericAPIView):
                 if reset:
                     reset.save()
                     break
+            email_body = "Hello, \n Use this pin code to reset password \n" + reset.pin
+            data = {"email_body": email_body, "to_email": user.email,
+                    "email_subject": "Reset your passsword"}
+            Util.send_email(data)
         return JsonResponse({"result": True, "message": "We have sent you a link to reset your password"},
                         status=status.HTTP_200_OK)
 
