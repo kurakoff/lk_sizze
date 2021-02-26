@@ -135,7 +135,7 @@ class ResetPasswordEmailView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        email = request.data.get("email", "")
+        email = request.data.get("email")
         try:
             user = User.objects.get(email=email)
         except:
@@ -191,8 +191,8 @@ class SetNewPasswordView(APIView):
     permission_classes = [AllowAny]
 
     def put(self, request, email=None):
-        reset = models.PasswordReset.objects.get(to_user=email)
-        if reset.activate is False:
+        try:
+            reset = models.PasswordReset.objects.get(to_user=email, activate=False)
             serializer = SetNewPasswordSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             password = request.data.get("password")
@@ -202,7 +202,7 @@ class SetNewPasswordView(APIView):
             reset.save()
             return JsonResponse({"result": True, "message": "Password reset success"},
                                 status=status.HTTP_200_OK)
-        else:
+        except:
             return JsonResponse({"result": False, "message": "Password not reset"})
 
 
