@@ -1,4 +1,4 @@
-import os, json, random
+import os, json, random, secrets, string
 from .utils import Util
 from .social.backend import PasswordlessAuthBackend
 from content import models
@@ -29,6 +29,7 @@ from .serializers import \
     ChangePasswordSerializer, \
     SetNewPasswordSerializer, \
     ResetPasswordEmailRequestSerializer, \
+    SetPinSerializer,\
     UserSerializer,\
     GoogleSocialAuthSerializer
 
@@ -122,75 +123,83 @@ class ChangePassword(APIView):
         return JsonResponse(response, status=status.HTTP_200_OK)
 
 
-class CustomRedirect(HttpResponsePermanentRedirect):
-    allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
-
-
-class RequestPasswordResetEmail(generics.GenericAPIView):
+class ResetPasswordEmailView(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
     permission_classes = [AllowAny]
 
+    def generate_pin(self):
+        alphabet = string.ascii_letters + string.digits
+        pin = ''.join(secrets.choice(alphabet) for i in range(6))
+        return pin
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-
+        serializer.is_valid(raise_exception=True)
         email = request.data.get("email", "")
         try:
             user = User.objects.get(email=email)
         except:
-            return Response({"result": False, "failed": "User with this email does not exist"})
+            return Response({"result": False, "message": "User with this email does not exist"})
+        try:
+            reset = models.PasswordReset.objects.filter(to_user=user, activate=False)
+            reset.delete()
+        except:
+            pass
         if user:
-            uidb64 = urlsafe_base64_encode(smart_bytes(user.id)) #закодированный id
-            token = PasswordResetTokenGenerator().make_token(user) #токен
-            current_site = get_current_site(
-                request=request).domain
-            relativeLink = reverse(
-                "password-reset-confirm", kwargs={'uidb64': uidb64, 'token': token})
-            redirect_url = request.data.get("redirect_url", "")
-            absurl = "http://"+current_site + relativeLink
-            email_body = "Hello, \n Use link below to reset your password  \n" + \
-                absurl+"?redirect_url="+redirect_url
-            data = {"email_body": email_body, "to_email": user.email,
-                    "email_subject": "Reset your passsword"}
-            Util.send_email(data)
-        return JsonResponse({"result": True, "success": "We have sent you a link to reset your password"},
+            while True:
+                reset = models.PasswordReset.objects.create(
+                    to_user=user,
+                    pin=self.generate_pin(),
+                    activate=False
+                )
+                if reset:
+                    reset.save()
+                    break
+        return JsonResponse({"result": True, "message": "We have sent you a link to reset your password"},
                         status=status.HTTP_200_OK)
 
 
-class PasswordTokenCheckAPI(generics.GenericAPIView):
-    serializer_class = SetNewPasswordSerializer
+class SetPinView(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request, uidb64, token):
-        redirect_url = request.GET.get("redirect_url")
-        try:
-            id = smart_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(id=id)
-
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                if len(redirect_url) > 3:
-                    return CustomRedirect(redirect_url + "?token_valid=False")
-
-            if redirect_url and len(redirect_url) > 3:
-                return CustomRedirect(
-                    redirect_url + "?token_valid=True&message=CredentialsValid&uidb64=" + uidb64 + "&token=" + token)
-
-        except DjangoUnicodeDecodeError as identifier:
-            try:
-                if not PasswordResetTokenGenerator().check_token(user):
-                    return CustomRedirect(redirect_url + "?token_valid=False")
-
-            except UnboundLocalError as e:
-                return JsonResponse({"error": "Token is not valid, please request a new one"},
-                                status=status.HTTP_400_BAD_REQUEST)
-
-
-class SetNewPasswordAPIView(APIView):
-    permission_classes = [AllowAny]
-
-    def put(self, request):
-        serializer = SetNewPasswordSerializer(data=request.data)
+    def post(self, request):
+        serializer = SetPinSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return JsonResponse({"success": True, "message": "Password reset success"}, status=status.HTTP_200_OK)
+        pin = request.data.get('pin')
+        try:
+            reset = models.PasswordReset.objects.get(pin=pin)
+            if reset.activate is True:
+                return JsonResponse({"result": False, "message": "This pin code is already activated"},
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+            if not int(reset.date.day) <= int(reset.date.day) + 1:
+                reset.delete()
+                return JsonResponse({"result": False, "message": "This pin code is deprecated"},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            user = User.objects.get(email=reset.to_user.email)
+            return JsonResponse({"result": True, "email": user.email, "message": "PIN is true"},
+                                status=status.HTTP_200_OK)
+        except:
+            return JsonResponse({"result": False, "message": "PIN code not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SetNewPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def put(self, request, email=None):
+        reset = models.PasswordReset.objects.get(to_user=email)
+        if reset.activate is False:
+            serializer = SetNewPasswordSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            password = request.data.get("password")
+            user = User.objects.get(email=email)
+            user.set_password(password)
+            reset.activate = True
+            reset.save()
+            return JsonResponse({"result": True, "message": "Password reset success"},
+                                status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({"result": False, "message": "Password not reset"})
 
 
 class GoogleSocialAuthView(generics.GenericAPIView):

@@ -13,12 +13,9 @@ urlpatterns = [
 
     path('users/change', api.UserUpdate.as_view()),
     path('users/profile', api.UserProfile.as_view()),
-    path('password-reset/', api.RequestPasswordResetEmail.as_view(),
-         name="request-reset-email"),
-    path('password-reset/<uidb64>/<token>/',
-         api.PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
-    path('password-reset-complete/', api.SetNewPasswordAPIView.as_view(),
-         name='password-reset-complete'),
+    path('password-reset/', api.ResetPasswordEmailView.as_view()),
+    path('password-reset/pin/', api.SetPinView.as_view()),
+    path('password-reset-complete/<email>/', api.SetNewPasswordView.as_view()),
     path('change-password/', api.ChangePassword.as_view()),
 
     path('create_account/', views.CreateAccount.as_view(), name='create_account'),

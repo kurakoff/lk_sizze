@@ -45,41 +45,25 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(min_length=2)
-    redirect_url = serializers.CharField(max_length=500, required=True)
 
     class Meta:
         fields = ['email']
 
 
-class SetNewPasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(
-        min_length=6, max_length=68, write_only=True)
-    token = serializers.CharField(
-        min_length=1, write_only=True)
-    uidb64 = serializers.CharField(
-        min_length=1, write_only=True)
+class SetPinSerializer(serializers.Serializer):
+    pin = serializers.CharField(
+        min_length=6, max_length=6, write_only=True)
 
     class Meta:
-        fields = ['password', 'token', 'uidb64']
+        fields = ['pin']
 
-    def validate(self, attrs):
-        try:
-            password = attrs.get('password')
-            token = attrs.get('token')
-            uidb64 = attrs.get('uidb64')
 
-            id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(id=id)
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                raise AuthenticationFailed('The reset link is invalid', 404)
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True)
 
-            user.set_password(password)
-            user.save()
+    class Meta:
+        fields = ['password']
 
-            return (user)
-        except Exception as e:
-            raise AuthenticationFailed('The reset link is invalid', 404)
-        return super().validate(attrs)
 
 
 class GoogleSocialAuthSerializer(serializers.Serializer):

@@ -102,6 +102,7 @@ class ScreenView(APIView):
         if payload.get('width'): screen.width = payload['width']
         if payload.get('height'): screen.height = payload['height']
         if payload.get('background_color'): screen.background_color = payload['background_color']
+        if payload.get('position'): screen.position = payload['position']
         screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
@@ -113,12 +114,14 @@ class ScreenView(APIView):
             return JsonResponse({'message': 'Project not found', "result": False})
 
         payload = json.loads(request.body)
+        screens = Screen.objects.filter(project=project_id)
         screen = Screen(
             title=payload['title'],
             project=project,
             layout="",
             width=project.prototype.width,
             height=project.prototype.height,
+            position=(len(screens) + 1)
         )
         screen.save()
         serializer = ScreenSerializer(screen)
@@ -161,11 +164,7 @@ class ProjectApiView(APIView):
                 return JsonResponse({'message': 'Project not found', "result": False})
             serializer = ProjectSerializer(project)
         else:
-            project_new = Project.objects.filter(
-                Q(share_project__to_user=request.user.email)
-            )
-            project = Project.objects.filter(Q(user=request.user) | Q(share_project__to_user=request.user.email)
-                                             | Q(share_project__all_users=True)).all()
+            project = Project.objects.filter(user=request.user).all()
             serializer = ProjectSerializer(project, many=True)
 
         return JsonResponse({'project': serializer.data})
@@ -188,7 +187,8 @@ class ProjectApiView(APIView):
             title='first_page',
             project=project,
             width=project.prototype.width,
-            height=project.prototype.height
+            height=project.prototype.height,
+            position=1
         )
         screen.save()
         serializer = ProjectSerializer(project)
@@ -360,6 +360,28 @@ class GoogleImageView(APIView):
         return JsonResponse({'result': True, "error": error})
 
 
+class ScreenCopyView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            screen = Screen.objects.get(project_id=kwargs["project_id"], id=kwargs["screen_id"])
+            sceens = Screen.objects.filter(project_id=kwargs["project_id"])
+            copy_screen = Screen.objects.create(
+                title="Copy " + screen.title,
+                layout=screen.layout,
+                project=screen.project,
+                last_change=screen.last_change,
+                height=screen.height,
+                width=screen.width,
+                background_color=screen.background_color,
+                position=(len(sceens) + 1)
+            )
+            copy_screen.save
+            copy_screen_serializer = ScreenSerializer(copy_screen)
+            return JsonResponse(copy_screen_serializer.data)
+        except:
+            return JsonResponse({"result": False, "message": "Screen not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
 class ProjectCopyView(APIView):
     permission_classes = [IsAuthor | EditPermission]
 
@@ -405,7 +427,8 @@ class ProjectCopyView(APIView):
                     last_change=screen.last_change,
                     height=screen.height,
                     width=screen.width,
-                    background_color=screen.background_color
+                    background_color=screen.background_color,
+                    position=screen.position
                 )
                 copy_screen.save
             copy_screens = Screen.objects.filter(project_id=copy.id)
@@ -511,9 +534,8 @@ class UserShareProjectsView(viewsets.ModelViewSet):
     queryset = SharedProject.objects.none()
 
     def list(self, request, *args, **kwargs):
-        project = Project.objects.filter(
-            Q(share_project__to_user=request.user.email)
-        )
+        project = Project.objects.filter(Q(share_project__to_user=request.user.email)
+                                         | Q(share_project__all_users=True)).all()
         serializer = self.get_serializer(project, many=True)
         return JsonResponse({"project": serializer.data}, status=status.HTTP_200_OK, safe=False)
 
