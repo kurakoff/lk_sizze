@@ -512,7 +512,7 @@ class UserShareProjectsView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         project = Project.objects.filter(
             Q(share_project__to_user=request.user.email) |
-            Q(SharedProject__all_users="True")
+            Q(SharedProject__all_users=True)
         )
         serializer = self.get_serializer(project, many=True)
         return JsonResponse({"project": serializer.data}, status=status.HTTP_200_OK, safe=False)
