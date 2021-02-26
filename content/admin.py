@@ -3,6 +3,7 @@ import nested_admin
 from tinymce.widgets import TinyMCE
 
 from .models import (
+    SharedProject,
     Project,
     Screen,
     Prototype,
@@ -60,3 +61,4 @@ admin.site.register(Prototype, PrototypeAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
 admin.site.register(Project)
+admin.site.register(SharedProject)
