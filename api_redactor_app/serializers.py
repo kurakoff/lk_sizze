@@ -22,6 +22,15 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'prototype', 'colors']
 
 
+class OtherProjectSerializer(serializers.ModelSerializer):
+    prototype = PrototypeSerializer(read_only=True)
+    permissions = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'prototype', 'colors', 'permissions']
+
+
 class UserElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserElement

@@ -17,7 +17,7 @@ from rest_framework import generics, viewsets, permissions, status
 from rest_framework.views import APIView
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
-    ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer
+    ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject
 from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
 from .helpers.is_auth import IsAuthenticated
@@ -530,13 +530,16 @@ class ShareProjectAllView(APIView):
 
 
 class UserShareProjectsView(viewsets.ModelViewSet):
-    serializer_class = ProjectSerializer
+    serializer_class = OtherProjectSerializer
     queryset = SharedProject.objects.none()
 
     def list(self, request, *args, **kwargs):
         project = Project.objects.filter(Q(share_project__to_user=request.user.email)
                                          | Q(share_project__all_users=True)).all()
         serializer = self.get_serializer(project, many=True)
+        for i in serializer.data:
+            project_permissions = *project.filter(share_project__project=i['id']).values('share_project__permission'),
+            i['permissions'] = (project_permissions[0]["share_project__permission"])
         return JsonResponse({"project": serializer.data}, status=status.HTTP_200_OK, safe=False)
 
 
