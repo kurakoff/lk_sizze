@@ -38,7 +38,7 @@ class Screen(models.Model):
     last_change = models.DateTimeField(verbose_name='последние изменение', default=now)
     width = models.IntegerField(verbose_name='ширина', default=0)
     height = models.IntegerField(verbose_name='высота', default=0)
-    background_color = models.TextField(default='#232323')
+    background_color = models.TextField(default='#FFFFFF')
     position = models.IntegerField(verbose_name='позиция', default=0)
 
     class Meta:
@@ -146,9 +146,15 @@ class SharedProject(models.Model):
     permission = jsonfield.JSONField()
     all_users = models.BooleanField()
 
+    def __str__(self):
+        return self.project
+
 
 class PasswordReset(models.Model):
     to_user = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE, related_name="reset_to_user")
     pin = models.CharField(max_length=6, unique=True)
     activate = models.BooleanField()
     date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.to_user
