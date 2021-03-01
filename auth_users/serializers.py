@@ -11,7 +11,7 @@ import os
 
 
 class UserSerializer(serializers.ModelSerializer):
-    is_staff = serializers.CharField(required=False)
+    is_staff = serializers.BooleanField(required=False)
 
     class Meta:
         model = User
