@@ -54,6 +54,12 @@ class ApiLoginView(APIView):
             return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class Logout(APIView):
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
 class UserCreate(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
