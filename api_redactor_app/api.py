@@ -150,24 +150,57 @@ class ProjectApiView(APIView):
     def get(self, request, project_id=None):
         if project_id:
             try:
-                project_permission = SharedProject.objects.get(Q(to_user=request.user, project=project_id) |
-                                                           Q(all_users=True, project=project_id))
-                if "read" in project_permission.permission:
-                        project = Project.objects.get(id=project_id)
-                        serializer = ProjectSerializer(project)
+                project_permissions = SharedProject.objects.filter(Q(to_user=request.user, project=project_id) |
+                                                                   Q(all_users=True, project=project_id))
+                for project_permission in project_permissions:
+                    if "read" in project_permission.permission:
+                        project = Project.objects.filter(id=project_id).all()
+                        serializer = ProjectSerializer(project, many=True)
+                        for i in serializer.data:
+                            project_permissions = project.filter(
+                                share_project__to_user=request.user, share_project__project=i['id']).\
+                                values('share_project__permission')
+                            all_users = project.filter(
+                                share_project__project=i['id'], share_project__all_users=True).\
+                                values('share_project__all_users')
+                            all_permissions = project.filter(
+                                share_project__all_users=True, share_project__project=i['id']).\
+                                values('share_project__permission')
+                            if project_permission:
+                                i['to_user'] = {"permissions": (project_permissions[0]["share_project__permission"])}
+                            else:
+                                i['to_user'] = False
+                            if all_users:
+                                i['all_users'] = {"permissions": all_permissions[0]["share_project__permission"]}
+                            else:
+                                i['all_users'] = False
+                            i['is_author'] = False
                         return JsonResponse({'project': serializer.data})
             except:
                 pass
             try:
-                project = Project.objects.get(id=project_id, user=request.user)
+                project = Project.objects.filter(id=project_id, user=request.user)
+                serializer = ProjectSerializer(project, many=True)
+                for i in serializer.data:
+                    all_users = project.filter(
+                        share_project__project=project_id, share_project__all_users=True). \
+                        values('share_project__all_users')
+                    all_permissions = project.filter(
+                        share_project__all_users=True, share_project__project=project_id). \
+                        values('share_project__permission')
+                    i['to_user'] = False
+                    if all_users:
+                        i['all_users'] = {"permissions": all_permissions[0]["share_project__permission"]}
+                    else:
+                        i['all_users'] = False
+                    i['is_author'] = True
+                    return JsonResponse({'project': serializer.data})
             except Project.DoesNotExist:
                 return JsonResponse({'message': 'Project not found', "result": False})
-            serializer = ProjectSerializer(project)
         else:
             project = Project.objects.filter(user=request.user).all()
             serializer = ProjectSerializer(project, many=True)
-
-        return JsonResponse({'project': serializer.data})
+            return JsonResponse({'project': serializer.data})
 
     def post(self, request):
         payload = json.loads(request.body)
@@ -175,7 +208,6 @@ class ProjectApiView(APIView):
             prototype = Prototype.objects.get(id=payload['prototype_id'])
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Prototype not found', "result": False})
-
         project = Project()
         project.prototype = prototype
         project.name = payload['name']
@@ -470,7 +502,8 @@ class ShareProjectAllView(APIView):
             else:
                 return JsonResponse({'result': False, 'message': 'You are not superuser'},
                                     status=status.HTTP_403_FORBIDDEN)
-
+        if request.data.get('to_user') == request.user.email:
+            return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
         serializer.save(project_id=kwargs['project_id'], from_user=request.user)
         msg_html = render_to_string('mail/Share.html', {'to_user': serializer.data['to_user'],
                                                         'from_user': serializer.data['from_user'],
@@ -517,6 +550,8 @@ class ShareProjectAllView(APIView):
         serializer = ShareProjectBaseSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         all_users = request.data.get('all_users')
+        if request.data.get('to_user') == request.user:
+            return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
         if all_users == 'False':
             shared_project = SharedProject.objects.get(to_user=serializer.data['to_user'],
                                                        project=kwargs['project_id'])
@@ -535,11 +570,23 @@ class UserShareProjectsView(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         project = Project.objects.filter(Q(share_project__to_user=request.user.email)
-                                         | Q(share_project__all_users=True)).all()
+                                         | Q(share_project__all_users=True)).distinct()
         serializer = self.get_serializer(project, many=True)
         for i in serializer.data:
-            project_permissions = *project.filter(share_project__project=i['id']).values('share_project__permission'),
-            i['permissions'] = (project_permissions[0]["share_project__permission"])
+            project_permissions = project.filter(share_project__to_user=request.user,
+                                                 share_project__project=i['id']).values('share_project__permission')
+            all_users = project.filter(share_project__project=i['id'],
+                                       share_project__all_users=True).values('share_project__all_users')
+            all_permissions = project.filter(share_project__all_users=True,
+                                             share_project__project=i['id']).values('share_project__permission')
+            if project_permissions:
+                i['to_user'] = {"permissions": (project_permissions[0]["share_project__permission"])}
+            else:
+                i['to_user'] = False
+            if all_users:
+                i['all_users'] = {"permissions": all_permissions[0]["share_project__permission"]}
+            else:
+                i['all_users'] = False
         return JsonResponse({"project": serializer.data}, status=status.HTTP_200_OK, safe=False)
 
 

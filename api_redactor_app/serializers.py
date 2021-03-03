@@ -24,11 +24,10 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class OtherProjectSerializer(serializers.ModelSerializer):
     prototype = PrototypeSerializer(read_only=True)
-    permissions = serializers.CharField(read_only=True)
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'prototype', 'colors', 'permissions']
+        fields = ['id', 'name', 'prototype', 'colors']
 
 
 class UserElementSerializer(serializers.ModelSerializer):
@@ -39,7 +38,6 @@ class UserElementSerializer(serializers.ModelSerializer):
 
 class ShareProjectBaseSerializer(serializers.ModelSerializer):
     permission = serializers.JSONField(required=True)
-    all_users = serializers.BooleanField(required=False)
 
     class Meta:
         model = SharedProject
@@ -47,7 +45,8 @@ class ShareProjectBaseSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "from_user": {"read_only": True},
             "project": {"read_only": True},
-            "to_user": {"required": True}
+            "to_user": {"required": True},
+            "all_users": {"required": False}
             }
 
     def validate(self, attrs):
