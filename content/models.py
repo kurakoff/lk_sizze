@@ -2,6 +2,7 @@ import jsonfield
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
+# import reversion
 
 CASCADE = models.CASCADE
 
@@ -28,9 +29,10 @@ class Project(models.Model):
         verbose_name_plural = 'проекты'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
+# @reversion.register()
 class Screen(models.Model):
     title = models.CharField(max_length=32, verbose_name='название', default='')
     layout = models.TextField(verbose_name='макет', default='')
@@ -46,7 +48,7 @@ class Screen(models.Model):
         verbose_name_plural = 'экраны'
 
     def __str__(self):
-        return self.pk
+        return str(self.pk)
 
 
 class Prototype(models.Model):
@@ -61,7 +63,7 @@ class Prototype(models.Model):
         verbose_name_plural = 'прототипы'
 
     def __str__(self):
-        return self.device_name
+        return str(self.device_name)
     #
     # @property
     # def created_categories(self):
