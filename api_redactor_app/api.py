@@ -105,6 +105,7 @@ class ScreenView(APIView):
         if payload.get('height'): screen.height = payload['height']
         if payload.get('background_color'): screen.background_color = payload['background_color']
         if payload.get('position'): screen.position = payload['position']
+        print(screen.layout)
         screen.save()
         serializer = ScreenSerializer(screen)
             # reversion.set_user(request.user)
