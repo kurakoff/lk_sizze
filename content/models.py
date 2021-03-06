@@ -32,7 +32,6 @@ class Project(models.Model):
         return str(self.name)
 
 
-@reversion.register()
 class Screen(models.Model):
     title = models.CharField(max_length=32, verbose_name='название', default='')
     layout = models.TextField(verbose_name='макет', default='')
