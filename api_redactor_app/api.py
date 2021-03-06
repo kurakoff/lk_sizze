@@ -97,22 +97,22 @@ class ScreenView(APIView):
             screen = project.screen_set.get(id=screen_id)
         except Screen.DoesNotExist:
             return JsonResponse({'message': 'Screen not found', "result": False})
-        with reversion.create_revision():
-            payload = json.loads(request.body)
-            if payload.get('title'): screen.title = payload['title']
-            if payload.get('layout'): screen.layout = payload['layout']
-            if payload.get('width'): screen.width = payload['width']
-            if payload.get('height'): screen.height = payload['height']
-            if payload.get('background_color'): screen.background_color = payload['background_color']
-            if payload.get('position'): screen.position = payload['position']
-            screen.save()
-            serializer = ScreenSerializer(screen)
-            layout = (payload.get('layout'))
-            print(layout)
-            reversion.set_user(request.user)
-            reversion.set_comment(
-                f"Change {*payload.values(),}"
-            )
+        # with reversion.create_revision():
+        payload = json.loads(request.body)
+        if payload.get('title'): screen.title = payload['title']
+        if payload.get('layout'): screen.layout = payload['layout']
+        if payload.get('width'): screen.width = payload['width']
+        if payload.get('height'): screen.height = payload['height']
+        if payload.get('background_color'): screen.background_color = payload['background_color']
+        if payload.get('position'): screen.position = payload['position']
+        screen.save()
+        serializer = ScreenSerializer(screen)
+        layout = (payload.get('layout'))
+        print(layout)
+            # reversion.set_user(request.user)
+            # reversion.set_comment(
+            #     f"Change {*payload.values(),}"
+            # )
         return JsonResponse({'screen': serializer.data, "result": True})
 
     def post(self, request, project_id):
