@@ -107,8 +107,6 @@ class ScreenView(APIView):
         if payload.get('position'): screen.position = payload['position']
         screen.save()
         serializer = ScreenSerializer(screen)
-        layout = (payload.get('layout'))
-        print(layout)
             # reversion.set_user(request.user)
             # reversion.set_comment(
             #     f"Change {*payload.values(),}"
