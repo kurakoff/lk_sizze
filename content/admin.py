@@ -1,6 +1,7 @@
 from django.contrib import admin
 import nested_admin
 from tinymce.widgets import TinyMCE
+from reversion.admin import VersionAdmin
 
 from .models import (
     SharedProject,
@@ -56,6 +57,10 @@ class PrototypeAdmin(nested_admin.NestedModelAdmin):
         HTMLField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
     }
 
+
+@admin.register(Screen)
+class ClientModelAdmin(VersionAdmin):
+    pass
 
 admin.site.register(Prototype, PrototypeAdmin)
 admin.site.register(Category, CategoryAdmin)

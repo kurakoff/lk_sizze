@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'tinymce',
     'nested_admin',
 
+    'reversion',
     'rest_framework',
     'rest_framework.authtoken',
 ]

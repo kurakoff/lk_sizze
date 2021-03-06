@@ -1,4 +1,4 @@
-import base64, json, os, random, string, googleapiclient
+import base64, json, os, random, string, googleapiclient, reversion
 from mimetypes import guess_extension, guess_type
 
 from django.conf import settings
@@ -7,14 +7,16 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from django.db.models import Q
+from django.db.models import Q, F
 
 from gphotospy import authorize
 from gphotospy.media import Media
 from gphotospy.album import Album
 
-from rest_framework import generics, viewsets, permissions, status
+from rest_framework import generics, viewsets, permissions, status, response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from reversion.models import Version, Revision
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer
@@ -95,16 +97,21 @@ class ScreenView(APIView):
             screen = project.screen_set.get(id=screen_id)
         except Screen.DoesNotExist:
             return JsonResponse({'message': 'Screen not found', "result": False})
-
-        payload = json.loads(request.body)
-        if payload.get('title'): screen.title = payload['title']
-        if payload.get('layout'): screen.layout = payload['layout']
-        if payload.get('width'): screen.width = payload['width']
-        if payload.get('height'): screen.height = payload['height']
-        if payload.get('background_color'): screen.background_color = payload['background_color']
-        if payload.get('position'): screen.position = payload['position']
-        screen.save()
-        serializer = ScreenSerializer(screen)
+        with reversion.create_revision():
+            payload = json.loads(request.body)
+            if payload.get('title'): screen.title = payload['title']
+            if payload.get('layout'): screen.layout = payload['layout']
+            if payload.get('width'): screen.width = payload['width']
+            if payload.get('height'): screen.height = payload['height']
+            if payload.get('background_color'): screen.background_color = payload['background_color']
+            if payload.get('position'): screen.position = payload['position']
+            screen.save()
+            serializer = ScreenSerializer(screen)
+            print(payload.get.title)
+            reversion.set_user(request.user)
+            reversion.set_comment(
+                f"Change {*payload.values(),}"
+            )
         return JsonResponse({'screen': serializer.data, "result": True})
 
     def post(self, request, project_id):
@@ -608,3 +615,51 @@ class UserShareProjectDeleteView(viewsets.ModelViewSet):
             return JsonResponse({"result": False, "message": "project permission not found"},
                                 status=status.HTTP_200_OK)
 
+
+class ScreenHistory(APIView):
+    def get(self, request, project_id, screen_id):
+        screen = Screen.objects.get(id=screen_id)
+        versions = Version.objects.get_for_object(screen)
+        data = versions.values('pk', date_time=F('revision__date_created'), user=F('revision__user__username'),
+                               comment=F('revision__comment'))
+
+        return response.Response({"data": data})
+
+
+class ScreenVersionAll(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            v = Version.objects.all()
+            data = []
+            for i in v:
+                data.append(i.field_dict)
+            return response.Response({"past screens": data})
+        except:
+            return JsonResponse({"message": "Version not found", "result": False})
+
+
+class ScreenVersion(APIView):
+
+    def get(self, requset, *args, **kwargs):
+        try:
+            v = Version.objects.get(id=kwargs['version_id'])
+            return response.Response({"data": v.field_dict})
+        except:
+            return JsonResponse({"message": "Version not found", "result": False})
+
+    def put(self, request, *args, **kwargs):
+        try:
+            v = Version.objects.get(id=kwargs['version_id'])
+            v = v.field_dict
+            screen = Screen.objects.get(id=kwargs['screen_id'])
+            screen.title = v['title']
+            screen.layout = v['layout']
+            screen.width = v['width']
+            screen.height = v['height']
+            screen.background_color = v['background_color']
+            screen.position = v['position']
+            screen.save()
+            serializer = ScreenSerializer(screen)
+            return JsonResponse({"screen": serializer.data, "result": True})
+        except:
+            return JsonResponse({"message": "Version not found", "result": False})

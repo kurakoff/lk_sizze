@@ -2,7 +2,7 @@ import jsonfield
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
-# import reversion
+import reversion
 
 CASCADE = models.CASCADE
 
@@ -32,7 +32,7 @@ class Project(models.Model):
         return str(self.name)
 
 
-# @reversion.register()
+@reversion.register()
 class Screen(models.Model):
     title = models.CharField(max_length=32, verbose_name='название', default='')
     layout = models.TextField(verbose_name='макет', default='')
