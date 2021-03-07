@@ -109,7 +109,7 @@ class ScreenView(APIView):
             serializer = ScreenSerializer(screen)
             reversion.set_user(request.user)
             reversion.set_comment(
-                f"Change {*payload.values(),}"
+                f"ТУТ БУДЕТ ИМЯ ЭЛЕМЕНТА"
             )
         return JsonResponse({'screen': serializer.data, "result": True})
 
