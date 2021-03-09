@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'nested_admin',
 
     'reversion',
+    'django_crontab',
     'rest_framework',
     'rest_framework.authtoken',
 ]
@@ -196,3 +197,8 @@ GOOGLE_CLIENT_SECRET = 'EPN6zbdU-_r_xI5d-SrWMQ3k'
 GOOGLE_CLIENT_ID = '334729455720-d4pno273r6kaoe49cjautkg9isov59ke.apps.googleusercontent.com'
 
 SILENCED_SYSTEM_CHECKS = ["auth.W004"]
+
+CRONJOBS = [
+    ('0 0 * * *', 'content.cron.delete_past_project', '>> /home/kabiljan/PycharmProjects/sizze/lk_sizze/cron.log'),
+    ('0 0 * * *', 'content.cron.delete_past_tokens', '>> /home/kabiljan/PycharmProjects/sizze/lk_sizze/cron.log')
+]

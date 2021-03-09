@@ -619,9 +619,8 @@ class ScreenHistory(APIView):
     def get(self, request, project_id, screen_id):
         screen = Screen.objects.get(id=screen_id)
         versions = Version.objects.get_for_object(screen)
-        data = versions.values('pk', date_time=F('revision__date_created'), user=F('revision__user__username'),
-                               comment=F('revision__comment'))
-
+        data = versions.values('pk', date_time=F('revision__date_created'), user=F('revision__user__username')
+                               ).order_by('revision__date_created').reverse()[:50]
         return response.Response({"data": data})
 
 

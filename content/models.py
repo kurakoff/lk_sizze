@@ -1,8 +1,7 @@
-import jsonfield
+import jsonfield, reversion
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
-import reversion
 
 CASCADE = models.CASCADE
 
