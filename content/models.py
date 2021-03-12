@@ -148,7 +148,7 @@ class SharedProject(models.Model):
     all_users = models.BooleanField()
 
     def __str__(self):
-        return self.project
+        return str(self.project)
 
 
 class PasswordReset(models.Model):
