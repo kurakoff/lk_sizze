@@ -558,7 +558,7 @@ class ShareProjectAllView(APIView):
         all_users = request.data.get('all_users')
         if request.data.get('to_user') == request.user:
             return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
-        if all_users == 'false':
+        if (all_users is False) or (all_users == 'false'):
             shared_project = SharedProject.objects.get(to_user=serializer.data['to_user'],
                                                        project=kwargs['project_id'])
             shared_project.permission = serializer.data['permission']
