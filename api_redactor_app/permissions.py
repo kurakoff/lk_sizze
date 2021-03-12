@@ -11,6 +11,8 @@ class IsAuthor(BasePermission):
         if request.method == 'OPTIONS':
             return True
         try:
+            if request.user.is_superuser:
+                return True
             if Project.objects.get(id=view.kwargs['project_id'], user=request.user):
                 return True
         except:
