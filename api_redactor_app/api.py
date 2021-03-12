@@ -494,6 +494,7 @@ class ShareProjectAllView(APIView):
         serializer = ShareProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         all_users = request.data.get('all_users')
+        print("All users is " + all_users)
         if all_users == "False":
             to_user = serializer.validated_data['to_user']
             share_project = SharedProject.objects.filter(project=kwargs['project_id'], to_user=to_user)
@@ -534,6 +535,7 @@ class ShareProjectAllView(APIView):
         serializer = SharedProjectDeleteUserSerializer(data=requset.data)
         serializer.is_valid(raise_exception=True)
         all_users = requset.data.get('all_users')
+        print("All users is " + all_users)
         if all_users == 'True':
             shared_project = SharedProject.objects.filter(
                 project=kwargs['project_id'], all_users=serializer.data['all_users']
@@ -556,16 +558,16 @@ class ShareProjectAllView(APIView):
         serializer = ShareProjectBaseSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         all_users = request.data.get('all_users')
+        print("All users is " + all_users)
         if request.data.get('to_user') == request.user:
             return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
-        print(all_users)
-        if (all_users is False) or (all_users == 'false'):
+        if (all_users is False) or (all_users == "False"):
             shared_project = SharedProject.objects.get(to_user=serializer.data['to_user'],
                                                        project=kwargs['project_id'])
             shared_project.permission = serializer.data['permission']
         else:
             serializer.validated_data['to_user'] = None
-            shared_project = SharedProject.objects.get(all_users="True", project=kwargs['project_id'])
+            shared_project = SharedProject.objects.get(all_users=True, project=kwargs['project_id'])
             shared_project.permission = serializer.data['permission']
         shared_project.save()
         return JsonResponse(serializer.data, status=status.HTTP_200_OK)
