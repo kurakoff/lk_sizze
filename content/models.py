@@ -10,18 +10,20 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     google_album_id = models.CharField(max_length=100)
 
-
+@reversion.register()
 class UserElement(models.Model):
     title = models.CharField(max_length=36,  blank=False)
     layout = models.TextField(default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE, default=None)
 
 
+@reversion.register(follow=['screen_set', 'userelement_set'])
 class Project(models.Model):
     name = models.CharField(max_length=16, verbose_name='название', blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
     colors = jsonfield.JSONField()
+    count = models.IntegerField(verbose_name='Период версий', default=0)
 
     class Meta:
         verbose_name = 'проект'

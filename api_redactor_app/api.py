@@ -1,4 +1,4 @@
-import base64, json, os, random, string, googleapiclient, reversion
+import base64, json, os, random, string, googleapiclient, reversion, datetime, ast
 from mimetypes import guess_extension, guess_type
 
 from django.conf import settings
@@ -19,7 +19,8 @@ from rest_framework.decorators import api_view
 from reversion.models import Version, Revision
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
-    ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer
+    ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
+    PastProjectsSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject
 from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
 from .helpers.is_auth import IsAuthenticated
@@ -97,20 +98,24 @@ class ScreenView(APIView):
             screen = project.screen_set.get(id=screen_id)
         except Screen.DoesNotExist:
             return JsonResponse({'message': 'Screen not found', "result": False})
-        with reversion.create_revision():
-            payload = json.loads(request.body)
-            if payload.get('title'): screen.title = payload['title']
-            if payload.get('layout'): screen.layout = payload['layout']
-            if payload.get('width'): screen.width = payload['width']
-            if payload.get('height'): screen.height = payload['height']
-            if payload.get('background_color'): screen.background_color = payload['background_color']
-            if payload.get('position'): screen.position = payload['position']
-            screen.save()
-            serializer = ScreenSerializer(screen)
-            reversion.set_user(request.user)
-            reversion.set_comment(
-                f"ТУТ БУДЕТ ИМЯ ЭЛЕМЕНТА"
-            )
+        payload = json.loads(request.body)
+        if payload.get('title'): screen.title = payload['title']
+        if payload.get('layout'): screen.layout = payload['layout']
+        if payload.get('width'): screen.width = payload['width']
+        if payload.get('height'): screen.height = payload['height']
+        if payload.get('background_color'): screen.background_color = payload['background_color']
+        if payload.get('position'): screen.position = payload['position']
+        screen.save()
+        if project.count == 10:
+            with reversion.create_revision():
+                    obj = project
+                    obj.save()
+                    reversion.set_user(request.user)
+                    reversion.set_date_created(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    project.count = 0
+        project.count += 1
+        project.save()
+        serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
 
     def post(self, request, project_id):
@@ -245,7 +250,15 @@ class ProjectApiView(APIView):
             project.name = payload['name']
         if 'colors' in payload.keys():
             project.colors = payload['colors']
-
+        project.save()
+        if project.count == 10:
+            with reversion.create_revision():
+                    obj = project
+                    obj.save()
+                    reversion.set_user(request.user)
+                    reversion.set_date_created(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    project.count = 0
+        project.count += 1
         project.save()
         serializer = ProjectSerializer(project)
         return JsonResponse({'project': serializer.data, "result": True})
@@ -327,6 +340,15 @@ class UserElementApiView(APIView):
         if payload.get('layout'):
             element.layout = payload['layout']
         element.save()
+        if project.count == 10:
+            with reversion.create_revision():
+                    obj = project
+                    obj.save()
+                    reversion.set_user(request.user)
+                    reversion.set_date_created(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    project.count = 0
+        project.count += 1
+        project.save()
         serialize = UserElementSerializer(element)
         return JsonResponse({"elements": serialize.data, "result": True})
 
@@ -616,12 +638,12 @@ class UserShareProjectDeleteView(viewsets.ModelViewSet):
 
 
 class ScreenHistory(APIView):
-    def get(self, request, project_id, screen_id):
-        screen = Screen.objects.get(id=screen_id)
+    def get(self, request, project_id):
+        screen = Project.objects.get(id=project_id)
         versions = Version.objects.get_for_object(screen)
-        data = versions.values('pk', date_time=F('revision__date_created'), user=F('revision__user__username')
+        data = versions.values("revision_id", date_time=F('revision__date_created'), user=F('revision__user__username')
                                ).order_by('revision__date_created').reverse()[:50]
-        return response.Response({"data": data})
+        return response.Response({"past_projects": data})
 
 
 class ScreenVersionAll(APIView):
@@ -638,26 +660,84 @@ class ScreenVersionAll(APIView):
 
 class ScreenVersion(APIView):
 
-    def get(self, requset, *args, **kwargs):
+    def get_data(self, serializer):
+        project = {}
+        user_element = []
+        screens = []
+        for i in serializer.data:
+            data = dict(i)
+            new_data = ast.literal_eval(data.get('serialized_data'))
+            if new_data[0]['model'] == 'content.screen':
+                new_data[0]['fields']['id'] = new_data[0]['pk']
+                screens.append(new_data[0]['fields'])
+            if new_data[0]['model'] == 'content.project':
+                new_data[0]['fields']['id'] = new_data[0]['pk']
+                project.update(new_data[0]['fields'])
+            if new_data[0]['model'] == 'content.userelement':
+                user_element.append(new_data[0]['fields'])
+        response_data = {'project': project, 'screens': screens, 'userElements': user_element}
+        return response_data
+
+    def copy_project(self, data):
+        project = data.get('project')
+        new_project = Project.objects.create(
+            name="Restored " + project['name'],
+            user_id=project['user'],
+            prototype_id=project['prototype'],
+            colors=project['colors']
+        )
+        return new_project
+
+    def copy_screen(self, data):
+        screens = data.get('screens')
+        for screen in screens:
+            Screen.objects.create(
+                title=screen['title'],
+                layout=screen['layout'],
+                project_id=screen['project'],
+                last_change=screen['last_change'],
+                width=screen['width'],
+                height=screen['height'],
+                background_color=screen['background_color'],
+                position=screen['position']
+            )
+
+    def copy_userElement(self, data):
+        elements = data.get('userElements')
+        for element in elements:
+            UserElement.objects.create(
+                title=element['title'],
+                layout=element['layout'],
+                project_id=element['project']
+            )
+
+    def get(self, request, *args, **kwargs):
         try:
-            v = Version.objects.get(id=kwargs['version_id'])
-            return response.Response({"data": v.field_dict})
+            v = Version.objects.filter(revision_id=kwargs['revision_id']).values('serialized_data')
+            serializer = PastProjectsSerializer(v, many=True)
+            data = self.get_data(serializer)
+            return response.Response(data)
         except:
             return JsonResponse({"message": "Version not found", "result": False})
 
     def put(self, request, *args, **kwargs):
         try:
-            v = Version.objects.get(id=kwargs['version_id'])
-            v = v.field_dict
-            screen = Screen.objects.get(id=kwargs['screen_id'])
-            screen.title = v['title']
-            screen.layout = v['layout']
-            screen.width = v['width']
-            screen.height = v['height']
-            screen.background_color = v['background_color']
-            screen.position = v['position']
-            screen.save()
-            serializer = ScreenSerializer(screen)
-            return JsonResponse({"screen": serializer.data, "result": True})
+            v = Version.objects.filter(revision_id=kwargs['revision_id']).values('serialized_data')
+            serializer = PastProjectsSerializer(v, many=True)
+            data = self.get_data(serializer)
+            self.copy_project(data)
+            self.copy_screen(data)
+            self.copy_userElement(data)
+            return JsonResponse({"message": "Project restored", "result": True})
         except:
-            return JsonResponse({"message": "Version not found", "result": False})
+            return JsonResponse({"message": "Project not restored", "result": False})
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            v = Version.objects.filter(revision_id=kwargs['revision_id'])
+            r = Revision.objects.filter(id=kwargs['revision_id'])
+            v.delete()
+            r.delete()
+            return JsonResponse({"message": "Past project versions deleted", "result": True})
+        except:
+            return JsonResponse({"message": "Past project versions not delete", "result": False})

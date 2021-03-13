@@ -74,3 +74,7 @@ class ShareProjectSerializer(ShareProjectBaseSerializer):
 class SharedProjectDeleteUserSerializer(serializers.Serializer):
     to_user = serializers.EmailField(required=False)
     all_users = serializers.BooleanField(required=False)
+
+
+class PastProjectsSerializer(serializers.Serializer):
+    serialized_data = serializers.JSONField()

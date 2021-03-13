@@ -2,7 +2,7 @@ from django.contrib import admin
 import nested_admin
 from tinymce.widgets import TinyMCE
 from reversion.admin import VersionAdmin
-
+from reversion.models import Revision, Version
 from .models import (
     SharedProject,
     Project,
@@ -68,3 +68,5 @@ admin.site.register(Settings, SettingsAdmin)
 admin.site.register(Project)
 admin.site.register(SharedProject)
 admin.site.register(Element)
+admin.site.register(Revision)
+admin.site.register(Version)
