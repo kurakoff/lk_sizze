@@ -199,6 +199,6 @@ GOOGLE_CLIENT_ID = '334729455720-d4pno273r6kaoe49cjautkg9isov59ke.apps.googleuse
 SILENCED_SYSTEM_CHECKS = ["auth.W004"]
 
 CRONJOBS = [
-    ('0 0 * * *', 'content.cron.delete_past_project', '>> /home/kabiljan/PycharmProjects/sizze/lk_sizze/cron.log'),
-    ('0 0 * * *', 'content.cron.delete_past_tokens', '>> /home/kabiljan/PycharmProjects/sizze/lk_sizze/cron.log')
+    ('0 0 * * *', 'content.cron.delete_past_project', '>> /var/www/html/lk_iszze/cron.log'),
+    ('0 0 * * *', 'content.cron.delete_past_tokens', '>> /var/www/html/lk_iszze/cron.log')
 ]
