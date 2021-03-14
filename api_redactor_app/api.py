@@ -720,7 +720,7 @@ class ScreenVersion(APIView):
         except:
             return JsonResponse({"message": "Version not found", "result": False})
 
-    def put(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         try:
             v = Version.objects.filter(revision_id=kwargs['revision_id']).values('serialized_data')
             serializer = PastProjectsSerializer(v, many=True)
