@@ -87,8 +87,12 @@ WSGI_APPLICATION = 'sizzy_lk.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'lk_sizze',
+        'USER': 'kabiljan',
+        'PASSWORD': 'kabiljan',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
