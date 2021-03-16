@@ -688,13 +688,13 @@ class ScreenVersion(APIView):
         )
         return new_project
 
-    def copy_screen(self, data):
+    def copy_screen(self, new_project, data):
         screens = data.get('screens')
         for screen in screens:
             Screen.objects.create(
                 title=screen['title'],
                 layout=screen['layout'],
-                project_id=screen['project'],
+                project_id=new_project.id,
                 last_change=screen['last_change'],
                 width=screen['width'],
                 height=screen['height'],
@@ -702,13 +702,13 @@ class ScreenVersion(APIView):
                 position=screen['position']
             )
 
-    def copy_userElement(self, data):
+    def copy_userElement(self, new_project, data):
         elements = data.get('userElements')
         for element in elements:
             UserElement.objects.create(
                 title=element['title'],
                 layout=element['layout'],
-                project_id=element['project']
+                project_id=new_project.id
             )
 
     def get(self, request, *args, **kwargs):
@@ -725,9 +725,9 @@ class ScreenVersion(APIView):
             v = Version.objects.filter(revision_id=kwargs['revision_id']).values('serialized_data')
             serializer = PastProjectsSerializer(v, many=True)
             data = self.get_data(serializer)
-            self.copy_project(data)
-            self.copy_screen(data)
-            self.copy_userElement(data)
+            new_project = self.copy_project(data)
+            self.copy_screen(new_project=new_project, data=data)
+            self.copy_userElement(new_project=data, data=data)
             return JsonResponse({"message": "Project restored", "result": True})
         except:
             return JsonResponse({"message": "Project not restored", "result": False})
