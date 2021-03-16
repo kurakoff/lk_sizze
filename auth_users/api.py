@@ -1,4 +1,4 @@
-import os, json, random, secrets, string
+import os, json, random, secrets, string, logging
 from .utils import Util
 from .social.backend import PasswordlessAuthBackend
 from content import models
@@ -60,13 +60,16 @@ class Logout(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
+logger = logging.getLogger('django')
+
+
 class UserCreate(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
+        logger.info(request.data)
         return self.create(request, *args, **kwargs)
 
 class UserUpdate(APIView):

@@ -206,3 +206,19 @@ CRONJOBS = [
     ('0 0 * * *', 'content.cron.delete_past_project', '>> /var/www/html/lk_iszze/cron.log'),
     ('0 0 * * *', 'content.cron.delete_past_tokens', '>> /var/www/html/lk_iszze/cron.log')
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
