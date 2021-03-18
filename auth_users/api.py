@@ -1,5 +1,4 @@
 import os, json, random, secrets, string, logging
-from .utils import Util
 from .social.backend import PasswordlessAuthBackend
 from content import models
 
@@ -168,9 +167,13 @@ class ResetPasswordEmailView(generics.GenericAPIView):
                     reset.save()
                     break
             email_body = "Hello, \n Use this pin code to reset password \n" + reset.pin
-            data = {"email_body": email_body, "to_email": user.email,
-                    "email_subject": "Reset your passsword"}
-            Util.send_email(data)
+            send_mail(
+                f"Reset your passsword",
+                email_body,
+                getattr(settings, "EMAIL_HOST_USER"),
+                [user.email],
+                fail_silently=True
+            )
         return JsonResponse({"result": True, "message": "We have sent you a link to reset your password"},
                         status=status.HTTP_200_OK)
 
