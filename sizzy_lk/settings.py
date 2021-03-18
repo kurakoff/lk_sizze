@@ -160,13 +160,13 @@ MEDIA_ROOT = './media/'
 MEDIA_URL = '/media/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # ПОКА ТЕСТ
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'mail.sizze.io'
 EMAIL_PORT = '465'
-EMAIL_HOST_USER = "sizze.team@gmail.com"
-EMAIL_HOST_PASSWORD = "Doc021295"
+EMAIL_HOST_USER = "support@sizze.io"
+EMAIL_HOST_PASSWORD = "fzOppTKoc4ga"
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = "sizze.team@gmail.com"
+DEFAULT_FROM_EMAIL = "mail.sizze.io"
 
 TINYMCE_JS_URL = os.path.join(STATIC_URL, "tiny_mce/tiny_mce.js")
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tiny_mce")
