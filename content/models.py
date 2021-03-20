@@ -152,6 +152,10 @@ class SharedProject(models.Model):
     def __str__(self):
         return str(self.project)
 
+    class Meta:
+        verbose_name = 'Права на проект'
+        verbose_name_plural = 'Права на проекты'
+
 
 class PasswordReset(models.Model):
     to_user = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE, related_name="reset_to_user")
