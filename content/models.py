@@ -55,7 +55,8 @@ class Screen(models.Model):
 class BaseWidthPrototype(models.Model):
     title = models.CharField(max_length=255)
     width = models.IntegerField()
-    image = models.FileField(upload_to='images_prototype_width/', verbose_name='изображение')
+    light_image = models.FileField(upload_to='images_prototype_width/', verbose_name='light изображение')
+    dark_image = models.FileField(upload_to='images_prototype_width/', verbose_name='dark изображение')
 
     def __str__(self):
         return str(self.title)
@@ -67,7 +68,7 @@ class Prototype(models.Model):
     height = models.IntegerField(verbose_name='высота', default=0)
     image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
     image_hover = models.FileField(upload_to='images_prototypes/hover/', verbose_name='hover', default='')
-    base_width = models.ManyToManyField(BaseWidthPrototype, null=True)
+    base_width = models.ManyToManyField(BaseWidthPrototype, null=True, verbose_name='Список width')
 
     class Meta:
         verbose_name = 'прототип'
