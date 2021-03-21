@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from django.db.models import Q, F
+from django.db.models import Q, F, expressions, CharField
 
 from gphotospy import authorize
 from gphotospy.media import Media
@@ -21,7 +21,8 @@ from reversion.models import Version, Revision
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
     PastProjectsSerializer
-from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject
+from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
+    BaseWidthPrototype
 from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
 from .helpers.is_auth import IsAuthenticated
 
@@ -276,6 +277,15 @@ class ProjectApiView(APIView):
 class PrototypeApiView(generics.ListAPIView):
     serializer_class = PrototypeSerializer
     queryset = Prototype.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        for i in serializer.data:
+            width = BaseWidthPrototype.objects.\
+                    filter(prototype=i['id'])
+            i['base_width'] = width.values()
+        return response.Response(serializer.data)
 
 
 class UserElementApiView(APIView):

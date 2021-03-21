@@ -52,12 +52,22 @@ class Screen(models.Model):
         return str(self.pk)
 
 
+class BaseWidthPrototype(models.Model):
+    title = models.CharField(max_length=255)
+    width = models.IntegerField()
+    image = models.FileField(upload_to='images_prototype_width/', verbose_name='изображение')
+
+    def __str__(self):
+        return str(self.title)
+
+
 class Prototype(models.Model):
     device_name = models.CharField(max_length=64, verbose_name='название')
     width = models.IntegerField(verbose_name='ширина', default=0)
     height = models.IntegerField(verbose_name='высота', default=0)
     image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
     image_hover = models.FileField(upload_to='images_prototypes/hover/', verbose_name='hover', default='')
+    base_width = models.ManyToManyField(BaseWidthPrototype, null=True)
 
     class Meta:
         verbose_name = 'прототип'
@@ -165,3 +175,4 @@ class PasswordReset(models.Model):
 
     def __str__(self):
         return self.to_user
+

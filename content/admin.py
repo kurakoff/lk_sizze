@@ -12,6 +12,7 @@ from .models import (
     CategoryPrototype,
     Element,
     Settings,
+    BaseWidthPrototype
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -138,6 +139,11 @@ class CategoryPrototypeInline(nested_admin.NestedStackedInline):
     #     return super(CategoryPrototypeInline, self).get_formset(request, obj, **kwargs)
 
 
+class BaseWidthInline(admin.TabularInline):
+    model = Prototype.base_width.through
+    extra = 1
+
+
 class PrototypeAdmin(nested_admin.NestedModelAdmin):
     inlines = [CategoryPrototypeInline]
     formfield_overrides = {
@@ -168,6 +174,9 @@ class ScreenSetting(admin.ModelAdmin):
 
 
 class PrototypeSetting(admin.ModelAdmin):
+    inlines = (
+        BaseWidthInline,
+    )
     actions_selection_counter = True
     list_display = ['id', 'device_name', 'width', 'height', 'image', 'image_hover']
     list_display_links = ('id', 'device_name')
@@ -186,3 +195,4 @@ admin.site.register(Element, ElementSetting)
 admin.site.register(Screen, ScreenSetting)
 admin.site.register(Revision)
 admin.site.register(Version)
+admin.site.register(BaseWidthPrototype)
