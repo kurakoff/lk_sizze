@@ -20,9 +20,9 @@ from reversion.models import Version, Revision
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
-    PastProjectsSerializer
+    PastProjectsSerializer, ModesStateSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
-    BaseWidthPrototype
+    BaseWidthPrototype, ModesState
 from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
 from .helpers.is_auth import IsAuthenticated
 
@@ -751,3 +751,18 @@ class ScreenVersion(APIView):
             return JsonResponse({"message": "Past project versions deleted", "result": True})
         except:
             return JsonResponse({"message": "Past project versions not delete", "result": False})
+
+
+class ModesStateView(APIView):
+    def post(self, request, *args, **kwargs):
+        queryset = ModesState.objects.get()
+        queryset.delete()
+        serializer = ModesStateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data)
+
+    def get(self, request, *args, **kwargs):
+        queryset = ModesState.objects.get()
+        serializer = ModesStateSerializer(queryset)
+        return JsonResponse(serializer.data)

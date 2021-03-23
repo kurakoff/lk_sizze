@@ -27,4 +27,6 @@ urlpatterns = [
     path('project/<int:project_id>/history/', api.ScreenHistory.as_view()),
     path('project/<int:project_id>/screens/<int:screen_id>/history/all/', api.ScreenVersionAll.as_view()),
     path('project/<int:project_id>/history/<int:revision_id>/', api.ScreenVersion.as_view()),
+
+    path('elements/', api.ModesStateView.as_view()),
 ]

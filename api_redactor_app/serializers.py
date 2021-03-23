@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from content.models import Screen, Prototype, Project, UserElement, SharedProject
+from content.models import Screen, Prototype, Project, UserElement, SharedProject, ModesState
 
 
 class ScreenSerializer(serializers.ModelSerializer):
@@ -78,3 +78,10 @@ class SharedProjectDeleteUserSerializer(serializers.Serializer):
 
 class PastProjectsSerializer(serializers.Serializer):
     serialized_data = serializers.JSONField()
+
+
+class ModesStateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ModesState
+        fields = '__all__'
