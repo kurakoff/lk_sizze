@@ -755,14 +755,20 @@ class ScreenVersion(APIView):
 
 class ModesStateView(APIView):
     def post(self, request, *args, **kwargs):
-        queryset = ModesState.objects.get()
-        queryset.delete()
+        try:
+            queryset = ModesState.objects.get(project_id=kwargs['project_id'])
+            queryset.delete()
+        except:
+            pass
         serializer = ModesStateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.save(project_id=kwargs['project_id'])
         return JsonResponse(serializer.data)
 
     def get(self, request, *args, **kwargs):
-        queryset = ModesState.objects.get()
-        serializer = ModesStateSerializer(queryset)
-        return JsonResponse(serializer.data)
+        try:
+            queryset = ModesState.objects.get(project_id=kwargs['project_id'])
+            serializer = ModesStateSerializer(queryset)
+            return JsonResponse(serializer.data)
+        except ModesState.DoesNotExist:
+            return JsonResponse({"result": False, "message": "ModesState does not exist"})

@@ -84,4 +84,4 @@ class ModesStateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ModesState
-        fields = '__all__'
+        fields = ['elements']

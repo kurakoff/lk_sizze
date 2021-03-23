@@ -179,5 +179,6 @@ class PasswordReset(models.Model):
 
 
 class ModesState(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='modes_state')
     elements = models.TextField()
 
