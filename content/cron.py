@@ -30,6 +30,13 @@ def delete_past_tokens():
     return print("Удаленние старых токенов завершенно")
 
 
+def create_backup():
+    today = datetime.datetime.today()
+    print("Начато создание backup базы данных ", today)
+    os.system(f"mkdir /home/kabiljan/PycharmProjects/sizze/lk_sizze/backup/{today.month}-{today.year}")
+    os.system(f'sudo -i -u kabiljan; PGPASSWORD="kabiljan" pg_dump lk_sizze> /var/www/html/lk_sizze/backup/{today.month}-{today.year}/db_{datetime.date.today()}.bak')
+    return print("Создание backup оконченно")
+
+
 if __name__ == "__main__":
-    delete_past_project()
-    delete_past_tokens()
+    create_backup()
