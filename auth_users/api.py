@@ -237,11 +237,7 @@ class GoogleSocialAuthView(generics.GenericAPIView):
 
     def generate_username(self, email):
         username = email.split("@")[0]
-        if not User.objects.filter(username=username).exists():
-            return username
-        else:
-            random_username = username + str(random.randint(0, 1000))
-            return self.generate_username(random_username)
+        return username
 
     def post(self, request):
         """
