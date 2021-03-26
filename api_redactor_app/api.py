@@ -107,6 +107,7 @@ class ScreenView(APIView):
         if payload.get('background_color'): screen.background_color = payload['background_color']
         if payload.get('position'): screen.position = payload['position']
         if payload.get('constant_color'): screen.constant_id = payload['constant_color']
+        elif payload.get('constant_color') is None: screen.constant_id = None
         screen.save()
         if project.count == 10:
             with reversion.create_revision():
