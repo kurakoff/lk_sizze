@@ -20,9 +20,9 @@ from reversion.models import Version, Revision
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
-    PastProjectsSerializer, ModesStateSerializer
+    PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
-    BaseWidthPrototype, ModesState
+    BaseWidthPrototype, ModesState, Constant_colors
 from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
 from .helpers.is_auth import IsAuthenticated
 
@@ -106,6 +106,7 @@ class ScreenView(APIView):
         if payload.get('height'): screen.height = payload['height']
         if payload.get('background_color'): screen.background_color = payload['background_color']
         if payload.get('position'): screen.position = payload['position']
+        if payload.get('constant_color'): screen.constant_id = payload['constant_color']
         screen.save()
         if project.count == 10:
             with reversion.create_revision():
@@ -133,7 +134,8 @@ class ScreenView(APIView):
             layout="",
             width=project.prototype.width,
             height=project.prototype.height,
-            position=(len(screens) + 1)
+            position=(len(screens) + 1),
+            constant_id=payload['constant_color']
         )
         screen.save()
         serializer = ScreenSerializer(screen)
@@ -772,3 +774,33 @@ class ModesStateView(APIView):
             return JsonResponse(serializer.data)
         except ModesState.DoesNotExist:
             return JsonResponse({"result": False, "message": "ModesState does not exist"})
+
+
+class ConstantColorsView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ConstantColorsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(project_id=kwargs['project_id'])
+        return JsonResponse(serializer.data)
+
+    def get(self, request, *args, **kwargs):
+        queryset = Constant_colors.objects.filter(project_id=kwargs['project_id'])
+        serializer = ConstantColorsSerializer(queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def put(self, request, *args, **kwargs):
+        queryset = Constant_colors.objects.get(id=kwargs['constant_color_id'])
+        light = request.data.get('light_value')
+        if light:
+            queryset.light_value = light
+        dark = request.data.get('dark_value')
+        if dark:
+            queryset.dark_value = dark
+        queryset.save()
+        serializer = ConstantColorsSerializer(queryset)
+        return JsonResponse(serializer.data)
+
+    def delete(self, *args, **kwargs):
+        queryset = Constant_colors.objects.get(id=kwargs['constant_color_id'])
+        queryset.delete()
+        return JsonResponse({"result": True, "message": "Constant_colors delete success"})

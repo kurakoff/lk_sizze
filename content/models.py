@@ -10,6 +10,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     google_album_id = models.CharField(max_length=100)
 
+
 @reversion.register()
 class UserElement(models.Model):
     title = models.CharField(max_length=36,  blank=False)
@@ -33,6 +34,12 @@ class Project(models.Model):
         return str(self.name)
 
 
+class Constant_colors(models.Model):
+    dark_value = models.TextField()
+    light_value = models.TextField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='constant_colors')
+
+
 @reversion.register()
 class Screen(models.Model):
     title = models.CharField(max_length=32, verbose_name='название', default='')
@@ -43,6 +50,7 @@ class Screen(models.Model):
     height = models.IntegerField(verbose_name='высота', default=0)
     background_color = models.TextField(default='#FFFFFF')
     position = models.IntegerField(verbose_name='позиция', default=0)
+    constant = models.ForeignKey(Constant_colors, on_delete=models.CASCADE, related_name='screen_constant', null=True)
 
     class Meta:
         verbose_name = 'экран'
@@ -181,4 +189,3 @@ class PasswordReset(models.Model):
 class ModesState(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='modes_state')
     elements = models.TextField()
-

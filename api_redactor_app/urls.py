@@ -29,4 +29,7 @@ urlpatterns = [
     path('project/<int:project_id>/history/<int:revision_id>/', api.ScreenVersion.as_view()),
 
     path('project/<int:project_id>/elements/', api.ModesStateView.as_view()),
+    path('project/<int:project_id>/constant_colors/', api.ConstantColorsView.as_view()),
+    path('project/<int:project_id>/constant_colors/<int:constant_color_id>/', api.ConstantColorsView.as_view()),
+
 ]

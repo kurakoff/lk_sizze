@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from content.models import Screen, Prototype, Project, UserElement, SharedProject, ModesState
+from content.models import Screen, Prototype, Project, UserElement, SharedProject, ModesState, Constant_colors
 
 
 class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
-        fields = ['id', 'title', 'layout', 'width', 'height', 'background_color', 'position']
+        fields = ['id', 'title', 'layout', 'width', 'height', 'background_color', 'position', 'constant']
 
 
 class PrototypeSerializer(serializers.ModelSerializer):
@@ -85,3 +85,14 @@ class ModesStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModesState
         fields = ['elements']
+
+
+class ConstantColorsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Constant_colors
+        fields = ['id', 'dark_value', "light_value", 'project']
+        extra_kwargs = {
+            "id": {"read_only": True},
+            "project": {"read_only": True}
+        }
