@@ -91,7 +91,7 @@ class ConstantColorsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Constant_colors
-        fields = ['id', 'dark_value', "light_value", 'project']
+        fields = ['id', 'title', 'dark_value', "light_value", 'to_prototype', 'project']
         extra_kwargs = {
             "id": {"read_only": True},
             "project": {"read_only": True}

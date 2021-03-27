@@ -34,32 +34,6 @@ class Project(models.Model):
         return str(self.name)
 
 
-class Constant_colors(models.Model):
-    dark_value = models.TextField()
-    light_value = models.TextField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='constant_colors')
-
-
-@reversion.register()
-class Screen(models.Model):
-    title = models.CharField(max_length=32, verbose_name='название', default='')
-    layout = models.TextField(verbose_name='макет', default='')
-    project = models.ForeignKey('Project', on_delete=models.CASCADE)
-    last_change = models.DateTimeField(verbose_name='последние изменение', default=now)
-    width = models.IntegerField(verbose_name='ширина', default=0)
-    height = models.IntegerField(verbose_name='высота', default=0)
-    background_color = models.TextField(default='#FFFFFF')
-    position = models.IntegerField(verbose_name='позиция', default=0)
-    constant = models.ForeignKey(Constant_colors, on_delete=models.CASCADE, related_name='screen_constant', null=True)
-
-    class Meta:
-        verbose_name = 'экран'
-        verbose_name_plural = 'экраны'
-
-    def __str__(self):
-        return str(self.pk)
-
-
 class BaseWidthPrototype(models.Model):
     title = models.CharField(max_length=255)
     width = models.IntegerField()
@@ -88,6 +62,41 @@ class Prototype(models.Model):
     # @property
     # def created_categories(self):
     #     return self.categoryprototype_set.values_list('pk', flat=True)
+
+
+class Constant_colors(models.Model):
+    title = models.CharField(max_length=255, default='')
+    dark_value = models.TextField()
+    light_value = models.TextField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='constant_colors', null=True, blank=True)
+    to_prototype = models.ForeignKey(Prototype, on_delete=models.CASCADE, related_name='constant_prototype', null=True,
+                                     blank=True)
+
+    class Meta:
+        verbose_name = 'цвет'
+        verbose_name_plural = 'цвета'
+
+    def __str__(self):
+        return str(self.title)
+
+@reversion.register()
+class Screen(models.Model):
+    title = models.CharField(max_length=32, verbose_name='название', default='')
+    layout = models.TextField(verbose_name='макет', default='')
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    last_change = models.DateTimeField(verbose_name='последние изменение', default=now)
+    width = models.IntegerField(verbose_name='ширина', default=0)
+    height = models.IntegerField(verbose_name='высота', default=0)
+    background_color = models.TextField(default='#FFFFFF')
+    position = models.IntegerField(verbose_name='позиция', default=0)
+    constant = models.ManyToManyField(Constant_colors)
+
+    class Meta:
+        verbose_name = 'экран'
+        verbose_name_plural = 'экраны'
+
+    def __str__(self):
+        return str(self.pk)
 
 
 class Category(models.Model):

@@ -1,5 +1,6 @@
 import base64, json, os, random, string, googleapiclient, reversion, datetime, ast
 from mimetypes import guess_extension, guess_type
+from itertools import chain
 
 from django.conf import settings
 from django.urls import path
@@ -106,8 +107,10 @@ class ScreenView(APIView):
         if payload.get('height'): screen.height = payload['height']
         if payload.get('background_color'): screen.background_color = payload['background_color']
         if payload.get('position'): screen.position = payload['position']
-        if payload.get('constant_color'): screen.constant_id = payload['constant_color']
-        elif payload.get('constant_color') is None: screen.constant_id = None
+        if payload.get('constant_color'):
+            screen.constant.clear(),
+            screen.constant.add(payload['constant_color'])
+        elif payload.get('constant_color') is None: screen.constant.clear()
         screen.save()
         if project.count == 10:
             with reversion.create_revision():
@@ -129,16 +132,16 @@ class ScreenView(APIView):
 
         payload = json.loads(request.body)
         screens = Screen.objects.filter(project=project_id)
-        screen = Screen(
+        colors = Constant_colors.objects.filter(to_prototype=project.prototype)
+        screen = Screen.objects.create(
             title=payload['title'],
             project=project,
             layout="",
             width=project.prototype.width,
             height=project.prototype.height,
             position=(len(screens) + 1),
-            constant_id=payload['constant_color']
         )
-        screen.save()
+        screen.constant.add(payload['constant_color'], *colors)
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
 
@@ -230,14 +233,15 @@ class ProjectApiView(APIView):
             project.colors = payload['colors']
         project.user = request.user
         project.save()
-        screen = Screen(
+        colors = Constant_colors.objects.filter(to_prototype=project.prototype)
+        screen = Screen.objects.create(
             title='first_page',
             project=project,
             width=project.prototype.width,
             height=project.prototype.height,
             position=1
         )
-        screen.save()
+        screen.constant.set(colors)
         serializer = ProjectSerializer(project)
         data = serializer.data
         data['screen'] = ScreenSerializer(screen).data
@@ -785,18 +789,25 @@ class ConstantColorsView(APIView):
         return JsonResponse(serializer.data)
 
     def get(self, request, *args, **kwargs):
-        queryset = Constant_colors.objects.filter(project_id=kwargs['project_id'])
+        project = Project.objects.get(id=kwargs["project_id"])
+        queryset = Constant_colors.objects.filter(Q(project_id=kwargs['project_id']) | Q(to_prototype=project.prototype))
         serializer = ConstantColorsSerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     def put(self, request, *args, **kwargs):
         queryset = Constant_colors.objects.get(id=kwargs['constant_color_id'])
+        title = request.data.get('title')
+        if title:
+            queryset.title = title
         light = request.data.get('light_value')
         if light:
             queryset.light_value = light
         dark = request.data.get('dark_value')
         if dark:
             queryset.dark_value = dark
+        to_prototype = request.data.get('to_prototype')
+        if to_prototype:
+            queryset.to_prototype = to_prototype
         queryset.save()
         serializer = ConstantColorsSerializer(queryset)
         return JsonResponse(serializer.data)
