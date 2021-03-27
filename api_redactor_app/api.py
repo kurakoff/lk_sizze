@@ -141,7 +141,10 @@ class ScreenView(APIView):
             height=project.prototype.height,
             position=(len(screens) + 1),
         )
-        screen.constant.add(payload['constant_color'], *colors)
+        try:
+            screen.constant.add(payload['constant_color'], *colors)
+        except:
+            pass
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
 
