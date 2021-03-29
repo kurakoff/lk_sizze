@@ -107,10 +107,8 @@ class ScreenView(APIView):
         if payload.get('height'): screen.height = payload['height']
         if payload.get('background_color'): screen.background_color = payload['background_color']
         if payload.get('position'): screen.position = payload['position']
-        if payload.get('constant_color'):
-            screen.constant.clear(),
-            screen.constant.add(payload['constant_color'])
-        elif payload.get('constant_color') is None: screen.constant.clear()
+        if payload.get('constant_color'): screen.constant_id = payload['constant_color']
+        elif payload.get('constant_color') is None: screen.constant_id = None
         screen.save()
         if project.count == 10:
             with reversion.create_revision():
@@ -132,7 +130,7 @@ class ScreenView(APIView):
 
         payload = json.loads(request.body)
         screens = Screen.objects.filter(project=project_id)
-        colors = Constant_colors.objects.filter(to_prototype=project.prototype)
+        color = payload
         screen = Screen.objects.create(
             title=payload['title'],
             project=project,
@@ -140,11 +138,8 @@ class ScreenView(APIView):
             width=project.prototype.width,
             height=project.prototype.height,
             position=(len(screens) + 1),
+            constant_id=payload.get('constant_color')
         )
-        try:
-            screen.constant.add(payload['constant_color'], *colors)
-        except:
-            pass
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
 
@@ -232,11 +227,8 @@ class ProjectApiView(APIView):
         project = Project()
         project.prototype = prototype
         project.name = payload['name']
-        if payload.get('colors'):
-            project.colors = payload['colors']
         project.user = request.user
         project.save()
-        colors = Constant_colors.objects.filter(to_prototype=project.prototype)
         screen = Screen.objects.create(
             title='first_page',
             project=project,
@@ -244,7 +236,6 @@ class ProjectApiView(APIView):
             height=project.prototype.height,
             position=1
         )
-        screen.constant.set(colors)
         serializer = ProjectSerializer(project)
         data = serializer.data
         data['screen'] = ScreenSerializer(screen).data

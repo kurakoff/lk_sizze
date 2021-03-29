@@ -89,7 +89,7 @@ class Screen(models.Model):
     height = models.IntegerField(verbose_name='высота', default=0)
     background_color = models.TextField(default='#FFFFFF')
     position = models.IntegerField(verbose_name='позиция', default=0)
-    constant = models.ManyToManyField(Constant_colors)
+    constant = models.ForeignKey(Constant_colors, on_delete=models.CASCADE, related_name='constant_screen', null=True)
 
     class Meta:
         verbose_name = 'экран'

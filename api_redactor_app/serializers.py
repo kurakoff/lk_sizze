@@ -6,6 +6,9 @@ class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
         fields = ['id', 'title', 'layout', 'width', 'height', 'background_color', 'position', 'constant']
+        extra_kwargs = {
+            "constant": {"required": False}
+        }
 
 
 class PrototypeSerializer(serializers.ModelSerializer):
