@@ -187,6 +187,17 @@ class PrototypeSetting(admin.ModelAdmin):
     search_fields = ['id', 'device_name']
 
 
+class ConstantColorsSetting(admin.ModelAdmin):
+    actions_selection_counter = True
+    list_display = ['id', 'title', 'dark_value', 'light_value', 'project', 'to_prototype']
+    readonly_fields = ['project']
+    list_display_links = ('id', 'title')
+    list_filter = ('to_prototype',)
+    preserve_filters = False
+    save_as = True
+    search_fields = ['id', 'title', 'project__id', 'project__name', 'prototype__id', 'prototype__device_name']
+
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
@@ -197,4 +208,4 @@ admin.site.register(Screen, ScreenSetting)
 admin.site.register(Revision)
 admin.site.register(Version)
 admin.site.register(BaseWidthPrototype)
-admin.site.register(Constant_colors)
+admin.site.register(Constant_colors, ConstantColorsSetting)
