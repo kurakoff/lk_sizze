@@ -677,7 +677,7 @@ class ScreenVersion(APIView):
         screens = []
         for i in serializer.data:
             data = dict(i)
-            new_data = ast.literal_eval(data.get('serialized_data'))
+            new_data = json.loads(data.get('serialized_data'))
             if new_data[0]['model'] == 'content.screen':
                 new_data[0]['fields']['id'] = new_data[0]['pk']
                 screens.append(new_data[0]['fields'])
