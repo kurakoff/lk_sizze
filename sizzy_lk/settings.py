@@ -89,8 +89,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'lk_sizze',
-        'USER': 'kabiljan',
-        'PASSWORD': 'kabiljan',
+        'USER': 'sergey',
+        'PASSWORD': 'sergey',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -221,11 +221,21 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console'
         },
+        'auth': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'console',
+            'filename': '/home/kabiljan/PycharmProjects/sizze/lk_sizze/logs/access.log'
+        }
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
+        'auth': {
+            'handlers': ['auth'],
+            'level': 'INFO'
+        }
     },
 }
