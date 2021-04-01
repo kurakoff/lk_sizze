@@ -221,21 +221,21 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console'
         },
-        'auth': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'formatter': 'console',
-            'filename': '/home/kabiljan/PycharmProjects/sizze/lk_sizze/logs/access.log'
-        }
+        # 'auth': {
+        #     'level': 'INFO',
+        #     'class': 'logging.FileHandler',
+        #     'formatter': 'console',
+        #     'filename': '/home/kabiljan/PycharmProjects/sizze/lk_sizze/logs/access.log'
+        # }
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        },
-        'auth': {
-            'handlers': ['auth'],
-            'level': 'INFO'
         }
+        # 'auth': {
+        #     'handlers': ['auth'],
+        #     'level': 'INFO'
+        # }
     },
 }
