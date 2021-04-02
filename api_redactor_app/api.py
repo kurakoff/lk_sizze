@@ -138,7 +138,7 @@ class ScreenView(APIView):
             width=project.prototype.width,
             height=project.prototype.height,
             position=(len(screens) + 1),
-            constant_id=payload.get('constant_color')
+            constant_color_id=payload.get('constant_color')
         )
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
