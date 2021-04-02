@@ -716,6 +716,7 @@ class ScreenVersion(APIView):
     def copy_userElement(self, new_project, data):
         elements = data.get('userElements')
         for element in elements:
+            print(new_project)
             UserElement.objects.create(
                 title=element['title'],
                 layout=element['layout'],
@@ -738,7 +739,7 @@ class ScreenVersion(APIView):
             data = self.get_data(serializer)
             new_project = self.copy_project(data)
             self.copy_screen(new_project=new_project, data=data)
-            self.copy_userElement(new_project=data, data=data)
+            self.copy_userElement(new_project=new_project, data=data)
             return JsonResponse({"message": "Project restored", "result": True})
         except:
             return JsonResponse({"message": "Project not restored", "result": False})
