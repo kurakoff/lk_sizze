@@ -18,7 +18,7 @@ class UserElement(models.Model):
     project = models.ForeignKey('Project', on_delete=models.CASCADE, default=None)
 
 
-@reversion.register(follow=['screen_set', 'userelement_set'])
+@reversion.register(follow=['screen_set', 'userelement_set', 'modes_state', 'constant_colors'])
 class Project(models.Model):
     name = models.CharField(max_length=255, verbose_name='название', blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -64,6 +64,7 @@ class Prototype(models.Model):
     #     return self.categoryprototype_set.values_list('pk', flat=True)
 
 
+@reversion.register()
 class Constant_colors(models.Model):
     title = models.CharField(max_length=255, default='')
     dark_value = models.TextField()
@@ -195,6 +196,7 @@ class PasswordReset(models.Model):
         return self.to_user
 
 
+@reversion.register()
 class ModesState(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='modes_state')
     elements = models.TextField()

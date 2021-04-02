@@ -675,6 +675,8 @@ class ScreenVersion(APIView):
         project = {}
         user_element = []
         screens = []
+        modes_state = {}
+        constant_color = {}
         for i in serializer.data:
             data = dict(i)
             new_data = json.loads(data.get('serialized_data'))
@@ -686,7 +688,14 @@ class ScreenVersion(APIView):
                 project.update(new_data[0]['fields'])
             if new_data[0]['model'] == 'content.userelement':
                 user_element.append(new_data[0]['fields'])
-        response_data = {'project': project, 'screens': screens, 'userElements': user_element}
+            if new_data[0]['model'] == 'content.modesstate':
+                new_data[0]['fields']['id'] = new_data[0]['pk']
+                modes_state.update(new_data[0]['fields'])
+            if new_data[0]['model'] == 'content.constant_colors':
+                new_data[0]['fields']['id'] = new_data[0]['pk']
+                constant_color.update(new_data[0]['fields'])
+        response_data = {'project': project, 'screens': screens, 'userElements': user_element, "modesState": modes_state,
+                         'constant_colors': constant_color}
         return response_data
 
     def copy_project(self, data):
@@ -716,11 +725,29 @@ class ScreenVersion(APIView):
     def copy_userElement(self, new_project, data):
         elements = data.get('userElements')
         for element in elements:
-            print(new_project)
             UserElement.objects.create(
                 title=element['title'],
                 layout=element['layout'],
                 project_id=new_project.id
+            )
+
+    def copy_modesState(self, new_project, data):
+        modes = data.get('modesState')
+        if modes:
+            ModesState.objects.create(
+                project_id=new_project.id,
+                elements=modes['elements']
+            )
+
+    def copy_constant_colors(self, new_project, data):
+        color = data.get('constant_colors')
+        if color:
+            ModesState.objects.create(
+                title=color['title'],
+                dark_value=color['dark_value'],
+                light_value=color['light_value'],
+                project_id=new_project.id,
+                to_prototype=None
             )
 
     def get(self, request, *args, **kwargs):
@@ -733,16 +760,18 @@ class ScreenVersion(APIView):
             return JsonResponse({"message": "Version not found", "result": False})
 
     def post(self, request, *args, **kwargs):
-        try:
-            v = Version.objects.filter(revision_id=kwargs['revision_id']).values('serialized_data')
-            serializer = PastProjectsSerializer(v, many=True)
-            data = self.get_data(serializer)
-            new_project = self.copy_project(data)
-            self.copy_screen(new_project=new_project, data=data)
-            self.copy_userElement(new_project=new_project, data=data)
-            return JsonResponse({"message": "Project restored", "result": True})
-        except:
-            return JsonResponse({"message": "Project not restored", "result": False})
+        # try:
+        v = Version.objects.filter(revision_id=kwargs['revision_id']).values('serialized_data')
+        serializer = PastProjectsSerializer(v, many=True)
+        data = self.get_data(serializer)
+        new_project = self.copy_project(data)
+        self.copy_screen(new_project=new_project, data=data)
+        self.copy_userElement(new_project=new_project, data=data)
+        self.copy_modesState(new_project=new_project, data=data)
+        self.copy_constant_colors(new_project=new_project, data=data)
+        return JsonResponse({"message": "Project restored", "result": True})
+        # except:
+        #     return JsonResponse({"message": "Project not restored", "result": False})
 
     def delete(self, request, *args, **kwargs):
         try:
