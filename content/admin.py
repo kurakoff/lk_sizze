@@ -160,7 +160,7 @@ class ProjectSetting(admin.ModelAdmin):
     list_filter = ('prototype',)
     preserve_filters = False
     save_as = True
-    search_fields = ['id', 'name', 'prototype__device_name']
+    search_fields = ['id', 'name', 'prototype__device_name', 'user__email']
 
 
 class ScreenSetting(admin.ModelAdmin):
