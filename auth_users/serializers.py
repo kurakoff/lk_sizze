@@ -68,7 +68,6 @@ class SetNewPasswordSerializer(serializers.Serializer):
         fields = ['password']
 
 
-
 class GoogleSocialAuthSerializer(serializers.Serializer):
     auth_token = serializers.CharField()
 
@@ -90,3 +89,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
         name = user_data['name']
 
         return {'user_id': user_id, 'email': email, 'name': name}
+
+
+class EmailLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()

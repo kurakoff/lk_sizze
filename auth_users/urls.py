@@ -11,6 +11,7 @@ urlpatterns = [
     path('login', api.ApiLoginView.as_view()),
     path('logout', api.Logout.as_view()),
     path('login/google/', api.GoogleSocialAuthView.as_view()),
+    path('login/email/', api.LoginEmail.as_view()),
 
     path('users/change', api.UserUpdate.as_view()),
     path('users/profile', api.UserProfile.as_view()),

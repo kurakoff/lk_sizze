@@ -30,7 +30,12 @@ from .serializers import \
     ResetPasswordEmailRequestSerializer, \
     SetPinSerializer,\
     UserSerializer,\
-    GoogleSocialAuthSerializer
+    GoogleSocialAuthSerializer,\
+    EmailLoginSerializer
+
+
+logger = logging.getLogger('django')
+auth = logging.getLogger('auth')
 
 
 class ApiLoginView(APIView):
@@ -48,6 +53,7 @@ class ApiLoginView(APIView):
             Token.objects.create(user=user)
             response = JsonResponse({"result": True, "token": user.auth_token.key})
             response.set_cookie('token', user.auth_token.key, httponly=True)
+            auth.info("user {} login with token {}".format(user, user.auth_token.key))
             return response
         else:
             return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -59,17 +65,15 @@ class Logout(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-logger = logging.getLogger('django')
-
-
 class UserCreate(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
-        logger.info(request.data)
+        auth.info("user create {}".format(request.data))
         return self.create(request, *args, **kwargs)
+
 
 class UserUpdate(APIView):
 
@@ -86,12 +90,15 @@ class UserUpdate(APIView):
 
         if name:
             user.username = name
+            auth.info("user {} change name {}".format(user, name))
         if email:
             user.email = email
+            auth.info("user {} change email {}".format(user, email))
 
         if old_password:
             if user.check_password(old_password) and password_1 == password_2:
                 user.set_password(password_1)
+                auth.info("user {} change password {}".format(user))
             else:
                 return JsonResponse({"result": False, 'message': 'Data error'})
 
@@ -259,6 +266,29 @@ class GoogleSocialAuthView(generics.GenericAPIView):
             user.set_unusable_password()
             user.is_verified = True
             user.save()
+        user = self.auth(email)
+        response = JsonResponse({"result": True, "token": user.auth_token.key})
+        response.set_cookie('token', user.auth_token.key, httponly=True)
+        return response
+
+
+class LoginEmail(APIView):
+    permission_classes = [AllowAny]
+
+    def auth(self, email):
+        backend = PasswordlessAuthBackend()
+        user = backend.authenticate(email=email)
+        try:
+            user.auth_token.delete()
+        except Exception as e:
+            pass
+        Token.objects.create(user=user)
+        return user
+
+    def post(self, request):
+        serializer = EmailLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data['email']
         user = self.auth(email)
         response = JsonResponse({"result": True, "token": user.auth_token.key})
         response.set_cookie('token', user.auth_token.key, httponly=True)
