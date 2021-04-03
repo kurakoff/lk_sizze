@@ -508,14 +508,45 @@ class ProjectCopyView(APIView):
         else:
             pass
 
+    def copy_modesState(self, copy, project_id):
+        modes = ModesState.objects.get(project_id=project_id)
+        if modes:
+            copy_modes = ModesState.objects.create(
+                project=copy,
+                elements=modes.elements
+            )
+        serializer = ModesStateSerializer(copy_modes)
+        return serializer.data
+
+    def copy_constant_colors(self, copy, project_id):
+        colors = Constant_colors.objects.filter(project_id=project_id)
+        if colors.count() > 0:
+            for color in colors:
+                copy_color = Constant_colors.objects.create(
+                    title=color.title,
+                    dark_value=color.dark_value,
+                    light_value=color.light_value,
+                    project=copy,
+                    to_prototype=None
+                )
+                copy_color.save
+            copy_colors = Constant_colors.objects.filter(project_id=copy.id)
+            copy_colors_serializer = ConstantColorsSerializer(copy_colors, many=True)
+            return copy_colors_serializer.data
+        else:
+            pass
+
     def post(self, request, *args, **kwargs):
         copy = self.copy_project(request=request, project_id=kwargs['project_id'])
         copy_element = self.copy_element(copy=copy, project_id=kwargs['project_id'])
         copy_screen = self.copy_screen(copy=copy, project_id=kwargs['project_id'])
+        copy_modes = self.copy_modesState(copy=copy, project_id=kwargs['project_id'])
+        copy_color = self.copy_constant_colors(copy=copy, project_id=kwargs['project_id'])
         try:
             copy_serializer = ProjectSerializer(copy, many=False)
             return JsonResponse({'result': True, 'copy_project': copy_serializer.data,
-                                 'copy_element': copy_element, 'copy_screen': copy_screen})
+                                 'copy_element': copy_element, 'copy_screen': copy_screen, 'copy_modes_state': copy_modes,
+                                 'copy_color': copy_color})
         except:
             return copy
 
