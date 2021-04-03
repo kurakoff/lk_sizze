@@ -509,14 +509,17 @@ class ProjectCopyView(APIView):
             pass
 
     def copy_modesState(self, copy, project_id):
-        modes = ModesState.objects.get(project_id=project_id)
-        if modes:
-            copy_modes = ModesState.objects.create(
-                project=copy,
-                elements=modes.elements
-            )
-        serializer = ModesStateSerializer(copy_modes)
-        return serializer.data
+        try:
+            modes = ModesState.objects.get(project_id=project_id)
+            if modes:
+                copy_modes = ModesState.objects.create(
+                    project=copy,
+                    elements=modes.elements
+                )
+            serializer = ModesStateSerializer(copy_modes)
+            return serializer.data
+        except ModesState.DoesNotExist:
+            pass
 
     def copy_constant_colors(self, copy, project_id):
         colors = Constant_colors.objects.filter(project_id=project_id)
