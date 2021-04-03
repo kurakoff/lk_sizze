@@ -444,7 +444,8 @@ class ScreenCopyView(APIView):
                 height=screen.height,
                 width=screen.width,
                 background_color=screen.background_color,
-                position=(len(sceens) + 1)
+                position=(len(sceens) + 1),
+                constant_color=screen.constant_color
             )
             copy_screen.save
             copy_screen_serializer = ScreenSerializer(copy_screen)
