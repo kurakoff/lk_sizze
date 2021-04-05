@@ -583,14 +583,17 @@ class ShareProjectAllView(APIView):
                                                         'from_user': serializer.data['from_user'],
                                                         'project': serializer.data['project']
                                                         })
-        send_mail(
-            f"Shared project with you",
-            msg_html,
-            getattr(settings, "EMAIL_HOST_USER"),
-            [serializer.data['to_user']],
-            html_message=msg_html,
-            fail_silently=True
-        )
+        from auth_users.utils import send_html_mail
+        send_html_mail(subject="Shared project with you", html_content=msg_html, sender=getattr(settings, "EMAIL_HOST_USER"),
+                       recipient_list=[serializer.data['to_user']])
+        # send_mail(
+        #     f"Shared project with you",
+        #     msg_html,
+        #     getattr(settings, "EMAIL_HOST_USER"),
+        #     [serializer.data['to_user']],
+        #     html_message=msg_html,
+        #     fail_silently=True
+        # )
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):

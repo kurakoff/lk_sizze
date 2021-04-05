@@ -174,15 +174,11 @@ class ResetPasswordEmailView(generics.GenericAPIView):
                     reset.save()
                     break
             email_body = "Hello, \n Use this pin code to reset password \n" + reset.pin
-            send_mail(
-                f"Reset your passsword",
-                email_body,
-                getattr(settings, "EMAIL_HOST_USER"),
-                [user.email],
-                fail_silently=True
-            )
+            from .utils import send_text_mail
+            send_text_mail(subject="Reset your password", content=email_body, sender=getattr(settings, "EMAIL_HOST_USER"),
+                           recipient_list=[user.email])
         return JsonResponse({"result": True, "message": "We have sent you a link to reset your password"},
-                        status=status.HTTP_200_OK)
+                            status=status.HTTP_200_OK)
 
 
 class SetPinView(APIView):
