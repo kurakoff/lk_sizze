@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.core.mail import send_mail
+from .utils import send_html_mail
 from .social import google
 from sizzy_lk import settings
 import os
@@ -27,14 +28,16 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
-        send_mail(
-            f"Добро пожаловать на sizze",
-            msg_html,
-            getattr(settings, "EMAIL_HOST_USER"),
-            [user.email],
-            html_message=msg_html,
-            fail_silently=True
-        )
+        send_html_mail(subject="Добро пожаловать на sizze", html_content=msg_html,
+                       sender=getattr(settings, "EMAIL_HOST_USER"), recipient_list=[user.email])
+        # send_mail(
+        #     f"Добро пожаловать на sizze",
+        #     msg_html,
+        #     getattr(settings, "EMAIL_HOST_USER"),
+        #     [user.email],
+        #     html_message=msg_html,
+        #     fail_silently=True
+        # )
         return user
 
 
