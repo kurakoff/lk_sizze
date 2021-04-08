@@ -660,7 +660,7 @@ class UserShareProjectsView(viewsets.ModelViewSet):
             all_users = project.filter(share_project__project=i['id'],
                                        share_project__all_users=True).values('share_project__all_users')
             all_permissions = project.filter(share_project__all_users=True,
-                                             share_project__project=i['id']).values('shareProjects_project__permission')
+                                             share_project__project=i['id']).values('share_project__permission')
             if project_permissions:
                 i['to_user'] = {"permissions": (project_permissions[0]["share_project__permission"])}
             else:
