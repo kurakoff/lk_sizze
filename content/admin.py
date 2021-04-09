@@ -13,7 +13,8 @@ from .models import (
     Element,
     Settings,
     BaseWidthPrototype,
-    Constant_colors
+    Constant_colors,
+    ModesState
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -209,3 +210,4 @@ admin.site.register(Revision)
 admin.site.register(Version)
 admin.site.register(BaseWidthPrototype)
 admin.site.register(Constant_colors, ConstantColorsSetting)
+admin.site.register(ModesState)
