@@ -199,6 +199,10 @@ class ConstantColorsSetting(admin.ModelAdmin):
     search_fields = ['id', 'title', 'project__id', 'project__name', 'prototype__id', 'prototype__device_name']
 
 
+class ModesSettings(admin.ModelAdmin):
+    search_fields = ['id', 'project__id', 'project__name']
+
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
@@ -210,4 +214,4 @@ admin.site.register(Revision)
 admin.site.register(Version)
 admin.site.register(BaseWidthPrototype)
 admin.site.register(Constant_colors, ConstantColorsSetting)
-admin.site.register(ModesState)
+admin.site.register(ModesState, ModesSettings)
