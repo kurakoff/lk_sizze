@@ -830,7 +830,7 @@ class ScreenVersion(APIView):
 class ModesStateView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            queryset = ModesState.objects.get(project_id=kwargs['project_id'])
+            queryset = ModesState.objects.filter(project_id=kwargs['project_id'])
             queryset.delete()
         except:
             pass
