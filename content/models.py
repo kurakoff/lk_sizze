@@ -201,3 +201,10 @@ class PasswordReset(models.Model):
 class ModesState(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='modes_state')
     elements = models.TextField()
+
+
+class FigmaUser(models.Model):
+    access_token = models.CharField(max_length=255)
+    refresh_token = models.CharField(max_length=255)
+    figma_user = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_relate')

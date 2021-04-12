@@ -1,15 +1,11 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.exceptions import AuthenticationFailed
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.template.loader import render_to_string
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
-from django.core.mail import send_mail
 from .utils import send_html_mail
 from .social import google
 from sizzy_lk import settings
-import os
+from content import models
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -96,3 +92,9 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
 
 class EmailLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+
+class FigmaUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FigmaUser
+        fields = '__all__'

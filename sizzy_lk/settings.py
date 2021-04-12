@@ -239,3 +239,7 @@ LOGGING = {
         # }
     },
 }
+
+FIGMA_SECRET = "mIiNtkfnRQxLTTUn4fPHjmG6iP0BEu"
+FIGMA_CLIENT = "hZWPD96SWEmc4QnMGxpRcw"
+FIGMA_REDIRECT_URI = "https://dashboard.sizze.io/"

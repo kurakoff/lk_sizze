@@ -1,7 +1,6 @@
 from django.contrib import admin
 import nested_admin
 from tinymce.widgets import TinyMCE
-from reversion.admin import VersionAdmin
 from reversion.models import Revision, Version
 from .models import (
     SharedProject,
@@ -14,13 +13,11 @@ from .models import (
     Settings,
     BaseWidthPrototype,
     Constant_colors,
-    ModesState
+    ModesState,
+    FigmaUser
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
-from datetime import date
-from django.db.models import Q
-import json
 
 
 def make_published(modeladmin, request, queryset):
@@ -215,3 +212,4 @@ admin.site.register(Version)
 admin.site.register(BaseWidthPrototype)
 admin.site.register(Constant_colors, ConstantColorsSetting)
 admin.site.register(ModesState, ModesSettings)
+admin.site.register(FigmaUser)

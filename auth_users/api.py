@@ -1,27 +1,16 @@
-import os, json, random, secrets, string, logging
+import json, secrets, string, logging, requests
 from .social.backend import PasswordlessAuthBackend
 from content import models
 
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
-from django.conf.urls import url
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.contrib.sites.shortcuts import get_current_site
-from django.http import JsonResponse, HttpResponsePermanentRedirect
-from django.template.loader import render_to_string
-from django.shortcuts import redirect
-from django.utils.encoding import smart_str, DjangoUnicodeDecodeError, smart_bytes
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.urls import reverse
+from django.http import JsonResponse
 
-from rest_framework import serializers, generics, status
+from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .serializers import \
@@ -31,7 +20,8 @@ from .serializers import \
     SetPinSerializer,\
     UserSerializer,\
     GoogleSocialAuthSerializer,\
-    EmailLoginSerializer
+    EmailLoginSerializer,\
+    FigmaUserSerializer
 
 
 logger = logging.getLogger('django')
@@ -289,3 +279,60 @@ class LoginEmail(APIView):
         response = JsonResponse({"result": True, "token": user.auth_token.key})
         response.set_cookie('token', user.auth_token.key, httponly=True)
         return response
+
+
+class FigmaView(APIView):
+
+    def post(self, request):
+        external_api_url = "https://www.figma.com/api/oauth/token?" \
+                           f"client_id={getattr(settings, 'FIGMA_CLIENT')}&" \
+                           f"client_secret={getattr(settings, 'FIGMA_SECRET')}&" \
+                           f"redirect_uri={getattr(settings, 'FIGMA_REDIRECT_URI')}&" \
+                           f"code={request.data.get('code')}&" \
+                           "grant_type=authorization_code"
+        data = request.POST
+        res = requests.post(external_api_url, data)
+        response_data = res.json()
+        queryset = models.FigmaUser.objects.filter(user=request.user)
+        queryset.delete()
+        models.FigmaUser.objects.create(
+            access_token=response_data['access_token'],
+            refresh_token=response_data['refresh_token'],
+            figma_user=response_data['user_id'],
+            user=request.user
+        )
+        response = JsonResponse(response_data)
+        response.set_cookie('access_token', response_data['access_token'], httponly=True)
+        return response
+
+    def get(self, request, *args, **kwargs):
+        queryset = models.FigmaUser.objects.get(user=request.user)
+        serializer = FigmaUserSerializer(queryset)
+        return JsonResponse(serializer.data)
+
+
+class FigmaUserRefresh(APIView):
+    def post(self, request):
+        external_api_url = "https://www.figma.com/api/oauth/refresh?" \
+                           f"client_id={getattr(settings, 'FIGMA_CLIENT')}&" \
+                           f"client_secret={getattr(settings, 'FIGMA_SECRET')}&" \
+                           f"refresh_token={request.data.get('refresh_token')}"
+        data = request.POST
+        res = requests.post(external_api_url, data)
+        response_data = res.json()
+        queryset = models.FigmaUser.objects.get(user=request.user)
+        queryset.access_token = response_data['access_token']
+        queryset.save()
+        response = JsonResponse(response_data)
+        response.set_cookie('access_token', response_data['access_token'], httponly=True)
+        return response
+
+
+class FigmaUserProfile(APIView):
+    def get(self, request):
+        external_api_url = 'https://api.figma.com/v1/me'
+        data = request.POST
+        figma_token = request.COOKIES.get('access_token')
+        print(figma_token)
+        res = requests.get(external_api_url, data=data, headers={'X-FIGMA-TOKEN': figma_token})
+        return JsonResponse(res.json())

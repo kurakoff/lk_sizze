@@ -26,4 +26,8 @@ urlpatterns = [
     path('password_mail_done/', views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset_confirm_mail/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset'),
     path('reset_done/', views.SuccessResetPassword.as_view(), name='password_reset_complete'),
+
+    path('figma/auth/', api.FigmaView.as_view()),
+    path('figma/auth/refresh/', api.FigmaUserRefresh.as_view())
+    # path('figma/user/', api.FigmaUserProfile.as_view()),
 ]
