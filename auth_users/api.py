@@ -44,6 +44,7 @@ class ApiLoginView(APIView):
             response = JsonResponse({"result": True, "token": user.auth_token.key})
             response.set_cookie('token', user.auth_token.key, httponly=True)
             auth.info("user {} login with token {}".format(user, user.auth_token.key))
+            print(request.headers)
             return response
         else:
             return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -295,15 +296,18 @@ class FigmaView(APIView):
         response_data = res.json()
         queryset = models.FigmaUser.objects.filter(user=request.user)
         queryset.delete()
-        models.FigmaUser.objects.create(
-            access_token=response_data['access_token'],
-            refresh_token=response_data['refresh_token'],
-            figma_user=response_data['user_id'],
-            user=request.user
-        )
-        response = JsonResponse(response_data)
-        response.set_cookie('access_token', response_data['access_token'], httponly=True)
-        return response
+        try:
+            models.FigmaUser.objects.create(
+                access_token=response_data['access_token'],
+                refresh_token=response_data['refresh_token'],
+                figma_user=response_data['user_id'],
+                user=request.user
+            )
+            response = JsonResponse(response_data)
+            response.set_cookie('access_token', response_data['access_token'], httponly=True)
+        except:
+            pass
+        return JsonResponse(response_data)
 
     def get(self, request, *args, **kwargs):
         queryset = models.FigmaUser.objects.get(user=request.user)
