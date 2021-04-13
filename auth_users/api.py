@@ -296,7 +296,7 @@ class FigmaView(APIView):
         response_data = res.json()
         queryset = models.FigmaUser.objects.filter(user=request.user)
         try:
-            models.FigmaUser.objects.create(
+            figma_user = models.FigmaUser.objects.create(
                 access_token=response_data['access_token'],
                 refresh_token=response_data['refresh_token'],
                 figma_user=response_data['user_id'],
@@ -304,6 +304,7 @@ class FigmaView(APIView):
             )
             response = JsonResponse(response_data)
             queryset.delete()
+            figma_user.save()
             response.set_cookie('access_token', response_data['access_token'], httponly=True)
         except:
             pass
