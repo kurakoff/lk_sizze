@@ -28,6 +28,7 @@ urlpatterns = [
     path('reset_done/', views.SuccessResetPassword.as_view(), name='password_reset_complete'),
 
     path('figma/auth/', api.FigmaView.as_view()),
+    path('local/figma/auth/', api.LocalFigmaView.as_view()),
     path('figma/auth/refresh/', api.FigmaUserRefresh.as_view())
     # path('figma/user/', api.FigmaUserProfile.as_view()),
 ]

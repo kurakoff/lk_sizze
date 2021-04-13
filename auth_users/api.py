@@ -333,6 +333,40 @@ class FigmaUserRefresh(APIView):
         return response
 
 
+class LocalFigmaView(APIView):
+
+    def post(self, request):
+        external_api_url = "https://www.figma.com/api/oauth/token?" \
+                           f"client_id={getattr(settings, 'FIGMA_CLIENT')}&" \
+                           f"client_secret={getattr(settings, 'FIGMA_SECRET')}&" \
+                           f"redirect_uri={'http://localhost:3000/0auth/callback'}&" \
+                           f"code={request.data.get('code')}&" \
+                           "grant_type=authorization_code"
+        data = request.POST
+        res = requests.post(external_api_url, data)
+        response_data = res.json()
+        queryset = models.FigmaUser.objects.filter(user=request.user)
+        try:
+            figma_user = models.FigmaUser.objects.create(
+                access_token=response_data['access_token'],
+                refresh_token=response_data['refresh_token'],
+                figma_user=response_data['user_id'],
+                user=request.user
+            )
+            response = JsonResponse(response_data)
+            queryset.delete()
+            figma_user.save()
+            response.set_cookie('access_token', response_data['access_token'], httponly=True)
+        except:
+            pass
+        return JsonResponse(response_data)
+
+    def get(self, request, *args, **kwargs):
+        queryset = models.FigmaUser.objects.get(user=request.user)
+        serializer = FigmaUserSerializer(queryset)
+        return JsonResponse(serializer.data)
+
+
 class FigmaUserProfile(APIView):
     def get(self, request):
         external_api_url = 'https://api.figma.com/v1/me'
