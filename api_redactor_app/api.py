@@ -1,22 +1,18 @@
-import base64, json, os, random, string, googleapiclient, reversion, datetime, ast
+import base64, json, os, random, string, googleapiclient, reversion, datetime, requests
 from mimetypes import guess_extension, guess_type
-from itertools import chain
 
 from django.conf import settings
-from django.urls import path
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
-from django.db.models import Q, F, expressions, CharField
+from django.db.models import Q, F
 
 from gphotospy import authorize
 from gphotospy.media import Media
 from gphotospy.album import Album
 
-from rest_framework import generics, viewsets, permissions, status, response
+from rest_framework import generics, viewsets, status, response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from reversion.models import Version, Revision
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
@@ -24,8 +20,7 @@ from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSeri
     PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
     BaseWidthPrototype, ModesState, Constant_colors
-from .permissions import IsAuthor, EditPermission, DeletePermission, ReadPermission
-from .helpers.is_auth import IsAuthenticated
+from .permissions import IsAuthor, EditPermission, DeletePermission
 
 CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
 print(settings.BASE_DIR)
@@ -785,7 +780,7 @@ class ScreenVersion(APIView):
     def copy_constant_colors(self, new_project, data):
         color = data.get('constant_colors')
         if color:
-            ModesState.objects.create(
+            Constant_colors.objects.create(
                 title=color['title'],
                 dark_value=color['dark_value'],
                 light_value=color['light_value'],
