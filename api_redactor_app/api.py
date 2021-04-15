@@ -127,12 +127,14 @@ class ScreenView(APIView):
         screens = Screen.objects.filter(project=project_id)
         width = project.prototype.width
         height = project.prototype.height
+        layout = ""
         if payload.get('width'): width = payload['width']
         if payload.get('height'): height = payload['height']
+        if payload.get('layout'): layout = payload['layout']
         screen = Screen.objects.create(
             title=payload['title'],
             project=project,
-            layout="",
+            layout=layout,
             width=width,
             height=height,
             position=(len(screens) + 1),
