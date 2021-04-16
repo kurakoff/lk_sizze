@@ -29,7 +29,7 @@ auth = logging.getLogger('auth')
 
 
 class ApiLoginView(APIView):
-    permission_classes = ()
+    permission_classes = [AllowAny]
 
     def post(self, request, ):
         password = request.data.get("password")
@@ -42,9 +42,8 @@ class ApiLoginView(APIView):
                 pass
             Token.objects.create(user=user)
             response = JsonResponse({"result": True, "token": user.auth_token.key})
-            response.set_cookie('token', user.auth_token.key, httponly=True)
+            response.set_cookie('access_token', user.auth_token.key, httponly=True,  samesite='strict')
             auth.info("user {} login with token {}".format(user, user.auth_token.key))
-            print(request.headers)
             return response
         else:
             return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
