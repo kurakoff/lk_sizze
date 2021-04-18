@@ -251,7 +251,7 @@ class ProjectApiView(APIView):
         serializer = ProjectSerializer(project)
         data = serializer.data
         data['screen'] = ScreenSerializer(screen).data
-        self.create_base_colors(project=project, prototype=prototype)
+        # self.create_base_colors(project=project, prototype=prototype)
         return JsonResponse({'project': data, "result": True})
 
     def put(self, request, project_id):
