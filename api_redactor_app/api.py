@@ -164,6 +164,17 @@ class ScreenView(APIView):
 
 class ProjectApiView(APIView):
 
+    def create_base_colors(self, prototype, project):
+        queryset = Constant_colors.objects.filter(to_prototype=prototype)
+        serializer = ConstantColorsSerializer(queryset)
+        for i in serializer.data:
+            Constant_colors.objects.create(
+                title=i.title,
+                dark_value=i.dark_value,
+                light_value=i.light_value,
+                project=project
+            )
+
     def get(self, request, project_id=None):
         if project_id:
             try:
@@ -240,6 +251,7 @@ class ProjectApiView(APIView):
         serializer = ProjectSerializer(project)
         data = serializer.data
         data['screen'] = ScreenSerializer(screen).data
+        self.create_base_colors(project=project, prototype=prototype)
         return JsonResponse({'project': data, "result": True})
 
     def put(self, request, project_id):
@@ -859,7 +871,7 @@ class ConstantColorsView(APIView):
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.get(id=kwargs["project_id"])
-        queryset = Constant_colors.objects.filter(Q(project_id=kwargs['project_id']) | Q(to_prototype=project.prototype))
+        queryset = Constant_colors.objects.filter(project_id=kwargs['project_id'])
         serializer = ConstantColorsSerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
 
