@@ -604,7 +604,7 @@ class ShareProjectAllView(APIView):
                                     )
         from auth_users.utils import send_html_mail
         send_html_mail(subject=f'{to_user}, the project {serializer.data["project"]} was shared with you',
-                       html_content=msg_html, sender=f'Sizze.io {getattr(settings, "EMAIL_HOST_USER")}',
+                       html_content=msg_html, sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
                        recipient_list=[serializer.data['to_user']])
         # serializer.data['link'] = link
         # send_mail(
