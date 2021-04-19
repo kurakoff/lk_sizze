@@ -166,10 +166,9 @@ class ResetPasswordEmailView(generics.GenericAPIView):
                 if reset:
                     reset.save()
                     break
-            msg_html = render_to_string('mail/Reset_password.html', {'pin': reset.pin,
-                                                                     'preview': "Your PIN code to reset your Sizze.io password"})
+            msg_html = render_to_string('mail/Reset_password.html', {'pin': reset.pin})
             from .utils import send_html_mail
-            send_html_mail(subject="", html_content=msg_html, sender=getattr(settings, "EMAIL_HOST_USER"),
+            send_html_mail(subject="Your PIN code to reset your Sizze.io password", html_content=msg_html, sender=getattr(settings, "EMAIL_HOST_USER"),
                            recipient_list=[user.email])
         return JsonResponse({"result": True, "message": "We have sent you a link to reset your password"},
                             status=status.HTTP_200_OK)
