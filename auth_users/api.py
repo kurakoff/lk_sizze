@@ -1,4 +1,7 @@
 import json, secrets, string, logging, requests
+
+from django.template.loader import render_to_string
+
 from .social.backend import PasswordlessAuthBackend
 from content import models
 
@@ -163,9 +166,9 @@ class ResetPasswordEmailView(generics.GenericAPIView):
                 if reset:
                     reset.save()
                     break
-            email_body = "Hello, \n Use this pin code to reset password \n" + reset.pin
-            from .utils import send_text_mail
-            send_text_mail(subject="Reset your password", content=email_body, sender=getattr(settings, "EMAIL_HOST_USER"),
+            msg_html = render_to_string('mail/Reset_password.html', {'pin': reset.pin})
+            from .utils import send_html_mail
+            send_html_mail(subject="Reset your password", html_content=msg_html, sender=getattr(settings, "EMAIL_HOST_USER"),
                            recipient_list=[user.email])
         return JsonResponse({"result": True, "message": "We have sent you a link to reset your password"},
                             status=status.HTTP_200_OK)

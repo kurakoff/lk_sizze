@@ -598,7 +598,7 @@ class ShareProjectAllView(APIView):
             return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
         serializer.save(project_id=kwargs['project_id'], from_user=request.user)
         # link = self.generate_link(kwargs['project_id'])
-        msg_html = render_to_string('mail/Share.html', {'to_user': serializer.data['to_user'],
+        msg_html = render_to_string('mail/Shared.html', {'to_user': serializer.data['to_user'],
                                                         'from_user': serializer.data['from_user'],
                                                         'project': serializer.data['project']
                                                         })

@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
-        msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+        msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
         send_html_mail(subject="Добро пожаловать на sizze", html_content=msg_html,
                        sender=getattr(settings, "EMAIL_HOST_USER"), recipient_list=[user.email])
         # send_mail(

@@ -13,12 +13,13 @@ from django.views.generic import TemplateView
 from django.conf import settings
 
 from auth_users.forms import CreateUserForm, LogInForm, ForgotPasswordForm
+from rest_framework.authtoken.models import Token
 
 
 class CustomPasswordResetView(PasswordResetView):
-    template_name = 'auth/forgot_password.html'
-    email_template_name = 'mail/forgot-password.html'
-    html_email_template_name = 'mail/forgot-password.html'
+    template_name = 'auth/Reset_password.html'
+    email_template_name = 'mail/Reset_password.html'
+    html_email_template_name = 'mail/Reset_password.html'
 
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
@@ -38,7 +39,9 @@ class LoginView(TemplateView):
     form_class = LogInForm
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form': self.form_class})
+        response = render(request, self.template_name, {'form': self.form_class})
+        response.set_cookie('test', 'test', httponly=True, samesite='strict')
+        return response
 
     def post(self, request, *args, **kwargs):
         response = {}
@@ -78,7 +81,7 @@ class CreateAccount(View):
             response['result'] = True
             response['redirect_url'] = '/'
 
-            msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+            msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
             send_mail(
                 f"Какой то загаловок",
                 msg_html,

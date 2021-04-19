@@ -64,7 +64,7 @@ class ProfileSaveDetailsView(View):
         if form.is_valid():
             response['result'] = True
             form.save()
-            msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+            msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
             send = send_mail(
                 "Смена почты sizze.io",
                 msg_html,
