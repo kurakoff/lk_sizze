@@ -97,7 +97,7 @@ class ScreenView(APIView):
             return JsonResponse({'message': 'Screen not found', "result": False})
         payload = json.loads(request.body)
         if payload.get('title'): screen.title = payload['title']
-        if payload.get('layout'): screen.layout = payload['layout']
+        if payload.get('layout') or payload.get('layout') == "": screen.layout = payload['layout']
         if payload.get('width'): screen.width = payload['width']
         if payload.get('height'): screen.height = payload['height']
         if payload.get('background_color'): screen.background_color = payload['background_color']
