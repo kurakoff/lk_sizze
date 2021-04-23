@@ -64,7 +64,7 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
-        auth.info("user create {}".format(request.data))
+        auth.info("user create email: {} username: {}".format(request.data['email'], request.data['username']))
         return self.create(request, *args, **kwargs)
 
 
@@ -91,7 +91,7 @@ class UserUpdate(APIView):
         if old_password:
             if user.check_password(old_password) and password_1 == password_2:
                 user.set_password(password_1)
-                auth.info("user {} change password {}".format(user))
+                auth.info("user {} change password".format(user))
             else:
                 return JsonResponse({"result": False, 'message': 'Data error'})
 
@@ -127,6 +127,7 @@ class ChangePassword(APIView):
                                 status=status.HTTP_400_BAD_REQUEST)
         self.object.set_password(serializer.data.get("new_password_1"))
         self.object.save()
+        auth.info("user {} change password".format(request.user))
         response = {
             "result": True,
             "message": "Password updated successfully",
@@ -170,6 +171,7 @@ class ResetPasswordEmailView(generics.GenericAPIView):
             from .utils import send_html_mail
             send_html_mail(subject="Your PIN code to reset your Sizze.io password", html_content=msg_html, sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
                            recipient_list=[user.email])
+        auth.info("Send reset pin to email {}".format(email))
         return JsonResponse({"result": True, "message": "We have sent you a link to reset your password"},
                             status=status.HTTP_200_OK)
 
@@ -211,6 +213,7 @@ class SetNewPasswordView(APIView):
             user.set_password(password)
             reset.activate = True
             reset.save()
+            auth.info("user {}, email {} reset password".format(user, email))
             return JsonResponse({"result": True, "message": "Password reset success"},
                                 status=status.HTTP_200_OK)
         except:
@@ -258,6 +261,7 @@ class GoogleSocialAuthView(generics.GenericAPIView):
         user = self.auth(email)
         response = JsonResponse({"result": True, "token": user.auth_token.key})
         response.set_cookie('token', user.auth_token.key, httponly=True)
+        auth.info("google auth to user {}".format(user))
         return response
 
 
@@ -374,6 +378,5 @@ class FigmaUserProfile(APIView):
         external_api_url = 'https://api.figma.com/v1/me'
         data = request.POST
         figma_token = request.COOKIES.get('access_token')
-        print(figma_token)
         res = requests.get(external_api_url, data=data, headers={'X-FIGMA-TOKEN': figma_token})
         return JsonResponse(res.json())
