@@ -29,6 +29,7 @@ from .serializers import \
 
 logger = logging.getLogger('django')
 auth = logging.getLogger('auth')
+figma = logging.getLogger('figma')
 
 
 class ApiLoginView(APIView):
@@ -46,7 +47,7 @@ class ApiLoginView(APIView):
             Token.objects.create(user=user)
             response = JsonResponse({"result": True, "token": user.auth_token.key})
             response.set_cookie('access_token', user.auth_token.key, httponly=True,  samesite='strict')
-            auth.info("user {} login with token {}".format(user, user.auth_token.key))
+            auth.info("user {} login".format(user))
             return response
         else:
             return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -311,6 +312,7 @@ class FigmaView(APIView):
             response = JsonResponse(response_data)
             queryset.delete()
             figma_user.save()
+            figma.info("Add figma user {} to user {}".format(response_data['access_token'], request.user))
             response.set_cookie('access_token', response_data['access_token'], httponly=True)
         except:
             pass
@@ -379,4 +381,5 @@ class FigmaUserProfile(APIView):
         data = request.POST
         figma_token = request.COOKIES.get('access_token')
         res = requests.get(external_api_url, data=data, headers={'X-FIGMA-TOKEN': figma_token})
+        figma.info("User {} get profile {}".format(request.user, str(request.body)))
         return JsonResponse(res.json())

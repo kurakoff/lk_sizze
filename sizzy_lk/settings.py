@@ -226,6 +226,12 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'formatter': 'console',
             'filename': '/var/www/html/lk_sizze/logs/access.log'
+        },
+        'figma': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'console',
+            'filename': '/var/www/html/lk_sizze/logs/figma.log'
         }
     },
     'loggers': {
@@ -235,6 +241,10 @@ LOGGING = {
         },
         'auth': {
             'handlers': ['auth'],
+            'level': 'INFO'
+        },
+        'figma': {
+            'handlers': ['figma'],
             'level': 'INFO'
         }
     },
