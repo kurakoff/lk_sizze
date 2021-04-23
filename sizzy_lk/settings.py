@@ -180,7 +180,7 @@ TINYMCE_DEFAULT_CONFIG = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
         'auth_users.auth_helpers.helpers.TokenAuthSupportCookie',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
@@ -221,22 +221,22 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console'
         },
-        # 'auth': {
-        #     'level': 'INFO',
-        #     'class': 'logging.FileHandler',
-        #     'formatter': 'console',
-        #     'filename': '/home/kabiljan/PycharmProjects/sizze/lk_sizze/logs/access.log'
-        # }
+        'auth': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'console',
+            'filename': '/var/www/html/lk_sizze/logs/access.log'
+        }
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'auth': {
+            'handlers': ['auth'],
+            'level': 'INFO'
         }
-        # 'auth': {
-        #     'handlers': ['auth'],
-        #     'level': 'INFO'
-        # }
     },
 }
 
