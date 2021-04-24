@@ -1,20 +1,25 @@
+import os
 from pprint import pprint
 
 from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views import View
 
 from content.forms import UserDetailsForm, CreateProjectForm, DeleteProjectForm, EditProjectForm, CreateScreenForm, \
-    EditScreenForm, DeleteScreenForm, CopyScreenForm
+    EditScreenForm, DeleteScreenForm, CopyScreenForm, EmailSpammerForm
 from content.models import Prototype, Project, Screen, Category, Element, Settings
 from django.utils.timezone import now
 from django.core.paginator import Paginator
 
 from content.utils import separate_by_n
+
+from sizzy_lk.settings import BASE_DIR
 
 
 class IndexView(View):
@@ -384,3 +389,36 @@ class TestView(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+
+class EmailSpammer(View):
+    template_name = 'content/create_email.html'
+    form_class = EmailSpammerForm
+
+    def get(self, request):
+        return render(request, self.template_name, {'form': self.form_class})
+
+    def upload_func(self, file):
+        with open(os.path.join(BASE_DIR, 'templates/email_spam/spam.html'), 'wb+') as f:
+            for chunk in file.chunks():
+                f.write(chunk)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            print(request.FILES['html'])
+            from auth_users.utils import send_html_mail
+            from django.contrib.auth.models import User
+            data = request.FILES['html']
+            self.upload_func(data)
+            msg_html = render_to_string("email_spam/spam.html")
+            if form.cleaned_data['to']:
+                send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
+                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[form.cleaned_data['to']])
+            if form.cleaned_data['to'] == '':
+                user_list = []
+                users = User.objects.all().values('email')
+                for i in users:
+                    user_list.append(i['email'])
+                send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
+                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=user_list)
+        return redirect('/email/')

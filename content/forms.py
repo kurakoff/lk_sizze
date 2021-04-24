@@ -30,6 +30,12 @@ class EditProjectForm(forms.Form):
     id = forms.IntegerField(widget=forms.HiddenInput)
 
 
+class EmailSpammerForm(forms.Form):
+    html = forms.FileField()
+    theme = forms.CharField()
+    to = forms.CharField(required=False)
+
+
 class CreateScreenForm(forms.ModelForm):
     class Meta:
         model = Screen
