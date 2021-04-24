@@ -395,7 +395,10 @@ class EmailSpammer(View):
     form_class = EmailSpammerForm
 
     def get(self, request):
-        return render(request, self.template_name, {'form': self.form_class})
+        if request.user.is_superuser:
+            return render(request, self.template_name, {'form': self.form_class})
+        else:
+            return redirect('/')
 
     def upload_func(self, file):
         with open(os.path.join(BASE_DIR, 'templates/email_spam/spam.html'), 'wb+') as f:
