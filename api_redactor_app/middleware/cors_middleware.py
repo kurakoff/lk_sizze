@@ -19,13 +19,13 @@ def check_token_middleware(get_response):
             token = request.META.get("HTTP_AUTHORIZATION")
             token = token.split()
             back_token = Token.objects.get(user=request.user)
+            print(back_token)
+            print(token)
             if token == back_token:
                 pass
             else:
                 return redirect("https://dashboard.sizze.io/sign-in")
         except Token.DoesNotExist:
-            return redirect("https://dashboard.sizze.io/sign-in")
-        except:
             pass
         return response
     return middleware
