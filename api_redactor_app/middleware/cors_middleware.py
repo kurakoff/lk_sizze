@@ -25,7 +25,7 @@ def check_token_middleware(get_response):
                 pass
             else:
                 return redirect("https://dashboard.sizze.io/sign-in")
-        except Token.DoesNotExist:
+        except:
             pass
         return response
     return middleware
