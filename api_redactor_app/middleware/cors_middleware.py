@@ -22,7 +22,7 @@ def check_token_middleware(get_response):
             print(back_token)
             print(token[1])
             if token[1] != back_token:
-                print('redirect')
+                print('redirect ')
                 return redirect("https://dashboard.sizze.io/sign-in")
         except:
             return response
