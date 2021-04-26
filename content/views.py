@@ -1,10 +1,6 @@
 import os
-from pprint import pprint
-
 from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
