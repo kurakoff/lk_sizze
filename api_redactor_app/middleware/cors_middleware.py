@@ -26,9 +26,9 @@ def check_token_middleware(get_response):
             if token[1] not in token_list:
                 print('Tam')
                 return redirect("https://dashboard.sizze.io/sign-in")
-        except Token.DoesNotExist:
-            print('check token')
-            return redirect("https://dashboard.sizze.io/sign-in")
+        # except Token.DoesNotExist:
+        #     print('check token')
+        #     return redirect("https://dashboard.sizze.io/sign-in")
         except:
             pass
         return response
