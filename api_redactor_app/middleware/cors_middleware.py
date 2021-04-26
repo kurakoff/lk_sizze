@@ -17,12 +17,13 @@ def check_token_middleware(get_response):
         response = get_response(request)
         try:
             token = request.META.get("HTTP_AUTHORIZATION")
-            print('token', token)
+            token_list = []
             token = token.split()
-            back_token = Token.objects.get(user=request.user)
-            print('back_token', back_token)
-            if str(token[1]) != str(back_token):
-                print('response')
+            back_token = Token.objects.all().values('key')
+            for i in back_token['key']:
+                token_list.append(i)
+            if token[1] not in token_list:
+                print('Tam')
                 return redirect("https://dashboard.sizze.io/sign-in")
         except Token.DoesNotExist:
             print('check token')
