@@ -22,6 +22,7 @@ def check_token_middleware(get_response):
             back_token = Token.objects.all().values('key')
             for i in back_token['key']:
                 token_list.append(i)
+            print(token_list)
             if token[1] not in token_list:
                 print('Tam')
                 return redirect("https://dashboard.sizze.io/sign-in")
