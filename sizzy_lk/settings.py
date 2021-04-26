@@ -56,9 +56,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'api_redactor_app.middleware.cors_middleware.check_token_middleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'api_redactor_app.middleware.cors_middleware.check_token_middleware',
 ]
 
 ROOT_URLCONF = 'sizzy_lk.urls'
