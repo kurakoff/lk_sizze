@@ -382,6 +382,14 @@ class LocalFigmaView(APIView):
         serializer = FigmaUserSerializer(queryset)
         return JsonResponse(serializer.data)
 
+    def delete(self, request):
+        try:
+            queryset = models.FigmaUser.objects.get(user=request.user)
+            queryset.delete()
+            return JsonResponse({"result": True, "message": "User has been deleted"})
+        except:
+            return JsonResponse({"result": False, "message": "User has not been deleted"})
+
 
 class FigmaUserProfile(APIView):
     def get(self, request):
