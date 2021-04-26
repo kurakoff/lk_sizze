@@ -20,6 +20,7 @@ def check_token_middleware(get_response):
             token = token.split()
             back_token = Token.objects.get(user=request.user)
             if str(token[1]) != str(back_token):
+                print('response')
                 return redirect("https://dashboard.sizze.io/sign-in")
         except:
             return response
