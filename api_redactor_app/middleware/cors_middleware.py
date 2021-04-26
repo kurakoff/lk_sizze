@@ -20,8 +20,8 @@ def check_token_middleware(get_response):
             token_list = []
             token = token.split()
             back_token = Token.objects.all().values('key')
-            for i in back_token['key']:
-                token_list.append(i)
+            for i in back_token:
+                token_list.append(i['key'])
             print(token_list)
             if token[1] not in token_list:
                 print('Tam')
