@@ -47,7 +47,6 @@ class ApiLoginView(APIView):
             Token.objects.create(user=user)
             response = JsonResponse({"result": True, "token": user.auth_token.key})
             response.set_cookie('access_token', user.auth_token.key, httponly=True,  samesite='strict')
-            print(request.COOKIES)
             auth.info("user {} login".format(user))
             return response
         else:
@@ -105,6 +104,7 @@ class UserUpdate(APIView):
 class UserProfile(APIView):
 
     def get(self, request):
+        print(request.COOKIES)
         user = request.user
         serialize = UserSerializer(user)
         return JsonResponse({"result": True, 'user': serialize.data})
