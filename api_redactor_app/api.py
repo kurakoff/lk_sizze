@@ -231,6 +231,7 @@ class ProjectApiView(APIView):
             return JsonResponse({'project': serializer.data})
 
     def post(self, request):
+        print(request.COOKIES)
         payload = json.loads(request.body)
         try:
             prototype = Prototype.objects.get(id=payload['prototype_id'])
