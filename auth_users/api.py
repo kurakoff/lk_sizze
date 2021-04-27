@@ -47,6 +47,7 @@ class ApiLoginView(APIView):
             Token.objects.create(user=user)
             response = JsonResponse({"result": True, "token": user.auth_token.key})
             response.set_cookie('access_token', user.auth_token.key, httponly=True,  samesite='strict')
+            print(request.COOKIES)
             auth.info("user {} login".format(user))
             return response
         else:
