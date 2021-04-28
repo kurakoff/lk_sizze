@@ -45,8 +45,9 @@ class ApiLoginView(APIView):
             except Exception as e:
                 pass
             Token.objects.create(user=user)
-            response = Response({"result": True, "token": user.auth_token.key})
-            response.set_cookie('access_token', user.auth_token.key, max_age=31449600, samesite=None, secure=False)
+            response = Response()
+            response.set_cookie(key='access_token', value=user.auth_token.key, httponly=True)
+            response.data = {"result": True, "token": user.auth_token.key}
             print(request.COOKIES)
             auth.info("user {} login".format(user))
             return response
