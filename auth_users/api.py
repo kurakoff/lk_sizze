@@ -73,6 +73,7 @@ class UserCreate(generics.CreateAPIView):
 class UserUpdate(APIView):
 
     def put(self, request):
+        print(request.COOKIES)
         payload = json.loads(request.body)
         user = request.user
 
@@ -118,6 +119,7 @@ class ChangePassword(APIView):
         return obj
 
     def put(self, request):
+        print(request.COOKIES)
         self.object = self.get_object()
         serializer = ChangePasswordSerializer(data=request.data)
 
