@@ -8,7 +8,7 @@ from content import models
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
@@ -45,7 +45,7 @@ class ApiLoginView(APIView):
             except Exception as e:
                 pass
             Token.objects.create(user=user)
-            response = JsonResponse({"result": True, "token": user.auth_token.key})
+            response = Response({"result": True, "token": user.auth_token.key})
             response.set_cookie('access_token', user.auth_token.key, max_age=31449600, samesite=None, secure=False)
             print(request.COOKIES)
             auth.info("user {} login".format(user))
