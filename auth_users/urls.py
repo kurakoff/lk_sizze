@@ -13,7 +13,7 @@ urlpatterns = [
     path('login/google/', api.GoogleSocialAuthView.as_view()),
     path('login/email/', api.LoginEmail.as_view()),
 
-    path('users/change', api.UserUpdate.as_view()),
+    path('users/change/', api.UserUpdate.as_view()),
     path('users/profile', api.UserProfile.as_view()),
     path('password-reset/', api.ResetPasswordEmailView.as_view()),
     path('password-reset/pin/', api.SetPinView.as_view()),
