@@ -46,7 +46,8 @@ class ApiLoginView(APIView):
                 pass
             Token.objects.create(user=user)
             response = Response()
-            response.set_cookie(key='access_token', value=user.auth_token.key, httponly=True)
+            response.set_cookie(key='access_token', value=user.auth_token.key, httponly=True, domain='lk.sizze.io', secure=True,
+                                samesite='Strict')
             response.data = {"result": True, "token": user.auth_token.key}
             print(request.COOKIES)
             auth.info("user {} login".format(user))
