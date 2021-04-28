@@ -74,6 +74,7 @@ class UserCreate(generics.CreateAPIView):
 class UserUpdate(APIView):
 
     def put(self, request):
+        print(request.COOKIES)
         payload = json.loads(request.body)
         user = request.user
 
