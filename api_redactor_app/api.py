@@ -586,6 +586,7 @@ class ShareProjectAllView(APIView):
             share_project = SharedProject.objects.filter(project=kwargs['project_id'], to_user=to_user)
             if len(share_project) > 0:
                 return JsonResponse({'result': False, 'message': 'This project has already been shared'})
+            link = self.generate_link(kwargs['project_id'])
         if all_users is True or (all_users == "True"):
             if request.user.is_superuser or request.user.is_staff:
                 serializer.validated_data['to_user'] = None
@@ -598,24 +599,15 @@ class ShareProjectAllView(APIView):
         if request.data.get('to_user') == request.user.email:
             return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
         serializer.save(project_id=kwargs['project_id'], from_user=request.user)
-        # link = self.generate_link(kwargs['project_id'])
         msg_html = render_to_string('mail/Shared.html', {'to_user': serializer.data['to_user'],
                                                         'from_user': serializer.data['from_user'],
-                                                        'project': serializer.data['project']}
+                                                        'project': serializer.data['project'],
+                                                         'link': link}
                                     )
         from auth_users.utils import send_html_mail
         send_html_mail(subject=f'{to_user}, the project {serializer.data["project"]} was shared with you',
                        html_content=msg_html, sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
                        recipient_list=[serializer.data['to_user']])
-        # serializer.data['link'] = link
-        # send_mail(
-        #     f"Shared project with you",
-        #     msg_html,
-        #     getattr(settings, "EMAIL_HOST_USER"),
-        #     [serializer.data['to_user']],
-        #     html_message=msg_html,
-        #     fail_silently=True
-        # )
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
