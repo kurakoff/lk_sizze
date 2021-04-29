@@ -586,7 +586,6 @@ class ShareProjectAllView(APIView):
             share_project = SharedProject.objects.filter(project=kwargs['project_id'], to_user=to_user)
             if len(share_project) > 0:
                 return JsonResponse({'result': False, 'message': 'This project has already been shared'})
-            link = self.generate_link(kwargs['project_id'])
         if all_users is True or (all_users == "True"):
             if request.user.is_superuser or request.user.is_staff:
                 serializer.validated_data['to_user'] = None
@@ -598,6 +597,8 @@ class ShareProjectAllView(APIView):
                                     status=status.HTTP_403_FORBIDDEN)
         if request.data.get('to_user') == request.user.email:
             return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
+        link = self.generate_link(kwargs['project_id'])
+        serializer.data['link'] = link
         serializer.save(project_id=kwargs['project_id'], from_user=request.user)
         msg_html = render_to_string('mail/Shared.html', {'to_user': serializer.data['to_user'],
                                                         'from_user': serializer.data['from_user'],
