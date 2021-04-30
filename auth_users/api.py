@@ -34,6 +34,7 @@ figma = logging.getLogger('figma')
 
 class ApiLoginView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request, ):
         password = request.data.get("password")
@@ -231,6 +232,7 @@ class SetNewPasswordView(APIView):
 class GoogleSocialAuthView(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = GoogleSocialAuthSerializer
+    authentication_classes = []
 
     def auth(self, email):
         backend = PasswordlessAuthBackend()
@@ -275,6 +277,7 @@ class GoogleSocialAuthView(generics.GenericAPIView):
 
 class LoginEmail(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def auth(self, email):
         backend = PasswordlessAuthBackend()
