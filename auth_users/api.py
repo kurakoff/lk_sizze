@@ -221,6 +221,7 @@ class SetNewPasswordView(APIView):
             password = request.data.get("password")
             user = User.objects.get(email=email)
             user.set_password(password)
+            user.save()
             reset.activate = True
             reset.save()
             auth.info("user {}, email {} reset password".format(user, email))
