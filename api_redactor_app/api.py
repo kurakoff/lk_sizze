@@ -62,6 +62,7 @@ class InitProject(APIView):
 class ScreenView(APIView):
 
     def get(self, request, project_id, screen_id=None, action=None):
+        print(request.COOKIES)
         try:
             project = Project.objects.get(id=project_id)
         except Project.DoesNotExist:
@@ -176,6 +177,7 @@ class ProjectApiView(APIView):
             )
 
     def get(self, request, project_id=None):
+        print(request.COOKIES)
         if project_id:
             try:
                 project_permissions = SharedProject.objects.filter(Q(to_user=request.user, project=project_id) |
@@ -295,6 +297,7 @@ class PrototypeApiView(generics.ListAPIView):
     queryset = Prototype.objects.all()
 
     def list(self, request, *args, **kwargs):
+        print(request.COOKIES)
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
         for i in serializer.data:
@@ -307,6 +310,7 @@ class PrototypeApiView(generics.ListAPIView):
 class UserElementApiView(APIView):
 
     def get(self, request, project_id):
+        print(request.COOKIES)
         user = request.user
         try:
             project_permission = SharedProject.objects.get(Q(to_user=request.user, project=project_id) |
