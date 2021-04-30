@@ -47,8 +47,6 @@ class ApiLoginView(APIView):
                 pass
             Token.objects.create(user=user)
             response = Response()
-            if request.COOKIES.get('access_token'):
-                response.delete_cookie('access_token')
             response.set_cookie(key='access_token', value=user.auth_token.key, httponly=True)
             response.data = {"result": True, "token": user.auth_token.key}
             print(request.COOKIES)
