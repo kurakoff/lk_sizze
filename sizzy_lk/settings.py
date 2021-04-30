@@ -194,7 +194,7 @@ TINYMCE_DEFAULT_CONFIG = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'auth_users.auth_helpers.helpers.TokenAuthSupportCookie',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
