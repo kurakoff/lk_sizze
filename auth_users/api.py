@@ -145,6 +145,7 @@ class ChangePassword(APIView):
 class ResetPasswordEmailView(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def generate_pin(self):
         alphabet = string.ascii_letters + string.digits
@@ -185,6 +186,7 @@ class ResetPasswordEmailView(generics.GenericAPIView):
 
 class SetPinView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         serializer = SetPinSerializer(data=request.data)
@@ -209,6 +211,7 @@ class SetPinView(APIView):
 
 class SetNewPasswordView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def put(self, request, email=None):
         try:
