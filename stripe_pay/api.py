@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-stripe.api_key = "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"
+stripe.api_key = "rk_test_51IgwKcINVsPnahAO2VRGnXHFBTVshPBQn2l7fPc8zVDHYf45e0t53Tk58POM07ls592aWnhlV6glyqM4UocKck81008vMMp7jn"
 
 
 class StripeApi(APIView):
