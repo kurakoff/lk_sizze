@@ -70,6 +70,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://dashboard.sizze.io",
     "https://sizze.io",
     "https://lk.sizze.io",
+    "http://0.0.0.0:3000"
 ]
 
 CORS_ALLOW_CREDENTIALS = True
