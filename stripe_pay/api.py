@@ -5,8 +5,9 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
+from decouple import config
 
-stripe.api_key = "rk_test_51IgwKcINVsPnahAO2VRGnXHFBTVshPBQn2l7fPc8zVDHYf45e0t53Tk58POM07ls592aWnhlV6glyqM4UocKck81008vMMp7jn"
+stripe.api_key = config('stripe_secret')
 
 
 class StripeApi(APIView):
