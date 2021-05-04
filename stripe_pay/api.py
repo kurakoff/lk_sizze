@@ -12,7 +12,6 @@ stripe.api_key = config('stripe_secret')
 
 class StripeApi(APIView):
     permission_classes = [AllowAny]
-    authentication_classes = []
 
     def post(self, request):
         data = json.loads(request.body)
@@ -36,7 +35,6 @@ class StripeApi(APIView):
 
 class StripeWebhook(APIView):
     permission_classes = [AllowAny]
-    authentication_classes = []
 
     def post(self, request):
         webhook_secret = config('stripe_webhook')
