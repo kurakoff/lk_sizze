@@ -47,7 +47,7 @@ class StripeWebhook(APIView):
             print(signature)
             try:
                 event = stripe.Webhook.construct_event(
-                    payload=request_data, sig_header=signature, secret=webhook_secret)
+                    payload=request.body, sig_header=signature, secret=webhook_secret)
                 data = event['data']
                 print("try")
             except Exception as e:
