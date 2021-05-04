@@ -61,8 +61,6 @@ class StripeWebhook(APIView):
         data_object = data['object']
         print(event_type)
         if event_type == 'checkout.session.completed':
-            # Payment is successful and the subscription is created.
-            # You should provision the subscription and save the customer ID to your database.
             print(data)
         elif event_type == 'invoice.paid':
             # Continue to provision the subscription as payments continue to be made.
@@ -77,4 +75,13 @@ class StripeWebhook(APIView):
         else:
             print('Unhandled event type {}'.format(event_type))
         return JsonResponse({'status': 'success'})
+
+
+class ClientPortal(APIView):
+    def post(self, request):
+        return_url = 'https://dashboard.sizze.io/'
+        session = stripe.billing_portal.Session.create(
+            customer='{{CUSTOMER_ID}}',
+            return_url=return_url)
+        return JsonResponse({'url': session.url})
 
