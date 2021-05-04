@@ -14,7 +14,9 @@ from .models import (
     BaseWidthPrototype,
     Constant_colors,
     ModesState,
-    FigmaUser
+    FigmaUser,
+    PasswordReset,
+    ClientStrip
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -213,3 +215,5 @@ admin.site.register(BaseWidthPrototype)
 admin.site.register(Constant_colors, ConstantColorsSetting)
 admin.site.register(ModesState, ModesSettings)
 admin.site.register(FigmaUser)
+admin.site.register(PasswordReset)
+admin.site.register(ClientStrip)
