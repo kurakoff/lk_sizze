@@ -40,14 +40,14 @@ class StripeWebhook(APIView):
 
     def post(self, request):
         webhook_secret = config('stripe_webhook')
-        request_data = request.data
+        request_data = json.loads(request.body)
         if webhook_secret:
             # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
             signature = request.headers.get('stripe-signature')
             print(signature)
             try:
                 event = stripe.Webhook.construct_event(
-                    payload=request.data, sig_header=signature, secret=webhook_secret)
+                    payload=request_data, sig_header=signature, secret=webhook_secret)
                 data = event['data']
                 print("try")
             except Exception as e:
