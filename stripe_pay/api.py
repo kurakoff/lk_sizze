@@ -1,11 +1,11 @@
 import json
-import os
 import stripe
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from decouple import config
+from content.models import ClientStrip
 
 stripe.api_key = config('stripe_secret')
 
@@ -62,6 +62,8 @@ class StripeWebhook(APIView):
         print(event_type)
         if event_type == 'checkout.session.completed':
             print(data['object']['customer'])
+            client = data['object']['customer']
+            ClientStrip.objects.create(user=request.user, client=client)
         elif event_type == 'invoice.paid':
             # Continue to provision the subscription as payments continue to be made.
             # Store the status in your database and check when a user accesses your service.
