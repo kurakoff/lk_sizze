@@ -18,9 +18,9 @@ class StripeApi(APIView):
         data = json.loads(request.body)
         try:
             checkout_session = stripe.checkout.Session.create(
-                success_url='http://localhost:3000',
+                success_url='http://localhost:3000/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url='http//localhost:3000',
+                cancel_url='http://localhost:3000/',
                 payment_method_types=['card'],
                 mode='subscription',
                 line_items=[{
@@ -81,7 +81,7 @@ class StripeWebhook(APIView):
 
 class ClientPortal(APIView):
     def post(self, request):
-        return_url = 'http://localhost:3000'
+        return_url = 'http://localhost:3000/'
         session = stripe.billing_portal.Session.create(
             customer='{{CUSTOMER_ID}}',
             return_url=return_url)
