@@ -61,7 +61,7 @@ class StripeWebhook(APIView):
         data_object = data['object']
         print(event_type)
         if event_type == 'checkout.session.completed':
-            print(data)
+            print(data['object']['customer'])
         elif event_type == 'invoice.paid':
             # Continue to provision the subscription as payments continue to be made.
             # Store the status in your database and check when a user accesses your service.
