@@ -51,7 +51,7 @@ class StripeWebhook(APIView):
                 data = event['data']
                 print("try")
             except Exception as e:
-                print("except")
+                print(e)
                 return e
             # Get the type of webhook event sent - used to check the status of PaymentIntents.
             event_type = event['type']
