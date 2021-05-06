@@ -22,6 +22,7 @@ class StripeApi(APIView):
                 cancel_url='http://localhost:3000/',
                 payment_method_types=['card'],
                 mode='subscription',
+                customer_email=request.user.email,
                 line_items=[{
                     'price': data['priceId'],
                     # For metered billing, do not pass quantity
@@ -61,7 +62,8 @@ class StripeWebhook(APIView):
         if event_type == 'checkout.session.completed':
             print(data['object']['customer'])
             client = data['object']['customer']
-            ClientStrip.objects.create(user=request.user, client=client)
+            email = data['object']['customer_details']['email']
+            ClientStrip.objects.create(user=email, client=client)
         elif event_type == 'invoice.paid':
             # Continue to provision the subscription as payments continue to be made.
             # Store the status in your database and check when a user accesses your service.
