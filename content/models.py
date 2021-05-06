@@ -211,5 +211,5 @@ class FigmaUser(models.Model):
 
 
 class ClientStrip(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client_user')
+    user = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE, related_name='client_user')
     client = models.CharField(max_length=255)

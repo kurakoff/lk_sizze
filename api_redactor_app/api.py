@@ -1,11 +1,12 @@
 import base64, json, os, random, string, googleapiclient, reversion, datetime, requests
 from mimetypes import guess_extension, guess_type
-
+from reversion.revisions import _ContextWrapper, _create_revision_context, _update_frame
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.db.models import Q, F
+from django.db import router
 
 from gphotospy import authorize
 from gphotospy.media import Media
@@ -107,11 +108,12 @@ class ScreenView(APIView):
         elif payload.get('constant_color') is None: screen.constant_color_id = None
         screen.save()
         if project.count == 10:
-            with reversion.create_revision():
+            with create_revision():
                     obj = project
                     obj.save()
                     reversion.set_user(request.user)
                     reversion.set_date_created(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    set_title()
                     project.count = 0
         project.count += 1
         project.save()
@@ -900,3 +902,11 @@ class ConstantColorsView(APIView):
         queryset = Constant_colors.objects.get(id=kwargs['constant_color_id'])
         queryset.delete()
         return JsonResponse({"result": True, "message": "Constant_colors delete success"})
+#
+#
+# def create_revision(manage_manually=False, using=None, atomic=True):
+#     using = using or router.db_for_write(NewRevision)
+#     return _ContextWrapper(_create_revision_context, (manage_manually, using, atomic))
+#
+# def set_title(title):
+#     _update_frame(title=title)

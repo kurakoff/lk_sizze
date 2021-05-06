@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 def open_access_middleware(get_response):
     def middleware(request):
         response = get_response(request)
-        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Origin"] = "localhost:3000"
         response["Access-Control-Allow-Headers"] = "*"
         response["Access-Control-Allow-Methods"] = 'GET, POST, DELETE, PUT'
         return response
