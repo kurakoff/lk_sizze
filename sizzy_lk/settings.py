@@ -212,7 +212,7 @@ GOOGLE_PHOTO_API = {"web": {"client_id": "334729455720-v3rk8a7n810m2u52d7ekn5gr2
                             "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
                             "client_secret": "6QHX7jQht8kLwY1PlXntC1pL", "redirect_uris": ["https://sizze.io/"]}}
 
-GOOGLE_CLIENT_SECRET = 'EPN6zbdU-_r_xI5d-SrWMQ3k'
+GOOGLE_CLIENT_SECRET = 'dKKeVeH8zZWy9aBcfgKnO5a5'
 GOOGLE_CLIENT_ID = '334729455720-d4pno273r6kaoe49cjautkg9isov59ke.apps.googleusercontent.com'
 
 SILENCED_SYSTEM_CHECKS = ["auth.W004"]
