@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from decouple import config
 from content.models import ClientStrip
+from django.contrib.auth.models import User
 
 stripe.api_key = config('stripe_secret')
 
@@ -63,7 +64,8 @@ class StripeWebhook(APIView):
             print(data['object']['customer'])
             client = data['object']['customer']
             email = data['object']['customer_details']['email']
-            ClientStrip.objects.create(user__email=email, client=client)
+            user = User.objects.get(email=email)
+            ClientStrip.objects.create(user=user, client=client)
         elif event_type == 'invoice.paid':
             # Continue to provision the subscription as payments continue to be made.
             # Store the status in your database and check when a user accesses your service.

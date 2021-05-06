@@ -1,12 +1,10 @@
 import base64, json, os, random, string, googleapiclient, reversion, datetime, requests
 from mimetypes import guess_extension, guess_type
-from reversion.revisions import _ContextWrapper, _create_revision_context, _update_frame
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.db.models import Q, F
-from django.db import router
 
 from gphotospy import authorize
 from gphotospy.media import Media
