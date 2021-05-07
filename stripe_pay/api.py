@@ -84,8 +84,12 @@ class StripeWebhook(APIView):
 class ClientPortal(APIView):
     def post(self, request):
         return_url = 'http://localhost:3000/'
+        customer = ClientStrip.objects.get(user=request.user)
         session = stripe.billing_portal.Session.create(
-            customer='{{CUSTOMER_ID}}',
+            customer=customer.client,
             return_url=return_url)
         return JsonResponse({'url': session.url})
 
+
+class SubscriptionStripe(APIView):
+    pass
