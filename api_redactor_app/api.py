@@ -713,10 +713,10 @@ class UserShareProjectDeleteView(viewsets.ModelViewSet):
 
 class ScreenHistory(APIView):
     def get(self, request, project_id):
-        screen = Project.objects.get(id=project_id)
-        versions = Version.objects.get_for_object(screen)
-        data = versions.values("revision_id", date_time=F('revision__date_created'), user=F('revision__user__username')
-                               ).order_by('revision__date_created').reverse()[:50]
+        project = Project.objects.get(id=project_id)
+        versions = Version.objects.get_for_object(project)
+        data = versions.values("revision_id", date_time=F('revision__date_created'), user=F('revision__user__username'),
+                               comment=F('revision__comment')).order_by('revision__date_created').reverse()[:50]
         return response.Response({"past_projects": data})
 
 
@@ -845,6 +845,14 @@ class ScreenVersion(APIView):
             return JsonResponse({"message": "Past project versions deleted", "result": True})
         except:
             return JsonResponse({"message": "Past project versions not delete", "result": False})
+
+    def put(self, request, *args, **kwargs):
+        # try:
+        revision = Revision.objects.get(id=kwargs['revision_id'])
+        revision.comment = request.data.get('comment')
+        revision.save()
+        return JsonResponse({'revision_id': revision.id, "date_time": revision.date_created, "user": revision.user.email,
+                             "comment": revision.comment})
 
 
 class ModesStateView(APIView):
