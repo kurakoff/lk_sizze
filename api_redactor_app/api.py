@@ -106,12 +106,11 @@ class ScreenView(APIView):
         elif payload.get('constant_color') is None: screen.constant_color_id = None
         screen.save()
         if project.count == 10:
-            with create_revision():
+            with reversion.create_revision():
                     obj = project
                     obj.save()
                     reversion.set_user(request.user)
                     reversion.set_date_created(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                    set_title()
                     project.count = 0
         project.count += 1
         project.save()
