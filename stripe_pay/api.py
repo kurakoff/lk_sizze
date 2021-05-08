@@ -76,12 +76,23 @@ class StripeWebhook(APIView):
             # The subscription becomes past_due. Notify your customer and send them to the
             # customer portal to update their payment information.
             print(data)
+        elif event_type == 'customer.subscription.deleted':
+            print('deleted')
+            print(data)
+        elif event_type == 'customer.subscription.created':
+            print('deleted')
+            print(data)
+        elif event_type == 'customer.subscription.updated':
+            print('deleted')
+            print(data)
         else:
             print('Unhandled event type {}'.format(event_type))
         return JsonResponse({'status': 'success'})
 
 
 class ClientPortal(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         return_url = 'http://localhost:3000/'
         customer = ClientStrip.objects.get(user=request.user)
