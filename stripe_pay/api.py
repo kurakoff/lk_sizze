@@ -110,7 +110,7 @@ class PriceWebhook(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        webhook_secret = config('stripe_webhook')
+        webhook_secret = config('stripe_webhook_price')
         request_data = json.loads(request.body)
         if webhook_secret:
             # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
