@@ -213,3 +213,13 @@ class FigmaUser(models.Model):
 class ClientStrip(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client_user')
     client = models.CharField(max_length=255)
+
+
+class Price(models.Model):
+    price = models.CharField(max_length=500)
+    product = models.CharField(max_length=500)
+    status = models.CharField(max_length=255)
+    live_mode = models.BooleanField()
+    cost = models.IntegerField()
+    interval = models.CharField(max_length=255)
+    name = models.TextField()
