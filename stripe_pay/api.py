@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from decouple import config
 from content.models import ClientStrip, Price, Subscription
 from django.contrib.auth.models import User
+from .serializers import *
 
 stripe.api_key = config('stripe_secret')
 
@@ -192,6 +193,6 @@ class PriceWebhook(APIView):
 
 class GetPrice(APIView):
     def get(self, request):
-        price = stripe.Price.list(api_key=stripe.api_key)
-        print(price)
-        return Response({'result': "ok"})
+        price = Price.objects.all()
+        serializer = PriceSerializer(price, many=True)
+        return Response(serializer.data)
