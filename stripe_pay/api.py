@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from decouple import config
-from content.models import ClientStrip, Price
+from content.models import ClientStrip, Price, Subscription
 from django.contrib.auth.models import User
 
 stripe.api_key = config('stripe_secret')
@@ -63,30 +63,53 @@ class StripeWebhook(APIView):
         data_object = data['object']
         print(event_type)
         if event_type == 'checkout.session.completed':
-            print(data['object']['customer'])
-            client = data['object']['customer']
-            email = data['object']['customer_details']['email']
-            user = User.objects.get(email=email)
-            ClientStrip.objects.create(user=user, client=client)
+            try:
+                client = data['object']['customer']
+                email = data['object']['customer_details']['email']
+                user = User.objects.get(email=email)
+                ClientStrip.objects.create(user=user, client=client, payment_status=data_object['payment_status'],
+                                           seanse=data_object['id'], livemode=data_object["livemode"])
+                return JsonResponse({"result": True})
+            except Exception:
+                return JsonResponse({"result": False})
         elif event_type == 'invoice.paid':
-            # Continue to provision the subscription as payments continue to be made.
-            # Store the status in your database and check when a user accesses your service.
-            # This approach helps you avoid hitting rate limits.
             print(data)
         elif event_type == 'invoice.payment_failed':
-            # The payment failed or the customer does not have a valid payment method.
-            # The subscription becomes past_due. Notify your customer and send them to the
-            # customer portal to update their payment information.
             print(data)
         elif event_type == 'customer.subscription.deleted':
-            print('deleted')
-            print(data)
+            try:
+                sub = Subscription.objects.get(subscription=data_object['id'])
+                sub.delete()
+            except Exception as e:
+                print(e)
         elif event_type == 'customer.subscription.created':
-            print('deleted')
-            print(data)
+            try:
+                Subscription.objects.create(
+                    subscription=data_object['id'],
+                    end_period=data_object['current_period_end'],
+                    start_period=data_object['current_period_start'],
+                    customer=data_object['customer'],
+                    latest_invoice=data_object["latest_invoice"],
+                    status=data_object['status'],
+                    subscription_end=data_object['ended_at'],
+                    livemode=data_object['livemode']
+                )
+            except Exception as e:
+                print(e)
         elif event_type == 'customer.subscription.updated':
-            print('deleted')
-            print(data)
+            try:
+                sub = Subscription.objects.get(
+                    subscription=data_object['id'],
+                )
+                sub.end_period = data_object['current_period_end']
+                sub.start_period = data_object['current_period_start']
+                sub.customer = data_object['customer']
+                sub.latest_invoice = data_object["latest_invoice"]
+                sub.status = data_object['status']
+                sub.subscription_end = data_object['ended_at']
+                sub.save()
+            except Exception as e:
+                print(e)
         else:
             print('Unhandled event type {}'.format(event_type))
         return JsonResponse({'status': 'success'})
@@ -116,7 +139,6 @@ class PriceWebhook(APIView):
         webhook_secret = config('stripe_webhook_price')
         request_data = json.loads(request.body)
         if webhook_secret:
-            # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
             signature = request.headers.get('stripe-signature')
             print(signature)
             try:
@@ -127,33 +149,45 @@ class PriceWebhook(APIView):
             except Exception as e:
                 print(e)
                 return e
-            # Get the type of webhook event sent - used to check the status of PaymentIntents.
             event_type = event['type']
         else:
             data = request_data['data']
             event_type = request_data['type']
         data_object = data['object']
         if event_type == 'price.created':
-            print(data)
-            product = stripe.Product.retrieve(id=data_object['product'])
-            Price.objects.create(
-                price=data_object['id'],
-                product=data_object['product'],
-                status=data_object['active'],
-                live_mode=data_object['livemode'],
-                cost=data_object['unit_amount'],
-                name=product['name'],
-                interval=data_object['recurring']['interval']
-            )
+            try:
+                product = stripe.Product.retrieve(id=data_object['product'])
+                Price.objects.create(
+                    price=data_object['id'],
+                    product=data_object['product'],
+                    status=data_object['active'],
+                    live_mode=data_object['livemode'],
+                    cost=data_object['unit_amount'],
+                    name=product['name'],
+                    interval=data_object['recurring']['interval']
+                )
+                return JsonResponse({'result': True})
+            except Exception:
+                return JsonResponse({'result': False})
+
         elif event_type == 'price.updated':
-            price = Price.objects.get(price=data_object['id'])
-            price.status = data_object['active']
-            price.live_mode = data_object['livemode']
-            price.cost = data_object['unit_amount']
-            price.save()
+            try:
+                price = Price.objects.get(price=data_object['id'])
+                price.status = data_object['active']
+                price.live_mode = data_object['livemode']
+                price.cost = data_object['unit_amount']
+                price.save()
+                return JsonResponse({'result': True})
+            except Exception:
+                return JsonResponse({'result': False})
+
         elif event_type == 'price.deleted':
-            price = Price.objects.get(price=data_object['id'])
-            price.delete()
+            try:
+                price = Price.objects.get(price=data_object['id'])
+                price.delete()
+                return JsonResponse({'result': True})
+            except Exception:
+                return JsonResponse({'result': False})
 
 
 class GetPrice(APIView):

@@ -213,6 +213,20 @@ class FigmaUser(models.Model):
 class ClientStrip(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client_user')
     client = models.CharField(max_length=255)
+    payment_status = models.CharField(max_length=255)
+    seanse = models.TextField()
+    livemode = models.BooleanField()
+
+
+class Subscription(models.Model):
+    subscription = models.CharField(max_length=500)
+    end_period = models.CharField(max_length=100)
+    start_period = models.CharField(max_length=100)
+    customer = models.CharField(max_length=255)
+    latest_invoice = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    subscription_end = models.CharField(max_length=255)
+    livemode = models.BooleanField()
 
 
 class Price(models.Model):
