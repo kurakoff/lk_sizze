@@ -38,6 +38,7 @@ class StripeApi(APIView):
 
 class StripeWebhook(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         webhook_secret = config('stripe_webhook')
@@ -106,8 +107,10 @@ class ClientPortal(APIView):
 class SubscriptionStripe(APIView):
     pass
 
+
 class PriceWebhook(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         webhook_secret = config('stripe_webhook_price')
