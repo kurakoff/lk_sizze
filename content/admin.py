@@ -16,7 +16,8 @@ from .models import (
     ModesState,
     FigmaUser,
     PasswordReset,
-    ClientStrip
+    ClientStrip,
+    Price
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -217,3 +218,4 @@ admin.site.register(ModesState, ModesSettings)
 admin.site.register(FigmaUser)
 admin.site.register(PasswordReset)
 admin.site.register(ClientStrip)
+admin.site.register(Price)
