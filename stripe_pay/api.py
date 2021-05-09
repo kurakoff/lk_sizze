@@ -135,13 +135,13 @@ class PriceWebhook(APIView):
         data_object = data['object']
         if event_type == 'price.created':
             print(data)
-            product = stripe.Product.retrieve(id=data['product'])
+            product = stripe.Product.retrieve(id=data_object['product'])
             Price.objects.create(
-                price=data['id'],
-                product=data['product'],
-                status=data['active'],
-                live_mode=data['livemode'],
-                cost=data['unit_amount'],
+                price=data_object['id'],
+                product=data_object['product'],
+                status=data_object['active'],
+                live_mode=data_object['livemode'],
+                cost=data_object['unit_amount'],
                 name=product['name']
             )
         elif event_type == 'price.updated':
