@@ -134,6 +134,7 @@ class PriceWebhook(APIView):
             event_type = request_data['type']
         data_object = data['object']
         if event_type == 'price.created':
+            print(data)
             product = stripe.Product.retrieve(id=data['product'])
             Price.objects.create(
                 price=data['id'],
