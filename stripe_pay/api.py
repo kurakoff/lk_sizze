@@ -146,13 +146,13 @@ class PriceWebhook(APIView):
                 interval=data_object['recurring']['interval']
             )
         elif event_type == 'price.updated':
-            price = Price.objects.get(price=data['id'])
+            price = Price.objects.get(price=data_object['id'])
             price.status = data_object['active']
             price.live_mode = data_object['livemode']
             price.cost = data_object['unit_amount']
             price.save()
         elif event_type == 'price.deleted':
-            price = Price.objects.get(price=data['id'])
+            price = Price.objects.get(price=data_object['id'])
             price.delete()
 
 
