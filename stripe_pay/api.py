@@ -19,10 +19,14 @@ class StripeApi(APIView):
     def post(self, request):
         data = json.loads(request.body)
         try:
+            customer = ClientStrip.objects.get(user=request.user)
+        except: pass
+        try:
             checkout_session = stripe.checkout.Session.create(
                 success_url='http://localhost:3000/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url='http://localhost:3000/',
+                customer=customer or None,
                 payment_method_types=['card'],
                 mode='subscription',
                 customer_email=request.user.email,
@@ -121,11 +125,14 @@ class ClientPortal(APIView):
 
     def post(self, request):
         return_url = 'http://localhost:3000/'
-        customer = ClientStrip.objects.get(user=request.user)
-        session = stripe.billing_portal.Session.create(
-            customer=customer.client,
-            return_url=return_url)
-        return JsonResponse({'url': session.url})
+        try:
+            customer = ClientStrip.objects.get(user=request.user)
+            session = stripe.billing_portal.Session.create(
+                customer=customer.client,
+                return_url=return_url)
+            return JsonResponse({'url': session.url})
+        except:
+            return JsonResponse({'result': False})
 
 
 class SubscriptionStripe(APIView):
@@ -186,6 +193,19 @@ class PriceWebhook(APIView):
             try:
                 price = Price.objects.get(price=data_object['id'])
                 price.delete()
+                return JsonResponse({'result': True})
+            except Exception:
+                return JsonResponse({'result': False})
+        elif event_type == 'customer.updated':
+            try:
+                client = ClientStrip.objects.get(user=request.user)
+                client.payment_status = data_object['payment_status']
+            except Exception:
+                return JsonResponse({'result': False})
+        elif event_type == 'customer.deleted':
+            try:
+                client = ClientStrip.objects.get(user=request.user)
+                client.delete()
                 return JsonResponse({'result': True})
             except Exception:
                 return JsonResponse({'result': False})
