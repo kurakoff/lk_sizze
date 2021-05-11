@@ -24,7 +24,7 @@ class StripeApi(APIView):
             success_url='http://localhost:3000/',
                         #'?session_id={CHECKOUT_SESSION_ID}',
             cancel_url='http://localhost:3000/',
-            customer=customer['client'],
+            customer=customer.client,
             payment_method_types=['card'],
             mode='subscription',
             line_items=[{
