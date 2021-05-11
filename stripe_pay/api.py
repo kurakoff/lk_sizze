@@ -20,8 +20,6 @@ class StripeApi(APIView):
         data = json.loads(request.body)
         try:
             customer = ClientStrip.objects.get(user=request.user)
-        except: customer = None
-        try:
             checkout_session = stripe.checkout.Session.create(
                 success_url='http://localhost:3000/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
@@ -37,8 +35,24 @@ class StripeApi(APIView):
                 }],
             )
             return JsonResponse({'sessionId': checkout_session['id']})
-        except Exception as e:
-            return JsonResponse({'error': {'message': str(e)}}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            try:
+                checkout_session = stripe.checkout.Session.create(
+                    success_url='http://localhost:3000/',
+                                #'?session_id={CHECKOUT_SESSION_ID}',
+                    cancel_url='http://localhost:3000/',
+                    payment_method_types=['card'],
+                    mode='subscription',
+                    customer_email=request.user.email,
+                    line_items=[{
+                        'price': data['priceId'],
+                        # For metered billing, do not pass quantity
+                        'quantity': 1
+                    }],
+                )
+                return JsonResponse({'sessionId': checkout_session['id']})
+            except Exception as e:
+                return JsonResponse({'error': {'message': str(e)}}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StripeWebhook(APIView):
