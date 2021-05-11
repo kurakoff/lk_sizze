@@ -24,7 +24,7 @@ class StripeApi(APIView):
             success_url='http://localhost:3000/',
                         #'?session_id={CHECKOUT_SESSION_ID}',
             cancel_url='http://localhost:3000/',
-            customer=customer,
+            customer=customer['client'],
             payment_method_types=['card'],
             mode='subscription',
             line_items=[{
@@ -213,11 +213,12 @@ class PriceWebhook(APIView):
             try:
                 client = ClientStrip.objects.get(user=request.user)
                 client.payment_status = data_object['payment_status']
+                return JsonResponse({'result': True})
             except Exception:
                 return JsonResponse({'result': False})
         elif event_type == 'customer.deleted':
             try:
-                client = ClientStrip.objects.get(user=request.user)
+                client = ClientStrip.objects.get(client=data_object['id'])
                 client.delete()
                 return JsonResponse({'result': True})
             except Exception:
