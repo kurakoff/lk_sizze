@@ -20,13 +20,13 @@ class StripeApi(APIView):
         data = json.loads(request.body)
         try:
             customer = ClientStrip.objects.get(user=request.user)
-        except: pass
+        except: customer = None
         try:
             checkout_session = stripe.checkout.Session.create(
                 success_url='http://localhost:3000/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url='http://localhost:3000/',
-                customer=customer or None,
+                customer=customer,
                 payment_method_types=['card'],
                 mode='subscription',
                 customer_email=request.user.email,
