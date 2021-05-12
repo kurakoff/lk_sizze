@@ -140,7 +140,6 @@ class ScreenView(APIView):
             height = payload['height']
             project.theLastAppliedHeight = payload['height']
         if payload.get('layout'): layout = payload['layout']
-        if payload.get('styles'): styles = payload['styles']
         screen = Screen.objects.create(
             title=payload['title'],
             project=project,
@@ -148,11 +147,12 @@ class ScreenView(APIView):
             width=width,
             height=height,
             position=(len(screens) + 1),
-            constant_color_id=payload.get('constant_color'),
-            styles=styles
+            constant_color_id=payload.get('constant_color')
         )
         project.save()
         if payload.get('background_color'): screen.background_color = payload.get('background_color')
+        if payload.get('styles'): screen.styles = payload.get('styles')
+        screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
 
