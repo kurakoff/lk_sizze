@@ -237,4 +237,16 @@ class GetPrice(APIView):
     def get(self, request):
         price = Price.objects.all()
         serializer = PriceSerializer(price, many=True)
+        subs = []
+        try:
+            customer = ClientStrip.objects.get(user=request.user)
+            sub = stripe.Subscription.list(customer=customer.client)
+            for i in sub['data']:
+                subs.append(i['plan']['id'])
+        except: pass
+        for i in serializer.data:
+            if i.price in subs:
+                i['user_status'] = True
+            else:
+                i['user_status'] = False
         return Response(serializer.data)
