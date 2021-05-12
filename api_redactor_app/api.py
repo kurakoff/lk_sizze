@@ -108,7 +108,7 @@ class ScreenView(APIView):
         if payload.get('position'): screen.position = payload['position']
         if payload.get('constant_color'): screen.constant_color_id = payload['constant_color']
         elif payload.get('constant_color') is None: screen.constant_color_id = None
-        # if payload.get('styles'): screen.styles = payload['styles']
+        if payload.get('styles'): screen.styles = payload['styles']
         screen.save()
         if project.count == 10:
             with reversion.create_revision():
@@ -151,7 +151,7 @@ class ScreenView(APIView):
         )
         project.save()
         if payload.get('background_color'): screen.background_color = payload.get('background_color')
-        # if payload.get('styles'): screen.styles = payload.get('styles')
+        if payload.get('styles'): screen.styles = payload.get('styles')
         screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
@@ -481,8 +481,8 @@ class ScreenCopyView(APIView):
                 width=screen.width,
                 background_color=screen.background_color,
                 position=(len(sceens) + 1),
-                constant_color=screen.constant_color
-                # styles=screen.styles
+                constant_color=screen.constant_color,
+                styles=screen.styles
             )
             copy_screen.save
             copy_screen_serializer = ScreenSerializer(copy_screen)
@@ -539,8 +539,8 @@ class ProjectCopyView(APIView):
                     height=screen.height,
                     width=screen.width,
                     background_color=screen.background_color,
-                    position=screen.position
-                    # styles=screen.styles
+                    position=screen.position,
+                    styles=screen.styles
                 )
                 copy_screen.save
             copy_screens = Screen.objects.filter(project_id=copy.id)
@@ -802,8 +802,8 @@ class ScreenVersion(APIView):
                 width=screen['width'],
                 height=screen['height'],
                 background_color=screen['background_color'],
-                position=screen['position']
-                # styles=screen['styles']
+                position=screen['position'],
+                styles=screen['styles']
             )
 
     def copy_userElement(self, new_project, data):

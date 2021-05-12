@@ -5,7 +5,7 @@ from content.models import Screen, Prototype, Project, UserElement, SharedProjec
 class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
-        fields = ['id', 'title', 'layout', 'width', 'height', 'background_color', 'position', 'constant_color']
+        fields = ['id', 'title', 'layout', 'width', 'height', 'background_color', 'position', 'constant_color', 'styles']
         extra_kwargs = {
             "constant_color": {"required": False}
         }

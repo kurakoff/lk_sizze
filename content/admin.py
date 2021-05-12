@@ -167,13 +167,13 @@ class ProjectSetting(admin.ModelAdmin):
 
 class ScreenSetting(admin.ModelAdmin):
     actions_selection_counter = True
-    list_display = ['id', 'title', 'project', 'width', 'height', 'background_color', 'position']
+    list_display = ['id', 'title', 'project', 'width', 'height', 'background_color', 'position', 'styles']
     readonly_fields = ['position']
     list_display_links = ('id', 'title')
     list_filter = ('width', 'height')
     preserve_filters = False
     save_as = True
-    search_fields = ['id', 'title', 'project__id', 'project__name', 'width', 'height']
+    search_fields = ['id', 'title', 'project__id', 'project__name', 'width', 'height', 'styles']
 
 
 class PrototypeSetting(admin.ModelAdmin):
