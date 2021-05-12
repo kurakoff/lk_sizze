@@ -265,8 +265,8 @@ class ProjectApiView(APIView):
             width=project.prototype.width,
             height=project.prototype.height,
             position=1,
-            theLastAppliedWidth=prototype.width,
-            theLastAppliedHeight=prototype.height
+            theLastAppliedWidth=project.prototype.width,
+            theLastAppliedHeight=project.prototype.height
         )
         serializer = ProjectSerializer(project)
         data = serializer.data
