@@ -22,6 +22,8 @@ class StripeApi(APIView):
             customer = ClientStrip.objects.get(user=request.user)
         except Exception as e: customer = None
         if customer:
+            sub = stripe.Subscription.retrieve(customer.client)
+            print(sub)
             checkout_session = stripe.checkout.Session.create(
                 success_url='http://localhost:3000/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
