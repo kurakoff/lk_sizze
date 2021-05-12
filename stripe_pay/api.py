@@ -23,7 +23,9 @@ class StripeApi(APIView):
         except Exception as e: customer = None
         if customer:
             sub = stripe.Subscription.list(customer=customer.client)
-            print(sub)
+            for i in sub['data']:
+                if i['items']['data']['plan']['id'] == data['priceId']:
+                    return JsonResponse['result': False, 'message': 'Sub is exist']
             checkout_session = stripe.checkout.Session.create(
                 success_url='http://localhost:3000/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
