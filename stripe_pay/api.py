@@ -86,9 +86,10 @@ class StripeWebhook(APIView):
                 client = data['object']['customer']
                 email = data['object']['customer_details']['email']
                 user = User.objects.get(email=email)
+                past_client = ClientStrip.objects.filter(user=user)
+                past_client.delete()
                 ClientStrip.objects.create(user=user, client=client, payment_status=data_object['payment_status'],
                                            seanse=data_object['id'], livemode=data_object["livemode"])
-                user.delete()
                 return JsonResponse({"result": True})
             except Exception:
                 return JsonResponse({"result": False})
