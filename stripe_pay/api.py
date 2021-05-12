@@ -246,7 +246,7 @@ class GetPrice(APIView):
         except: pass
         for i in serializer.data:
             print(i)
-            if i.price in subs:
+            if i['price'] in subs:
                 i['user_status'] = True
             else:
                 i['user_status'] = False
