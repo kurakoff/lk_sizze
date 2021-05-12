@@ -207,11 +207,11 @@ class FigmaUser(models.Model):
     access_token = models.CharField(max_length=255)
     refresh_token = models.CharField(max_length=255)
     figma_user = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_relate')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class ClientStrip(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client_user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     client = models.CharField(max_length=255)
     payment_status = models.CharField(max_length=255)
     seanse = models.TextField()
