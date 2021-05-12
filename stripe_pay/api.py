@@ -26,7 +26,7 @@ class StripeApi(APIView):
             for i in sub['data']:
                 print(i)
                 if i['plan']['id'] == data['priceId']:
-                    return JsonResponse['result': False, 'message': 'Sub is exist']
+                    return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
             checkout_session = stripe.checkout.Session.create(
                 success_url='http://localhost:3000/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
