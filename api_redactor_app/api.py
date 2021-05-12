@@ -258,6 +258,8 @@ class ProjectApiView(APIView):
         project.prototype = prototype
         project.name = payload['name']
         project.user = request.user
+        project.theLastAppliedWidth = project.prototype.width,
+        project.theLastAppliedHeight = project.prototype.height
         project.save()
         screen = Screen.objects.create(
             title='first_page',
@@ -265,8 +267,6 @@ class ProjectApiView(APIView):
             width=project.prototype.width,
             height=project.prototype.height,
             position=1,
-            theLastAppliedWidth=project.prototype.width,
-            theLastAppliedHeight=project.prototype.height
         )
         serializer = ProjectSerializer(project)
         data = serializer.data
