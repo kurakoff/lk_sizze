@@ -98,12 +98,17 @@ class ScreenView(APIView):
         payload = json.loads(request.body)
         if payload.get('title'): screen.title = payload['title']
         if payload.get('layout') or payload.get('layout') == "": screen.layout = payload['layout']
-        if payload.get('width'): screen.width = payload['width']
-        if payload.get('height'): screen.height = payload['height']
+        if payload.get('width'):
+            screen.width = payload['width']
+            project.theLastAppliedWidth = payload['width']
+        if payload.get('height'):
+            screen.height = payload['height']
+            project.theLastAppliedHeight = payload['height']
         if payload.get('background_color'): screen.background_color = payload['background_color']
         if payload.get('position'): screen.position = payload['position']
         if payload.get('constant_color'): screen.constant_color_id = payload['constant_color']
         elif payload.get('constant_color') is None: screen.constant_color_id = None
+        if payload.get('styles'): screen.styles = payload['styles']
         screen.save()
         if project.count == 10:
             with reversion.create_revision():
@@ -128,9 +133,14 @@ class ScreenView(APIView):
         width = project.prototype.width
         height = project.prototype.height
         layout = ""
-        if payload.get('width'): width = payload['width']
-        if payload.get('height'): height = payload['height']
+        if payload.get('width'):
+            width = payload['width']
+            project.theLastAppliedWidth = payload['width']
+        if payload.get('height'):
+            height = payload['height']
+            project.theLastAppliedHeight = payload['height']
         if payload.get('layout'): layout = payload['layout']
+        if payload.get('styles'): styles = payload['styles']
         screen = Screen.objects.create(
             title=payload['title'],
             project=project,
@@ -138,8 +148,10 @@ class ScreenView(APIView):
             width=width,
             height=height,
             position=(len(screens) + 1),
-            constant_color_id=payload.get('constant_color')
+            constant_color_id=payload.get('constant_color'),
+            styles=styles
         )
+        project.save()
         if payload.get('background_color'): screen.background_color = payload.get('background_color')
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
@@ -252,7 +264,9 @@ class ProjectApiView(APIView):
             project=project,
             width=project.prototype.width,
             height=project.prototype.height,
-            position=1
+            position=1,
+            theLastAppliedWidth=prototype.width,
+            theLastAppliedHeight=prototype.height
         )
         serializer = ProjectSerializer(project)
         data = serializer.data
@@ -467,7 +481,8 @@ class ScreenCopyView(APIView):
                 width=screen.width,
                 background_color=screen.background_color,
                 position=(len(sceens) + 1),
-                constant_color=screen.constant_color
+                constant_color=screen.constant_color,
+                styles=screen.styles
             )
             copy_screen.save
             copy_screen_serializer = ScreenSerializer(copy_screen)
@@ -489,7 +504,9 @@ class ProjectCopyView(APIView):
             name=('Copy ' + project.name),
             user=request.user,
             prototype=project.prototype,
-            colors=project.colors
+            colors=project.colors,
+            theLastAppliedWidth=project.theLastAppliedWidth,
+            theLastAppliedHeight=project.theLastAppliedHeight
         )
         copy.save()
         return copy
@@ -522,7 +539,8 @@ class ProjectCopyView(APIView):
                     height=screen.height,
                     width=screen.width,
                     background_color=screen.background_color,
-                    position=screen.position
+                    position=screen.position,
+                    styles=screen.styles
                 )
                 copy_screen.save
             copy_screens = Screen.objects.filter(project_id=copy.id)
@@ -767,7 +785,9 @@ class ScreenVersion(APIView):
             name="Restored " + project['name'],
             user_id=project['user'],
             prototype_id=project['prototype'],
-            colors=project['colors']
+            colors=project['colors'],
+            theLastAppliedWidth=project['theLastAppliedWidth'],
+            theLastAppliedHeight=project['theLastAppliedHeight']
         )
         return new_project
 
@@ -782,7 +802,8 @@ class ScreenVersion(APIView):
                 width=screen['width'],
                 height=screen['height'],
                 background_color=screen['background_color'],
-                position=screen['position']
+                position=screen['position'],
+                styles=screen['styles']
             )
 
     def copy_userElement(self, new_project, data):
@@ -884,7 +905,6 @@ class ConstantColorsView(APIView):
         return JsonResponse(serializer.data)
 
     def get(self, request, *args, **kwargs):
-        project = Project.objects.get(id=kwargs["project_id"])
         queryset = Constant_colors.objects.filter(project_id=kwargs['project_id'])
         serializer = ConstantColorsSerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
@@ -911,11 +931,3 @@ class ConstantColorsView(APIView):
         queryset = Constant_colors.objects.get(id=kwargs['constant_color_id'])
         queryset.delete()
         return JsonResponse({"result": True, "message": "Constant_colors delete success"})
-#
-#
-# def create_revision(manage_manually=False, using=None, atomic=True):
-#     using = using or router.db_for_write(NewRevision)
-#     return _ContextWrapper(_create_revision_context, (manage_manually, using, atomic))
-#
-# def set_title(title):
-#     _update_frame(title=title)

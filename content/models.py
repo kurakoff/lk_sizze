@@ -25,6 +25,8 @@ class Project(models.Model):
     prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
     colors = jsonfield.JSONField()
     count = models.IntegerField(verbose_name='Период версий', default=0)
+    theLastAppliedWidth = models.IntegerField(default=0)
+    theLastAppliedHeight = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'проект'
@@ -92,6 +94,7 @@ class Screen(models.Model):
     position = models.IntegerField(verbose_name='позиция', default=0)
     constant_color = models.ForeignKey(Constant_colors, on_delete=models.CASCADE, related_name='constant_screen',
                                        null=True)
+    styles = models.TextField(default='')
 
     class Meta:
         verbose_name = 'экран'
