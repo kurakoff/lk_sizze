@@ -258,7 +258,7 @@ class ProjectApiView(APIView):
         project.prototype = prototype
         project.name = payload['name']
         project.user = request.user
-        project.theLastAppliedWidth = project.prototype.width,
+        project.theLastAppliedWidth = project.prototype.width
         project.theLastAppliedHeight = project.prototype.height
         project.save()
         screen = Screen.objects.create(
