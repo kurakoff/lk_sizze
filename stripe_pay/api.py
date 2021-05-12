@@ -25,7 +25,7 @@ class StripeApi(APIView):
             sub = stripe.Subscription.list(customer=customer.client)
             for i in sub['data']:
                 print(i)
-                if i['items']['data']['plan']['id'] == data['priceId']:
+                if i['plan']['id'] == data['priceId']:
                     return JsonResponse['result': False, 'message': 'Sub is exist']
             checkout_session = stripe.checkout.Session.create(
                 success_url='http://localhost:3000/',
