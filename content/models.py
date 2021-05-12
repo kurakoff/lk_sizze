@@ -225,7 +225,7 @@ class Subscription(models.Model):
     customer = models.CharField(max_length=255)
     latest_invoice = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
-    subscription_end = models.CharField(max_length=255)
+    subscription_end = models.CharField(max_length=255, null=True)
     livemode = models.BooleanField()
 
 
