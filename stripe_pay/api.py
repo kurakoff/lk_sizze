@@ -103,19 +103,19 @@ class StripeWebhook(APIView):
             except Exception as e:
                 print(e)
         elif event_type == 'customer.subscription.created':
-            try:
-                Subscription.objects.create(
-                    subscription=data_object['id'],
-                    end_period=data_object['current_period_end'],
-                    start_period=data_object['current_period_start'],
-                    customer=data_object['customer'],
-                    latest_invoice=data_object["latest_invoice"],
-                    status=data_object['status'],
-                    subscription_end=data_object['ended_at'],
-                    livemode=data_object['livemode']
-                )
-            except Exception as e:
-                print(e)
+            # try:
+            Subscription.objects.create(
+                subscription=data_object['id'],
+                end_period=data_object['current_period_end'],
+                start_period=data_object['current_period_start'],
+                customer=data_object['customer'],
+                latest_invoice=data_object["latest_invoice"],
+                status=data_object['status'],
+                subscription_end=data_object['ended_at'],
+                livemode=data_object['livemode']
+            )
+            # except Exception as e:
+            #     print(e)
         elif event_type == 'customer.subscription.updated':
             try:
                 sub = Subscription.objects.get(
