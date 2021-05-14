@@ -19,7 +19,8 @@ from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSeri
     PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
     BaseWidthPrototype, ModesState, Constant_colors
-from .permissions import IsAuthor, EditPermission, DeletePermission
+from .permissions import IsAuthor, EditPermission, DeletePermission, StartPermission, ProfessionalPermission, TeamPermission
+
 
 CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
 print(settings.BASE_DIR)
@@ -255,6 +256,11 @@ class ProjectApiView(APIView):
         except Project.DoesNotExist:
             return JsonResponse({'message': 'Prototype not found', "result": False})
         project = Project()
+        project_list = Project.objects.filter(user=request.user)
+        if request.user.has_perm('StartPermission'):
+            print('Start')
+        if request.user.has_perm('startPermission'):
+            print('start')
         project.prototype = prototype
         project.name = payload['name']
         project.user = request.user
