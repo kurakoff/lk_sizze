@@ -14,9 +14,11 @@ from rest_framework.authtoken.models import Token
 def delete_past_project():
     print("Начато удаленние старых версий проектов")
     PastProjects = Version.objects.filter(revision__date_created__lte=(datetime.datetime.now() -
-                                                                       datetime.timedelta(days=14)))
+                                                                       datetime.timedelta(days=14)),
+                                          revision__user__user_permission__start=True)
     PastRevisions = Revision.objects.filter(date_created__lte=(datetime.datetime.now() -
-                                                               datetime.timedelta(days=14)))
+                                                               datetime.timedelta(days=14)),
+                                            user__user_permission__start=True)
     PastProjects.delete()
     PastRevisions.delete()
     return print("Удаленние старых проектов завершенно")

@@ -269,6 +269,7 @@ class GoogleSocialAuthView(generics.GenericAPIView):
             user.set_unusable_password()
             user.is_verified = True
             user.save()
+            models.UserPermission.objects.create(user=user)
         user = self.auth(email)
         response = JsonResponse({"result": True, "token": user.auth_token.key})
         response.set_cookie('token', user.auth_token.key, httponly=True)

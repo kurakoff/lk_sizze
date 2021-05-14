@@ -257,11 +257,9 @@ class ProjectApiView(APIView):
             return JsonResponse({'message': 'Prototype not found', "result": False})
         project = Project()
         project_list = Project.objects.filter(user=request.user)
-        if request.user.has_perm('StartPermission'):
-            print('Start')
-        if request.user.has_perm('teamPermission') is True:
-            print(request.user.get_all_permissions())
-            print('team')
+        if request.user.projectpermission.start is True:
+            if len(project_list) > 3:
+                return JsonResponse({'message': 'Project limit reached', 'result': False})
         project.prototype = prototype
         project.name = payload['name']
         project.user = request.user
@@ -605,6 +603,15 @@ class ProjectCopyView(APIView):
 class ShareProjectAllView(APIView):
     permission_classes = [IsAuthor]
 
+    def check_max_share_limit(self, user, project):
+        share_list = SharedProject.objects.filter(project=project)
+        if user.userpermission.professional is True:
+            if len(share_list>3):
+                return JsonResponse({'result': False, 'message': "Subscription limit reached"})
+        if user.userpermission.start is True:
+            if len(share_list>1):
+                return JsonResponse({'result': False, 'message': "Subscription limit reached"})
+
     def generate_link(self, project_id):
         link = f"https://dashboard.sizze.io/editor/{project_id}?project=shared"
         return link
@@ -613,6 +620,7 @@ class ShareProjectAllView(APIView):
         serializer = ShareProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         all_users = request.data.get('all_users')
+        self.check_max_share_limit(user=request.user, project=kwargs['project_id'])
         if request.data.get('to_user') == request.user.email:
             return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
         if (all_users is False) or (all_users == "False"):

@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from decouple import config
-from content.models import ClientStrip, Price, Subscription
+from content.models import ClientStrip, Price, Subscription, UserPermission
 from django.contrib.auth.models import User
 from .serializers import *
 
@@ -99,15 +99,31 @@ class StripeWebhook(APIView):
             except Exception:
                 return JsonResponse({"result": False})
         elif event_type == 'invoice.paid':
-            print(data)
+            permission = UserPermission.objects.get(user=request.user)
+            product = Price.objects.get(price=data_object['lines']['data']['price']['id'])
+            if product.name == "Team":
+                permission.start = False
+                permission.team = True
+                permission.professional = False
+            if product.name == "Professional":
+                permission.start = False
+                permission.professional = True
+                permission.team = False
         elif event_type == 'invoice.payment_failed':
-            print(data)
+            permission = UserPermission.objects.get(user=request.user)
+            permission.start = True
+            permission.team = False
+            permission.professional = False
         elif event_type == 'customer.subscription.deleted':
             try:
                 sub = Subscription.objects.get(subscription=data_object['id'])
                 sub.delete()
             except Exception as e:
                 print(e)
+            permission = UserPermission.objects.get(user=request.user)
+            permission.start = True
+            permission.professional = False
+            permission.team = False
         elif event_type == 'customer.subscription.created':
             # try:
             Subscription.objects.create(
