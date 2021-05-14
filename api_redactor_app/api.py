@@ -260,6 +260,7 @@ class ProjectApiView(APIView):
         if request.user.has_perm('StartPermission'):
             print('Start')
         if request.user.has_perm('teamPermission') is True:
+            print(request.user.get_all_permissions())
             print('team')
         project.prototype = prototype
         project.name = payload['name']
