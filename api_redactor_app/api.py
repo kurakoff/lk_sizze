@@ -261,7 +261,7 @@ class ProjectApiView(APIView):
             print('start true')
             if len(project_list) > 3:
                 print('project list > 3')
-                return JsonResponse({'message': 'Project limit reached', 'result': False})
+                return JsonResponse({'message': 'Project limit reached', 'result': False}, status=status.HTTP_403_FORBIDDEN)
         project.prototype = prototype
         project.name = payload['name']
         project.user = request.user
@@ -609,10 +609,10 @@ class ShareProjectAllView(APIView):
         share_list = SharedProject.objects.filter(project=project)
         if user.userpermission.professional is True:
             if len(share_list>3):
-                return JsonResponse({'result': False, 'message': "Subscription limit reached"})
+                return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
         if user.userpermission.start is True:
             if len(share_list>1):
-                return JsonResponse({'result': False, 'message': "Subscription limit reached"})
+                return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
 
     def generate_link(self, project_id):
         link = f"https://dashboard.sizze.io/editor/{project_id}?project=shared"
