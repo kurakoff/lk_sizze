@@ -257,7 +257,7 @@ class ProjectApiView(APIView):
             return JsonResponse({'message': 'Prototype not found', "result": False})
         project = Project()
         project_list = Project.objects.filter(user=request.user)
-        if request.user.projectpermission.start is True:
+        if request.user.userpermission.start is True:
             if len(project_list) > 3:
                 return JsonResponse({'message': 'Project limit reached', 'result': False})
         project.prototype = prototype
