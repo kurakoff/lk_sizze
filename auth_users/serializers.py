@@ -1,20 +1,28 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from rest_framework.exceptions import AuthenticationFailed
 from django.template.loader import render_to_string
 from .utils import send_html_mail
 from .social import google
 from sizzy_lk import settings
 from content import models
+from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     is_staff = serializers.BooleanField(required=False)
+    plan = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'is_staff')
+        fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan')
         extra_kwargs = {'password': {'write_only': True}, 'is_staff': {'read_only': True}}
+
+    def get_plan(self, obj):
+        if obj.userPermission.team is True:
+            return 'team'
+        elif obj.userPermission.professional is True:
+            return 'professional'
+        else: return 'start'
 
     def create(self, validated_data):
         user = User(
@@ -23,6 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        models.UserPermission.objects.create(user=user)
         msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
         send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                        sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])

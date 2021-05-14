@@ -71,3 +71,41 @@ class DeletePermission(BasePermission):
         except:
             return False
 
+
+class StartPermission(BasePermission):
+    message = "Exceeding user rights"
+
+    def has_permission(self, request, view):
+        if request.method == 'OPTIONS':
+            return True
+        user = request.user
+        if user.start is True:
+            return True
+        else:
+            return False
+
+
+class ProfessionalPermission(BasePermission):
+    message = "Exceeding user rights"
+
+    def has_permission(self, request, view):
+        if request.method == 'OPTIONS':
+            return True
+        user = request.user
+        if user.professional is True:
+            return True
+        else:
+            return False
+
+
+class TeamPermission(BasePermission):
+    message = "Exceeding user rights"
+
+    def has_permission(self, request, view):
+        if request.method == 'OPTIONS':
+            return True
+        user = request.user
+        if user.team is True:
+            return True
+        else:
+            return False

@@ -240,3 +240,11 @@ class Price(models.Model):
     cost = models.IntegerField()
     interval = models.CharField(max_length=255)
     name = models.TextField()
+
+
+class UserPermission(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    start = models.BooleanField(default=True)
+    professional = models.BooleanField(default=False)
+    team = models.BooleanField(default=False)
+    last_update = models.DateTimeField(null=True, default=None)

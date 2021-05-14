@@ -7,8 +7,8 @@ from content import models
 
 from django.conf import settings
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.models import User
 
 from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
@@ -25,7 +25,6 @@ from .serializers import \
     GoogleSocialAuthSerializer,\
     EmailLoginSerializer,\
     FigmaUserSerializer
-
 
 logger = logging.getLogger('django')
 auth = logging.getLogger('auth')

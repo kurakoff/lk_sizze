@@ -18,7 +18,8 @@ from .models import (
     PasswordReset,
     ClientStrip,
     Price,
-    Subscription
+    Subscription,
+    UserPermission
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -221,3 +222,4 @@ admin.site.register(PasswordReset)
 admin.site.register(ClientStrip)
 admin.site.register(Price)
 admin.site.register(Subscription)
+admin.site.register(UserPermission)
