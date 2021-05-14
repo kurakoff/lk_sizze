@@ -123,13 +123,14 @@ class StripeWebhook(APIView):
         elif event_type == 'customer.subscription.deleted':
             try:
                 sub = Subscription.objects.get(subscription=data_object['id'])
+                client = ClientStrip.objects.get(sub.customer)
+                permission = UserPermission.objects.get(user=client.user)
+                permission.start = True
+                permission.professional = False
+                permission.team = False
                 sub.delete()
             except Exception as e:
                 print(e)
-            permission = UserPermission.objects.get(user=request.user)
-            permission.start = True
-            permission.professional = False
-            permission.team = False
         elif event_type == 'customer.subscription.created':
             # try:
             Subscription.objects.create(
