@@ -225,7 +225,7 @@ class Subscription(models.Model):
     subscription = models.CharField(max_length=500)
     end_period = models.CharField(max_length=100)
     start_period = models.CharField(max_length=100)
-    customer = models.CharField(max_length=255)
+    customer = models.ForeignKey(ClientStrip, on_delete=models.CASCADE)
     latest_invoice = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     subscription_end = models.CharField(max_length=255, null=True)
