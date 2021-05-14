@@ -609,13 +609,11 @@ class ShareProjectAllView(APIView):
         share_list = SharedProject.objects.filter(project=project)
         if user.userpermission.professional is True:
             if len(share_list)>3:
-                return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
+                return True
         if user.userpermission.start is True:
-            print(True)
-            print(len(share_list))
             if len(share_list)>1:
-                print('>')
-                return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
+                return True
+        return False
 
     def generate_link(self, project_id):
         link = f"https://dashboard.sizze.io/editor/{project_id}?project=shared"
@@ -625,7 +623,9 @@ class ShareProjectAllView(APIView):
         serializer = ShareProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         all_users = request.data.get('all_users')
-        self.check_max_share_limit(user=request.user, project=kwargs['project_id'])
+        max_list = self.check_max_share_limit(user=request.user, project=kwargs['project_id'])
+        if max_list is True:
+            return JsonResponse({'result': False}, status=status.HTTP_403_FORBIDDEN)
         if request.data.get('to_user') == request.user.email:
             return JsonResponse({'result': False, 'message': "You cant share the project with yourself"})
         if (all_users is False) or (all_users == "False"):
