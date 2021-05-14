@@ -135,11 +135,12 @@ class StripeWebhook(APIView):
             #     print(e)
         elif event_type == 'customer.subscription.created':
             # try:
+            client = ClientStrip.objects.get(client=data_object['customer'])
             Subscription.objects.create(
                 subscription=data_object['id'],
                 end_period=data_object['current_period_end'],
                 start_period=data_object['current_period_start'],
-                customer=data_object['customer'],
+                customer=client,
                 latest_invoice=data_object["latest_invoice"],
                 status=data_object['status'],
                 subscription_end=data_object['ended_at'],
@@ -154,7 +155,6 @@ class StripeWebhook(APIView):
                 )
                 sub.end_period = data_object['current_period_end']
                 sub.start_period = data_object['current_period_start']
-                sub.customer = data_object['customer']
                 sub.latest_invoice = data_object["latest_invoice"]
                 sub.status = data_object['status']
                 sub.subscription_end = data_object['ended_at']
