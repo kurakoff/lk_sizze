@@ -259,7 +259,7 @@ class ProjectApiView(APIView):
         project_list = Project.objects.filter(user=request.user)
         if request.user.has_perm('StartPermission'):
             print('Start')
-        if request.user.has_perm('startPermission'):
+        if request.user.has_perm('teamPermission'):
             print('start')
         project.prototype = prototype
         project.name = payload['name']
