@@ -608,10 +608,10 @@ class ShareProjectAllView(APIView):
     def check_max_share_limit(self, user, project):
         share_list = SharedProject.objects.filter(project=project)
         if user.userpermission.professional is True:
-            if len(share_list)>3:
+            if len(share_list)>=3:
                 return True
         if user.userpermission.start is True:
-            if len(share_list)>1:
+            if len(share_list)>=1:
                 return True
         return False
 
