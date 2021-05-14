@@ -258,7 +258,9 @@ class ProjectApiView(APIView):
         project = Project()
         project_list = Project.objects.filter(user=request.user)
         if request.user.userpermission.start is True:
+            print('start true')
             if len(project_list) > 3:
+                print('project list > 3')
                 return JsonResponse({'message': 'Project limit reached', 'result': False})
         project.prototype = prototype
         project.name = payload['name']
