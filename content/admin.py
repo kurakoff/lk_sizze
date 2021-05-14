@@ -201,6 +201,16 @@ class ConstantColorsSetting(admin.ModelAdmin):
     search_fields = ['id', 'title', 'project__id', 'project__name', 'prototype__id', 'prototype__device_name']
 
 
+class UserPermissionSetting(admin.ModelAdmin):
+    actions_selection_counter = True
+    list_display = ['id', 'user', 'start', 'professional', 'team', 'last_update']
+    list_display_links = ('id', 'user')
+    list_filter = ('start', 'team', 'professional', 'team')
+    preserve_filters = False
+    save_as = True
+    search_fields = ['id', 'user__email', 'last_update']
+
+
 class ModesSettings(admin.ModelAdmin):
     search_fields = ['id', 'project__id', 'project__name']
 
@@ -222,4 +232,4 @@ admin.site.register(PasswordReset)
 admin.site.register(ClientStrip)
 admin.site.register(Price)
 admin.site.register(Subscription)
-admin.site.register(UserPermission)
+admin.site.register(UserPermission, UserPermissionSetting)
