@@ -99,7 +99,7 @@ class StripeWebhook(APIView):
             except Exception:
                 return JsonResponse({"result": False})
         elif event_type == 'invoice.paid':
-            permission = UserPermission.objects.get(user=request.user)
+            permission = UserPermission.objects.get(user_email=data_object['customer_email'])
             product = Price.objects.get(price=data_object['lines']['data']['price']['id'])
             if product.name == "Team":
                 permission.start = False
