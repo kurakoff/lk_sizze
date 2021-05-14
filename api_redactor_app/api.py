@@ -612,6 +612,7 @@ class ShareProjectAllView(APIView):
                 return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
         if user.userpermission.start is True:
             print(True)
+            print(len(share_list))
             if len(share_list)>1:
                 print('>')
                 return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
