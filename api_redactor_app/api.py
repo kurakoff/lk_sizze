@@ -608,10 +608,10 @@ class ShareProjectAllView(APIView):
     def check_max_share_limit(self, user, project):
         share_list = SharedProject.objects.filter(project=project)
         if user.userpermission.professional is True:
-            if len(share_list>3):
+            if len(share_list)>3:
                 return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
         if user.userpermission.start is True:
-            if len(share_list>1):
+            if len(share_list)>1:
                 return JsonResponse({'result': False, 'message': "Subscription limit reached"}, status=status.HTTP_403_FORBIDDEN)
 
     def generate_link(self, project_id):
