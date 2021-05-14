@@ -102,14 +102,19 @@ class StripeWebhook(APIView):
             user = User.objects.get(email=data_object['customer_email'])
             permission = UserPermission.objects.get(user=user)
             product = Price.objects.get(price=data_object['lines']['data'][0]['price']['id'])
+            print(product)
             if product.name == "Team":
+                print('team')
                 permission.start = False
                 permission.team = True
                 permission.professional = False
+                permission.save()
             if product.name == "Professional":
+                print('prof')
                 permission.start = False
                 permission.professional = True
                 permission.team = False
+                permission.save()
         elif event_type == 'invoice.payment_failed':
             permission = UserPermission.objects.get(user=request.user)
             permission.start = True
