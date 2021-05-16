@@ -258,9 +258,7 @@ class ProjectApiView(APIView):
         project = Project()
         project_list = Project.objects.filter(user=request.user)
         if request.user.userpermission.start is True:
-            print('start true')
             if len(project_list) > 3:
-                print('project list > 3')
                 return JsonResponse({'message': 'Project limit reached', 'result': False}, status=status.HTTP_403_FORBIDDEN)
         project.prototype = prototype
         project.name = payload['name']
@@ -588,6 +586,10 @@ class ProjectCopyView(APIView):
             pass
 
     def post(self, request, *args, **kwargs):
+        project_list = Project.objects.filter(user=request.user)
+        if request.user.userpermission.start is True:
+            if len(project_list) > 3:
+                return JsonResponse({'message': 'Project limit reached', 'result': False}, status=status.HTTP_403_FORBIDDEN)
         copy = self.copy_project(request=request, project_id=kwargs['project_id'])
         copy_element = self.copy_element(copy=copy, project_id=kwargs['project_id'])
         copy_screen = self.copy_screen(copy=copy, project_id=kwargs['project_id'])
@@ -865,6 +867,11 @@ class ScreenVersion(APIView):
 
     def post(self, request, *args, **kwargs):
         # try:
+        project_list = Project.objects.filter(user=request.user)
+        if request.user.userpermission.start is True:
+            if len(project_list) > 3:
+                return JsonResponse({'message': 'Project limit reached', 'result': False},
+                                    status=status.HTTP_403_FORBIDDEN)
         v = Version.objects.filter(revision_id=kwargs['revision_id']).values('serialized_data')
         serializer = PastProjectsSerializer(v, many=True)
         data = self.get_data(serializer)
