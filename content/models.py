@@ -233,7 +233,7 @@ class Price(models.Model):
 
 class Subscription(models.Model):
     subscription = models.CharField(max_length=500)
-    plan = models.ForeignKey(Price, on_delete=models.CASCADE)
+    # plan = models.ForeignKey(Price, on_delete=models.CASCADE)
     end_period = models.CharField(max_length=100)
     start_period = models.CharField(max_length=100)
     customer = models.ForeignKey(ClientStrip, on_delete=models.CASCADE)
