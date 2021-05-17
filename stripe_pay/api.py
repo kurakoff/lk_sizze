@@ -122,14 +122,13 @@ class StripeWebhook(APIView):
         elif event_type == 'customer.subscription.created':
             client = ClientStrip.objects.get(client=data_object['customer'])
             plan = Price.objects.get(price=data_object['plan']['id'])
-            # try:
-            print('start_try_new_sub')
-            past_sub = Subscription.objects.get(customer=client)
-            past_plan_name = past_sub.plan.name
-            plan_name = plan.name
-            if past_plan_name == 'Professional' and plan_name == 'Team':
-                stripe.Subscription.delete(past_sub.subscription)
-            # except: pass
+            try:
+                past_sub = Subscription.objects.get(customer=client)
+                past_plan_name = past_sub.plan.name
+                plan_name = plan.name
+                if past_plan_name == 'Professional' and plan_name == 'Team':
+                    stripe.Subscription.delete(past_sub.subscription)
+            except: pass
             Subscription.objects.create(
                 subscription=data_object['id'],
                 plan=plan,
@@ -141,6 +140,15 @@ class StripeWebhook(APIView):
                 subscription_end=data_object['ended_at'],
                 livemode=data_object['livemode']
             )
+            permission = UserPermission.objects.get(user=client.user)
+            permission.start = False
+            if plan_name == 'Team':
+                permission.professional = False
+                permission.team = True
+            if plan_name == 'Professional':
+                permission.professional = True
+                permission.team = False
+            permission.save()
             msg_html = render_to_string('content/Plan.html', {'plan': plan.name})
             send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                            sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[client.user.email])
