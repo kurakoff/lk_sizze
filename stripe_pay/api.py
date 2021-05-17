@@ -260,17 +260,14 @@ class PriceWebhook(APIView):
             except Exception:
                 return JsonResponse({'result': False})
         elif event_type == 'customer.deleted':
-            try:
-                client = ClientStrip.objects.get(client=data_object['id'])
-                permission = UserPermission.objects.get(user=client.customer)
-                permission.start = True
-                permission.team = False
-                permission.professional = False
-                permission.save()
-                client.delete()
-                return JsonResponse({'result': True})
-            except Exception:
-                return JsonResponse({'result': False})
+            client = ClientStrip.objects.get(client=data_object['id'])
+            permission = UserPermission.objects.get(user=client.user)
+            permission.start = True
+            permission.team = False
+            permission.professional = False
+            permission.save()
+            client.delete()
+            return JsonResponse({'result': True})
 
 
 class GetPrice(APIView):
