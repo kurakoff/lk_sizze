@@ -216,7 +216,6 @@ class FigmaUser(models.Model):
 class ClientStrip(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     client = models.CharField(max_length=255)
-    payment_status = models.CharField(max_length=255)
     seanse = models.TextField()
     livemode = models.BooleanField()
 

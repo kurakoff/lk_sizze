@@ -250,7 +250,7 @@ class PriceWebhook(APIView):
             user = User.objects.get(email=email)
             past_client = ClientStrip.objects.filter(user=user)
             past_client.delete()
-            ClientStrip.objects.create(user=user, client=client, payment_status=data_object['payment_status'],
+            ClientStrip.objects.create(user=user, client=client,
                                        seanse=data_object['id'], livemode=data_object["livemode"])
         elif event_type == 'customer.updated':
             try:
