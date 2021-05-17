@@ -91,17 +91,7 @@ class StripeWebhook(APIView):
         data_object = data['object']
         print(event_type)
         if event_type == 'checkout.session.completed':
-            try:
-                client = data['object']['customer']
-                email = data['object']['customer_details']['email']
-                user = User.objects.get(email=email)
-                past_client = ClientStrip.objects.filter(user=user)
-                past_client.delete()
-                ClientStrip.objects.create(user=user, client=client, payment_status=data_object['payment_status'],
-                                           seanse=data_object['id'], livemode=data_object["livemode"])
-                return JsonResponse({"result": True})
-            except Exception:
-                return JsonResponse({"result": False})
+            return JsonResponse({"result": True})
         elif event_type == 'invoice.paid':
             user = User.objects.get(email=data_object['customer_email'])
             permission = UserPermission.objects.get(user=user)
@@ -254,6 +244,14 @@ class PriceWebhook(APIView):
                 return JsonResponse({'result': True})
             except Exception:
                 return JsonResponse({'result': False})
+        elif event_type == 'customer.created':
+            client = data['object']['customer']
+            email = data['object']['customer_details']['email']
+            user = User.objects.get(email=email)
+            past_client = ClientStrip.objects.filter(user=user)
+            past_client.delete()
+            ClientStrip.objects.create(user=user, client=client, payment_status=data_object['payment_status'],
+                                       seanse=data_object['id'], livemode=data_object["livemode"])
         elif event_type == 'customer.updated':
             try:
                 client = ClientStrip.objects.get(user=request.user)
