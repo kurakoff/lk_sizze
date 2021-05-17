@@ -28,7 +28,6 @@ class StripeApi(APIView):
         if customer:
             sub = stripe.Subscription.list(customer=customer.client)
             for i in sub['data']:
-                print(i)
                 if i['plan']['id'] == data['priceId']:
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
             checkout_session = stripe.checkout.Session.create(
@@ -74,12 +73,10 @@ class StripeWebhook(APIView):
         if webhook_secret:
             # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
             signature = request.headers.get('stripe-signature')
-            print(signature)
             try:
                 event = stripe.Webhook.construct_event(
                     payload=request.body, sig_header=signature, secret=webhook_secret)
                 data = event['data']
-                print("try")
             except Exception as e:
                 print(e)
                 return e
@@ -89,22 +86,18 @@ class StripeWebhook(APIView):
             data = request_data['data']
             event_type = request_data['type']
         data_object = data['object']
-        print(event_type)
         if event_type == 'checkout.session.completed':
             return JsonResponse({"result": True})
         elif event_type == 'invoice.paid':
             user = User.objects.get(email=data_object['customer_email'])
             permission = UserPermission.objects.get(user=user)
             product = Price.objects.get(price=data_object['lines']['data'][0]['price']['id'])
-            print(product)
             if product.name == "Team":
-                print('team')
                 permission.start = False
                 permission.team = True
                 permission.professional = False
                 permission.save()
             if product.name == "Professional":
-                print('prof')
                 permission.start = False
                 permission.professional = True
                 permission.team = False
@@ -193,12 +186,10 @@ class PriceWebhook(APIView):
         request_data = json.loads(request.body)
         if webhook_secret:
             signature = request.headers.get('stripe-signature')
-            print(signature)
             try:
                 event = stripe.Webhook.construct_event(
                     payload=request.body, sig_header=signature, secret=webhook_secret)
                 data = event['data']
-                print("try")
             except Exception as e:
                 print(e)
                 return e
@@ -279,7 +270,6 @@ class GetPrice(APIView):
                 subs.append(i['plan']['id'])
         except: pass
         for i in serializer.data:
-            print(i)
             if i['price'] in subs:
                 i['user_status'] = True
             else:
