@@ -125,8 +125,11 @@ class StripeWebhook(APIView):
             # try:
             print('start_try_new_sub')
             past_sub = Subscription.objects.get(customer=client)
-            get_sub = stripe.Subscription.retrieve(id=past_sub.subscription)
-            print(get_sub)
+            plan_name = past_sub.plan.name
+            if plan_name == 'Team':
+                pass
+            elif plan_name == 'Professional':
+                stripe.Subscription.delete(past_sub.subscription)
             # except: pass
             Subscription.objects.create(
                 subscription=data_object['id'],
