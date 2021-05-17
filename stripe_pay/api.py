@@ -133,7 +133,7 @@ class StripeWebhook(APIView):
                 print('start_try_new_sub')
                 past_sub = Subscription.objects.get(customer=client)
                 print(past_sub)
-                get_sub = stripe.Subscription.retrieve(past_sub.subscription)
+                get_sub = stripe.Subscription.retrieve(id=past_sub.subscription)
                 print(get_sub)
             except Exception as e:
                 print(e)
