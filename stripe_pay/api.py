@@ -130,6 +130,7 @@ class StripeWebhook(APIView):
             client = ClientStrip.objects.get(client=data_object['customer'])
             plan = Price.objects.get(price=data_object['plan']['id'])
             try:
+                print('start_try_new_sub')
                 past_sub = Subscription.objects.get(customer=client)
                 print(past_sub)
                 get_sub = stripe.Subscription.retrieve(past_sub.subscription)
