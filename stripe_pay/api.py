@@ -159,7 +159,7 @@ class StripeWebhook(APIView):
             )
             msg_html = render_to_string('content/Plan.html', {'plan': plan.name})
             send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
-                           sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])
+                           sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[client.user.email])
         elif event_type == 'customer.subscription.updated':
             try:
                 sub = Subscription.objects.get(
