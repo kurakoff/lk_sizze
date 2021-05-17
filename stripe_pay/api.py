@@ -122,12 +122,12 @@ class StripeWebhook(APIView):
         elif event_type == 'customer.subscription.created':
             client = ClientStrip.objects.get(client=data_object['customer'])
             plan = Price.objects.get(price=data_object['plan']['id'])
-            try:
-                print('start_try_new_sub')
-                past_sub = Subscription.objects.get(customer=client)
-                get_sub = stripe.Subscription.retrieve(id=past_sub.subscription)
-                print(get_sub)
-            except: pass
+            # try:
+            print('start_try_new_sub')
+            past_sub = Subscription.objects.get(customer=client)
+            get_sub = stripe.Subscription.retrieve(id=past_sub.subscription)
+            print(get_sub)
+            # except: pass
             Subscription.objects.create(
                 subscription=data_object['id'],
                 plan=plan,
