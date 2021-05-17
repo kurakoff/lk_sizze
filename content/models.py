@@ -221,17 +221,6 @@ class ClientStrip(models.Model):
     livemode = models.BooleanField()
 
 
-class Subscription(models.Model):
-    subscription = models.CharField(max_length=500)
-    end_period = models.CharField(max_length=100)
-    start_period = models.CharField(max_length=100)
-    customer = models.ForeignKey(ClientStrip, on_delete=models.CASCADE)
-    latest_invoice = models.CharField(max_length=255)
-    status = models.CharField(max_length=255)
-    subscription_end = models.CharField(max_length=255, null=True)
-    livemode = models.BooleanField()
-
-
 class Price(models.Model):
     price = models.CharField(max_length=500)
     product = models.CharField(max_length=500)
@@ -240,6 +229,18 @@ class Price(models.Model):
     cost = models.IntegerField()
     interval = models.CharField(max_length=255)
     name = models.TextField()
+
+
+class Subscription(models.Model):
+    subscription = models.CharField(max_length=500)
+    plan = models.ForeignKey(Price, on_delete=models.CASCADE)
+    end_period = models.CharField(max_length=100)
+    start_period = models.CharField(max_length=100)
+    customer = models.ForeignKey(ClientStrip, on_delete=models.CASCADE)
+    latest_invoice = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    subscription_end = models.CharField(max_length=255, null=True)
+    livemode = models.BooleanField()
 
 
 class UserPermission(models.Model):

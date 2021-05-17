@@ -9,6 +9,10 @@ from decouple import config
 from content.models import ClientStrip, Price, Subscription, UserPermission
 from django.contrib.auth.models import User
 from .serializers import *
+from django.template.loader import render_to_string
+from auth_users.utils import send_html_mail
+
+from sizzy_lk import settings
 
 stripe.api_key = config('stripe_secret')
 
@@ -133,10 +137,18 @@ class StripeWebhook(APIView):
             # except Exception as e:
             #     print(e)
         elif event_type == 'customer.subscription.created':
-            # try:
+            try:
+                past_sub = Subscription.objects.get(customer=request.user)
+                print(past_sub)
+                get_sub = stripe.Subscription.retrieve(past_sub.subscription)
+                print(get_sub)
+            except Exception as e:
+                print(e)
             client = ClientStrip.objects.get(client=data_object['customer'])
+            plan = Price.objects.get(price=data_object['plan']['id'])
             Subscription.objects.create(
                 subscription=data_object['id'],
+                plan=plan,
                 end_period=data_object['current_period_end'],
                 start_period=data_object['current_period_start'],
                 customer=client,
@@ -145,8 +157,9 @@ class StripeWebhook(APIView):
                 subscription_end=data_object['ended_at'],
                 livemode=data_object['livemode']
             )
-            # except Exception as e:
-            #     print(e)
+            msg_html = render_to_string('content/Plan.html', {'plan': plan.name})
+            send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
+                           sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])
         elif event_type == 'customer.subscription.updated':
             try:
                 sub = Subscription.objects.get(
@@ -251,6 +264,11 @@ class PriceWebhook(APIView):
         elif event_type == 'customer.deleted':
             try:
                 client = ClientStrip.objects.get(client=data_object['id'])
+                permission = UserPermission.objects.get(user=client.customer)
+                permission.start = True
+                permission.team = False
+                permission.professional = False
+                permission.save()
                 client.delete()
                 return JsonResponse({'result': True})
             except Exception:
