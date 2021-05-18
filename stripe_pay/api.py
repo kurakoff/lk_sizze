@@ -37,6 +37,7 @@ class StripeApi(APIView):
                 customer=customer.client,
                 payment_method_types=['card'],
                 mode='subscription',
+                locale='en',
                 line_items=[{
                     'price': data['priceId'],
                     'quantity': 1
@@ -51,6 +52,7 @@ class StripeApi(APIView):
                     cancel_url='http://localhost:3000/',
                     payment_method_types=['card'],
                     mode='subscription',
+                    locale='en',
                     customer_email=request.user.email,
                     line_items=[{
                         'price': data['priceId'],
