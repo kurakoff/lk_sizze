@@ -181,7 +181,8 @@ class ClientPortal(APIView):
             customer = ClientStrip.objects.get(user=request.user)
             session = stripe.billing_portal.Session.create(
                 customer=customer.client,
-                return_url=return_url)
+                return_url=return_url,
+                locale='en')
             return JsonResponse({'url': session.url})
         except:
             return JsonResponse({'result': False})
