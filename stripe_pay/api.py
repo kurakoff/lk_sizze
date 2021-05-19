@@ -31,9 +31,9 @@ class StripeApi(APIView):
                 if i['plan']['id'] == data['priceId']:
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
             checkout_session = stripe.checkout.Session.create(
-                success_url='http://localhost:3000/',
+                success_url='https://dashboard.sizze.io/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url='http://localhost:3000/',
+                cancel_url='https://dashboard.sizze.io/',
                 customer=customer.client,
                 payment_method_types=['card'],
                 mode='subscription',
@@ -47,9 +47,9 @@ class StripeApi(APIView):
         else:
             try:
                 checkout_session = stripe.checkout.Session.create(
-                    success_url='http://localhost:3000/',
+                    success_url='https://dashboard.sizze.io/',
                                 #'?session_id={CHECKOUT_SESSION_ID}',
-                    cancel_url='http://localhost:3000/',
+                    cancel_url='https://dashboard.sizze.io/',
                     payment_method_types=['card'],
                     mode='subscription',
                     locale='en',
@@ -176,7 +176,7 @@ class ClientPortal(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        return_url = 'http://localhost:3000/'
+        return_url = 'https://dashboard.sizze.io/'
         try:
             customer = ClientStrip.objects.get(user=request.user)
             session = stripe.billing_portal.Session.create(
