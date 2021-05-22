@@ -36,7 +36,7 @@ class OtherProjectSerializer(serializers.ModelSerializer):
 class UserElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserElement
-        fields = ['id', 'title', 'layout']
+        fields = ['id', 'title', 'layout', 'type']
 
 
 class ShareProjectBaseSerializer(serializers.ModelSerializer):

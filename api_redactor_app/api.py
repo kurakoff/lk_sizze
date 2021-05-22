@@ -368,6 +368,8 @@ class UserElementApiView(APIView):
         element = UserElement(title=payload['title'], project=project)
         if payload.get('layout'):
             element.layout = payload['layout']
+        if payload.get('type'):
+            element.layout = payload['type']
         element.save()
         serialize = UserElementSerializer(element)
         return JsonResponse({"elements": serialize.data, "result": True})
@@ -391,6 +393,8 @@ class UserElementApiView(APIView):
             element.title = payload['title']
         if payload.get('layout'):
             element.layout = payload['layout']
+        if payload.get('type'):
+            element.layout = payload['type']
         element.save()
         if project.count == 10:
             with reversion.create_revision():

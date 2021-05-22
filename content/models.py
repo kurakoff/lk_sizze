@@ -16,6 +16,7 @@ class UserElement(models.Model):
     title = models.CharField(max_length=36,  blank=False)
     layout = models.TextField(default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE, default=None)
+    type = models.TextField(null=True, default=None)
 
 
 @reversion.register(follow=['screen_set', 'userelement_set', 'modes_state', 'constant_colors'])
