@@ -49,7 +49,7 @@ class StripeApi(APIView):
     def post(self, request):
         data = json.loads(request.body)
         try:
-            customer = ClientStrip.objects.get(user=request.user)
+            customer = ClientStrip.objects.get(user=request.user, live_mode=True)
         except Exception as e: customer = None
         if customer:
             sub = stripe.Subscription.list(customer=customer.client)
@@ -330,7 +330,7 @@ class GetPrice(APIView):
         serializer = PriceSerializer(price, many=True)
         subs = []
         try:
-            customer = ClientStrip.objects.get(user=request.user)
+            customer = ClientStrip.objects.get(user=request.user, live_mode=True)
             sub = stripe.Subscription.list(customer=customer.client)
             for i in sub['data']:
                 subs.append(i['plan']['id'])
