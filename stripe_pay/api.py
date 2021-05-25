@@ -326,7 +326,7 @@ class PriceWebhook(APIView):
 
 class GetPrice(APIView):
     def get(self, request):
-        price = Price.objects.filter(live_mode=False)
+        price = Price.objects.filter(live_mode=True)
         serializer = PriceSerializer(price, many=True)
         subs = []
         try:
