@@ -129,9 +129,11 @@ class StripeWebhook(APIView):
                 permission.professional = False
                 permission.save()
             if product.name == "Professional":
+                print('start ampl')
                 event_args = {"user_id": user.id, "event_type": "Subscription (Professional)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
+                print('end ampl')
                 permission.start = False
                 permission.professional = True
                 permission.team = False
@@ -189,7 +191,7 @@ class StripeWebhook(APIView):
             )
             permission = UserPermission.objects.get(user=client.user)
             permission.start = False
-            if plan_name == 'Team':
+            if plan.name == 'Team':
                 event_amplitude = Amplitude()
                 event_amplitude.post(user=client.user, event='Subscription (Team)')
                 msg_html = render_to_string('content/plan_team.html')
@@ -198,7 +200,7 @@ class StripeWebhook(APIView):
                                recipient_list=[client.user.email])
                 permission.professional = False
                 permission.team = True
-            if plan_name == 'Professional':
+            if plan.name == 'Professional':
                 event_amplitude = Amplitude()
                 event_amplitude.post(user=client.user, event='Subscription (Professional)')
                 msg_html = render_to_string('content/Plan.html', {'plan': plan.name})
