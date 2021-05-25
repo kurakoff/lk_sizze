@@ -17,6 +17,7 @@ import requests
 import json, amplitude
 
 amplitude_logger = amplitude.AmplitudeLogger(api_key="bb7646a778c6c18c17fd261a7468ceca")
+stripe.api_key = config("stripe_secret")
 
 
 class Amplitude:
