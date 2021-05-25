@@ -121,7 +121,7 @@ class StripeWebhook(APIView):
             permission = UserPermission.objects.get(user=user)
             product = Price.objects.get(price=data_object['lines']['data'][0]['price']['id'])
             if product.name == "Team":
-                event_args = {"user_id": user.id, "event_type": "Subscription (Team)"}
+                event_args = {"user_id": str(user.id), "event_type": "Subscription (Team)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
                 permission.start = False
@@ -130,7 +130,7 @@ class StripeWebhook(APIView):
                 permission.save()
             if product.name == "Professional":
                 print('start ampl')
-                event_args = {"user_id": user.id, "event_type": "Subscription (Professional)"}
+                event_args = {"user_id": str(user.id), "event_type": "Subscription (Professional)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
                 print('end ampl')
@@ -140,7 +140,7 @@ class StripeWebhook(APIView):
                 permission.save()
         elif event_type == 'invoice.payment_failed':
             user = User.objects.get(email=data_object['customer_email'])
-            event_args = {"user_id": user.id, "event_type": "Subscription (Start)"}
+            event_args = {"user_id": str(user.id), "event_type": "Subscription (Start)"}
             event = amplitude_logger.create_event(**event_args)
             amplitude_logger.log_event(event)
             permission = UserPermission.objects.get(user=user)
@@ -192,8 +192,6 @@ class StripeWebhook(APIView):
             permission = UserPermission.objects.get(user=client.user)
             permission.start = False
             if plan.name == 'Team':
-                event_amplitude = Amplitude()
-                event_amplitude.post(user=client.user, event='Subscription (Team)')
                 msg_html = render_to_string('content/plan_team.html')
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -201,8 +199,6 @@ class StripeWebhook(APIView):
                 permission.professional = False
                 permission.team = True
             if plan.name == 'Professional':
-                event_amplitude = Amplitude()
-                event_amplitude.post(user=client.user, event='Subscription (Professional)')
                 msg_html = render_to_string('content/Plan.html', {'plan': plan.name})
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
