@@ -13,8 +13,33 @@ from django.template.loader import render_to_string
 from auth_users.utils import send_html_mail
 
 from sizzy_lk import settings
+import requests
+import json, amplitude
 
-stripe.api_key = config('stripe_secret')
+amplitude_logger = amplitude.AmplitudeLogger(api_key="bb7646a778c6c18c17fd261a7468ceca")
+
+
+class Amplitude:
+    def post(self, user, event):
+        data={
+          "api_key": config('amplitude_secret'),
+          "events": [
+            {
+              "user_id": user['id'],
+              "device_id": None,
+              "event_type": event,
+              "event_properties": {
+              },
+              "user_properties": {
+                "isStaff": user['is_staff'],
+                "email": user['email']
+              }
+            }
+          ]
+        }
+        response = requests.post('https://api2.amplitude.com/2/httpapi', data=json.dumps(data)
+        )
+        return response
 
 
 class StripeApi(APIView):
@@ -95,17 +120,26 @@ class StripeWebhook(APIView):
             permission = UserPermission.objects.get(user=user)
             product = Price.objects.get(price=data_object['lines']['data'][0]['price']['id'])
             if product.name == "Team":
+                event_args = {"user_id": user.id, "event_type": "Subscription (Team)"}
+                event = amplitude_logger.create_event(**event_args)
+                amplitude_logger.log_event(event)
                 permission.start = False
                 permission.team = True
                 permission.professional = False
                 permission.save()
             if product.name == "Professional":
+                event_args = {"user_id": user.id, "event_type": "Subscription (Professional)"}
+                event = amplitude_logger.create_event(**event_args)
+                amplitude_logger.log_event(event)
                 permission.start = False
                 permission.professional = True
                 permission.team = False
                 permission.save()
         elif event_type == 'invoice.payment_failed':
             user = User.objects.get(email=data_object['customer_email'])
+            event_args = {"user_id": user.id, "event_type": "Subscription (Start)"}
+            event = amplitude_logger.create_event(**event_args)
+            amplitude_logger.log_event(event)
             permission = UserPermission.objects.get(user=user)
             permission.start = True
             permission.team = False
@@ -125,9 +159,13 @@ class StripeWebhook(APIView):
             permission.team = False
             permission.save()
             sub.delete()
+            event_amplitude = Amplitude()
+            event_amplitude.post(user=customer, event='Subscription (Start)')
             # except Exception as e:
             #     print(e)
         elif event_type == 'customer.subscription.created':
+
+            stripe.api_key = config('stripe_secret')
             client = ClientStrip.objects.get(client=data_object['customer'])
             plan = Price.objects.get(price=data_object['plan']['id'])
             try:
@@ -151,6 +189,8 @@ class StripeWebhook(APIView):
             permission = UserPermission.objects.get(user=client.user)
             permission.start = False
             if plan_name == 'Team':
+                event_amplitude = Amplitude()
+                event_amplitude.post(user=client.user, event='Subscription (Team)')
                 msg_html = render_to_string('content/plan_team.html')
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -158,6 +198,8 @@ class StripeWebhook(APIView):
                 permission.professional = False
                 permission.team = True
             if plan_name == 'Professional':
+                event_amplitude = Amplitude()
+                event_amplitude.post(user=client.user, event='Subscription (Professional)')
                 msg_html = render_to_string('content/Plan.html', {'plan': plan.name})
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
