@@ -414,10 +414,8 @@ class EmailSpammer(View):
                 send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[form.cleaned_data['to']])
             if form.cleaned_data['to'] == '':
-                user_list = []
                 users = User.objects.all().values('email')
                 for i in users:
-                    user_list.append(i['email'])
-                send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
-                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=user_list)
+                    send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
+                                   sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[i['email']])
         return redirect('/email/')
