@@ -178,7 +178,7 @@ class SocialUser(models.Model):
 
 class SharedProject(models.Model):
     from_user = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE, related_name='from_user')
-    to_user = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE, related_name='to_user', null=True)
+    to_user = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE, related_name='to_user', null=True, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='share_project')
     permission = jsonfield.JSONField()
     all_users = models.BooleanField()
