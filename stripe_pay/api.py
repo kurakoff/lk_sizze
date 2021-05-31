@@ -56,13 +56,14 @@ class StripeApi(APIView):
             for i in sub['data']:
                 if i['plan']['id'] == data['priceId']:
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
-            checkout_session = stripe.checkout.Session.create(
+            checkout_session = stripe.checkout.Session.create(allow_promotion_codes=True,
                 success_url='https://dashboard.sizze.io/',
                             #'?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url='https://dashboard.sizze.io/',
                 customer=customer.client,
                 payment_method_types=['card'],
                 mode='subscription',
+                alow_promotion_codes=True,
                 locale='en',
                 line_items=[{
                     'price': data['priceId'],
@@ -78,6 +79,7 @@ class StripeApi(APIView):
                     cancel_url='https://dashboard.sizze.io/',
                     payment_method_types=['card'],
                     mode='subscription',
+                    allow_promotion_codes=True,
                     locale='en',
                     customer_email=request.user.email,
                     line_items=[{
