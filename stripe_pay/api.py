@@ -16,6 +16,7 @@ from sizzy_lk import settings
 import requests
 import json, amplitude
 
+live_mode_turn = False
 amplitude_logger = amplitude.AmplitudeLogger(api_key="bb7646a778c6c18c17fd261a7468ceca")
 stripe.api_key = config("stripe_secret")
 
@@ -49,7 +50,7 @@ class StripeApi(APIView):
     def post(self, request):
         data = json.loads(request.body)
         try:
-            customer = ClientStrip.objects.get(user=request.user, live_mode=True)
+            customer = ClientStrip.objects.get(user=request.user, live_mode=live_mode_turn)
         except Exception as e: customer = None
         if customer:
             sub = stripe.Subscription.list(customer=customer.client)
@@ -328,11 +329,11 @@ class PriceWebhook(APIView):
 
 class GetPrice(APIView):
     def get(self, request):
-        price = Price.objects.filter(live_mode=True)
+        price = Price.objects.filter(live_mode=live_mode_turn)
         serializer = PriceSerializer(price, many=True)
         subs = []
         try:
-            customer = ClientStrip.objects.get(user=request.user, live_mode=True)
+            customer = ClientStrip.objects.get(user=request.user, live_mode=live_mode_turn)
             sub = stripe.Subscription.list(customer=customer.client)
             for i in sub['data']:
                 subs.append(i['plan']['id'])
