@@ -50,7 +50,7 @@ class StripeApi(APIView):
     def post(self, request):
         data = json.loads(request.body)
         try:
-            customer = ClientStrip.objects.get(user=request.user, live_mode=live_mode_turn)
+            customer = ClientStrip.objects.get(user=request.user, livemode=live_mode_turn)
         except Exception as e: customer = None
         if customer:
             sub = stripe.Subscription.list(customer=customer.client)
