@@ -16,7 +16,7 @@ from sizzy_lk import settings
 import requests
 import json, amplitude
 
-live_mode_turn = False
+live_mode_turn = True
 amplitude_logger = amplitude.AmplitudeLogger(api_key="bb7646a778c6c18c17fd261a7468ceca")
 stripe.api_key = config("stripe_secret")
 
