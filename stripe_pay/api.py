@@ -64,7 +64,7 @@ class StripeApi(APIView):
                 customer=customer.client,
                 payment_method_types=['card'],
                 mode='subscription',
-                alow_promotion_codes=True,
+                allow_promotion_codes=True,
                 locale='en',
                 line_items=[{
                     'price': data['priceId'],
