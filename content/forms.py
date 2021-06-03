@@ -34,6 +34,7 @@ class EmailSpammerForm(forms.Form):
     html = forms.FileField()
     theme = forms.CharField()
     to = forms.CharField(required=False)
+    super_user = forms.BooleanField(required=False)
 
 
 class CreateScreenForm(forms.ModelForm):

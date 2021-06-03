@@ -403,17 +403,24 @@ class EmailSpammer(View):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
+        print(form.data)
         if form.is_valid():
-            print(request.FILES['html'])
             from auth_users.utils import send_html_mail
             from django.contrib.auth.models import User
             data = request.FILES['html']
             self.upload_func(data)
             msg_html = render_to_string("email_spam/spam.html")
-            if form.cleaned_data['to']:
+            if form.cleaned_data['super_user'] is True:
+                users = User.objects.filter(is_superuser=True)
+                for i in users:
+                    send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
+                                   sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[i.email])
+                return redirect('/email/')
+            if form.cleaned_data['to'] and form.cleaned_data['super_user'] is False:
                 send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[form.cleaned_data['to']])
-            if form.cleaned_data['to'] == '':
+            if form.cleaned_data['to'] == '' and form.cleaned_data['super_user'] is False:
+                print(3)
                 users = User.objects.all().values('email')
                 for i in users:
                     send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
