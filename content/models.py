@@ -96,6 +96,7 @@ class Screen(models.Model):
     constant_color = models.ForeignKey(Constant_colors, on_delete=models.CASCADE, related_name='constant_screen',
                                        null=True, blank=True)
     styles = jsonfield.JSONField(null=True, blank=True)
+    base = models.CharField(max_length=50, default=0)
 
     class Meta:
         verbose_name = 'экран'

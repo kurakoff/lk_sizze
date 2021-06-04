@@ -153,6 +153,7 @@ class ScreenView(APIView):
         project.save()
         if payload.get('background_color'): screen.background_color = payload.get('background_color')
         if payload.get('styles'): screen.styles = payload.get('styles')
+        screen.base = screen.id
         screen.save()
         serializer = ScreenSerializer(screen)
         return JsonResponse({'screen': serializer.data, "result": True})
@@ -491,7 +492,8 @@ class ScreenCopyView(APIView):
                 background_color=screen.background_color,
                 position=(len(sceens) + 1),
                 constant_color=screen.constant_color,
-                styles=screen.styles
+                styles=screen.styles,
+                base=screen.id
             )
             copy_screen.save
             copy_screen_serializer = ScreenSerializer(copy_screen)
@@ -549,7 +551,8 @@ class ProjectCopyView(APIView):
                     width=screen.width,
                     background_color=screen.background_color,
                     position=screen.position,
-                    styles=screen.styles
+                    styles=screen.styles,
+                    base=screen.base
                 )
                 copy_screen.save
             copy_screens = Screen.objects.filter(project_id=copy.id)
@@ -829,7 +832,8 @@ class ScreenVersion(APIView):
                 height=screen['height'],
                 background_color=screen['background_color'],
                 position=screen['position'],
-                styles=screen['styles']
+                styles=screen['styles'],
+                base=screen['base']
             )
 
     def copy_userElement(self, new_project, data):
