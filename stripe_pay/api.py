@@ -55,7 +55,7 @@ class StripeApi(APIView):
         if customer:
             sub = stripe.Subscription.list(customer=customer.client)
             for i in sub['data']:
-                if i['plan']['id'] == data['priceId']:
+                if i['plan']['id'] == data['priceId'] and i['status'] != 'incomplete':
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://dashboard.sizze.io/',
