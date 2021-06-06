@@ -131,16 +131,22 @@ class StripeWebhook(APIView):
                 permission.team = True
                 permission.professional = False
                 permission.save()
+                msg_html = render_to_string('content/plan_team.html')
+                send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
+                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
+                               recipient_list=[user.email])
             if product.name == "Professional":
-                print('start ampl')
                 event_args = {"user_id": str(user.id), "event_type": "Subscription (Professional)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
-                print('end ampl')
                 permission.start = False
                 permission.professional = True
                 permission.team = False
                 permission.save()
+                msg_html = render_to_string('content/Plan.html',)
+                send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
+                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
+                               recipient_list=[user.email])
         elif event_type == 'invoice.payment_failed':
             user = User.objects.get(email=data_object['customer_email'])
             event_args = {"user_id": str(user.id), "event_type": "Subscription (Start)"}
@@ -192,23 +198,6 @@ class StripeWebhook(APIView):
                 subscription_end=data_object['ended_at'],
                 livemode=data_object['livemode']
             )
-            permission = UserPermission.objects.get(user=client.user)
-            permission.start = False
-            if plan.name == 'Team':
-                msg_html = render_to_string('content/plan_team.html')
-                send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
-                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
-                               recipient_list=[client.user.email])
-                permission.professional = False
-                permission.team = True
-            if plan.name == 'Professional':
-                msg_html = render_to_string('content/Plan.html', {'plan': plan.name})
-                send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
-                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
-                               recipient_list=[client.user.email])
-                permission.professional = True
-                permission.team = False
-            permission.save()
         elif event_type == 'customer.subscription.updated':
             try:
                 sub = Subscription.objects.get(
