@@ -220,6 +220,7 @@ class ClientStrip(models.Model):
     client = models.CharField(max_length=255)
     seanse = models.TextField()
     livemode = models.BooleanField()
+    use_trial = models.BooleanField()
 
 
 class Price(models.Model):
