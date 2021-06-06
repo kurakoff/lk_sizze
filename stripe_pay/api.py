@@ -70,6 +70,9 @@ class StripeApi(APIView):
                     'price': data['priceId'],
                     'quantity': 1
                 }],
+                subscription_data={
+                    "trial_period_days": 7
+                }
             )
             return JsonResponse({'sessionId': checkout_session['id']})
         else:
