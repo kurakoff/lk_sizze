@@ -90,10 +90,7 @@ class StripeApi(APIView):
                     line_items=[{
                         'price': data['priceId'],
                         'quantity': 1
-                    }],
-                    subscription_data={
-                        "trial_period_days": 7
-                    }
+                    }]
                 )
             return JsonResponse({'sessionId': checkout_session['id']})
         else:
@@ -112,6 +109,9 @@ class StripeApi(APIView):
                         # For metered billing, do not pass quantity
                         'quantity': 1
                     }],
+                    subscription_data={
+                        "trial_period_days": 7
+                    }
                 )
                 return JsonResponse({'sessionId': checkout_session['id']})
             except Exception as e:
