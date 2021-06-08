@@ -274,10 +274,11 @@ class ProjectApiView(APIView):
             height=project.prototype.height,
             position=1,
         )
+        project.previewScreenId = screen
+        project.save()
         serializer = ProjectSerializer(project)
         data = serializer.data
         data['screen'] = ScreenSerializer(screen).data
-        print(prototype.pk)
         self.create_base_colors(project=project, prototype=prototype.pk)
         return JsonResponse({'project': data, "result": True})
 
@@ -292,6 +293,8 @@ class ProjectApiView(APIView):
             project.name = payload['name']
         if 'colors' in payload.keys():
             project.colors = payload['colors']
+        if payload.get('previewScreenId'):
+            project.previewScreenId_id = payload['previewScreenId']
         project.save()
         if project.count == 10:
             with reversion.create_revision():
@@ -517,7 +520,8 @@ class ProjectCopyView(APIView):
             prototype=project.prototype,
             colors=project.colors,
             theLastAppliedWidth=project.theLastAppliedWidth,
-            theLastAppliedHeight=project.theLastAppliedHeight
+            theLastAppliedHeight=project.theLastAppliedHeight,
+            previewScreenId=project.previewScreenId
         )
         copy.save()
         return copy
@@ -816,7 +820,8 @@ class ScreenVersion(APIView):
             prototype_id=project['prototype'],
             colors=project['colors'],
             theLastAppliedWidth=project['theLastAppliedWidth'],
-            theLastAppliedHeight=project['theLastAppliedHeight']
+            theLastAppliedHeight=project['theLastAppliedHeight'],
+            previewScreenId=project['previewScreenId']
         )
         return new_project
 

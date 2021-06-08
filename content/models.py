@@ -2,6 +2,7 @@ import jsonfield, reversion
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
+from . import models as this
 
 CASCADE = models.CASCADE
 
@@ -28,6 +29,8 @@ class Project(models.Model):
     count = models.IntegerField(verbose_name='Период версий', default=0)
     theLastAppliedWidth = models.IntegerField(default=0)
     theLastAppliedHeight = models.IntegerField(default=0)
+    previewScreenId = models.ForeignKey("Screen", on_delete=models.CASCADE, related_name='preview_screen',
+                                        null=True, blank=True)
 
     class Meta:
         verbose_name = 'проект'
