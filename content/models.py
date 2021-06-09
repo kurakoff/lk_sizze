@@ -248,7 +248,7 @@ class Subscription(models.Model):
 
 
 class UserPermission(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_status")
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     start = models.BooleanField(default=True)
     professional = models.BooleanField(default=False)
     team = models.BooleanField(default=False)
