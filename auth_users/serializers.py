@@ -35,6 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
         msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
         send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                        sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])
+        models.UserAbout.objects.create(user=user)
         # send_mail(
         #     f"Добро пожаловать на sizze",
         #     msg_html,
