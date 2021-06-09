@@ -294,7 +294,7 @@ class ProjectApiView(APIView):
         if 'colors' in payload.keys():
             project.colors = payload['colors']
         if payload.get('previewScreenId'):
-            project.previewScreenId_id = payload['previewScreenId']
+            project.previewScreenId = payload['previewScreenId']
         project.save()
         if project.count == 10:
             with reversion.create_revision():

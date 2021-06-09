@@ -29,8 +29,7 @@ class Project(models.Model):
     count = models.IntegerField(verbose_name='Период версий', default=0)
     theLastAppliedWidth = models.IntegerField(default=0)
     theLastAppliedHeight = models.IntegerField(default=0)
-    previewScreenId = models.ForeignKey("Screen", on_delete=models.CASCADE, related_name='preview_screen',
-                                        null=True, blank=True)
+    previewScreenId = models.OneToOneField("Screen", related_name='project_preview', on_delete=models.SET_NULL, default=None, null=True, blank=True)
 
     class Meta:
         verbose_name = 'проект'
