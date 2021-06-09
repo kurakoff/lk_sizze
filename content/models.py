@@ -254,3 +254,11 @@ class UserPermission(models.Model):
     professional = models.BooleanField(default=False)
     team = models.BooleanField(default=False)
     last_update = models.DateTimeField(null=True, default=None)
+
+
+class UserAbout(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profession = models.CharField(null=True, blank=True, default=None, max_length=30)
+    framework = models.CharField(null=True, blank=True, default=None, max_length=30)
+    news = models.CharField(null=True, blank=True, default=None, max_length=255)
+    theme = models.CharField(null=True, blank=True, default=None, max_length=30)

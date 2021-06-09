@@ -24,7 +24,8 @@ from .serializers import \
     UserSerializer,\
     GoogleSocialAuthSerializer,\
     EmailLoginSerializer,\
-    FigmaUserSerializer
+    FigmaUserSerializer, \
+    UserAboutSerializer
 
 logger = logging.getLogger('django')
 auth = logging.getLogger('auth')
@@ -411,3 +412,32 @@ class FigmaUserProfile(APIView):
         res = requests.get(external_api_url, data=data, headers={'X-FIGMA-TOKEN': figma_token})
         figma.info("User {} get profile {}".format(request.user, str(request.body)))
         return JsonResponse(res.json())
+
+class UserAboutView(APIView):
+    def post(self, request):
+        queryset = models.UserAbout.objects.get(user=request.user)
+        serializer = UserAboutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=request.user)
+        queryset.delete()
+        return JsonResponse(serializer.data)
+
+    def get(self, request):
+        queryset = models.UserAbout.objects.get(user=request.user)
+        serializer = UserAboutSerializer(queryset)
+        return JsonResponse(serializer.data)
+
+    def put(self, request):
+        about = models.UserAbout.objects.get(user=request.user)
+        if request.data.get('profession'): about.profession = request.data.get('profession')
+        if request.data.get('framework'): about.framework = request.data.get('framework')
+        if request.data.get('news'): about.news = request.data.get('news')
+        if request.data.get('theme'): about.theme = request.data.get('theme')
+        about.save()
+        serializer = UserAboutSerializer(about)
+        return JsonResponse(serializer.data)
+
+    def delete(self, request):
+        about = models.UserAbout.objects.get(user=request.user)
+        about.delete()
+        return JsonResponse({"Result": "Success"}, status=status.HTTP_200_OK)

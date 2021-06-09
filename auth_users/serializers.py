@@ -107,3 +107,10 @@ class FigmaUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FigmaUser
         fields = '__all__'
+
+
+class UserAboutSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.UserAbout
+        fields = '__all__'
