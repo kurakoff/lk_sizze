@@ -11,18 +11,23 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     is_staff = serializers.BooleanField(required=False)
     plan = serializers.SerializerMethodField()
+    downloadCount = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan')
+        fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan', 'downloadCount')
         extra_kwargs = {'password': {'write_only': True}, 'is_staff': {'read_only': True}}
 
     def get_plan(self, obj):
-        if obj.userpermission.team is True:
+        if obj.user_status.team is True:
             return 'team'
-        elif obj.userpermission.professional is True:
+        elif obj.user_status.professional is True:
             return 'professional'
         else: return 'start'
+
+    def get_downloadCount(self, obj):
+        count = obj.user_status.downloadCount
+        return count
 
     def create(self, validated_data):
         user = User(

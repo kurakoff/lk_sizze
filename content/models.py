@@ -248,11 +248,12 @@ class Subscription(models.Model):
 
 
 class UserPermission(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_status")
     start = models.BooleanField(default=True)
     professional = models.BooleanField(default=False)
     team = models.BooleanField(default=False)
     last_update = models.DateTimeField(null=True, default=None)
+    downloadCount = models.IntegerField(default=0)
 
 
 class UserAbout(models.Model):

@@ -100,6 +100,10 @@ class UserUpdate(APIView):
             else:
                 return JsonResponse({"result": False, 'message': 'Data error'})
 
+        if request.data.get("downloadCount"):
+            perm = models.UserPermission.objects.get(user=user)
+            perm.downloadCount = request.data.get("downloadCount")
+            perm.save()
         user.save()
         serialize = UserSerializer(user)
         return JsonResponse({"result": True, 'user': serialize.data})
