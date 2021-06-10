@@ -543,6 +543,9 @@ class ProjectCopyView(APIView):
             pass
 
     def copy_screen(self, copy, project_id):
+        project = Project.objects.get(project_id)
+        previewScreenId = project['previewScreenId']
+        screen_data = Screen.objects.get(previewScreenId)
         screens = Screen.objects.filter(project_id=project_id)
         if screens.count() > 0:
             for screen in screens:
@@ -559,6 +562,9 @@ class ProjectCopyView(APIView):
                     base=screen.base
                 )
                 copy_screen.save
+                if screen_data.position == copy_screen:
+                    copy.previewScreenId = previewScreenId
+                    copy.save()
             copy_screens = Screen.objects.filter(project_id=copy.id)
             copy_screen_serializer = ScreenSerializer(copy_screens, many=True)
             return copy_screen_serializer.data
@@ -821,14 +827,16 @@ class ScreenVersion(APIView):
             colors=project['colors'],
             theLastAppliedWidth=project['theLastAppliedWidth'],
             theLastAppliedHeight=project['theLastAppliedHeight'],
-            previewScreenId=project['previewScreenId']
         )
         return new_project
 
     def copy_screen(self, new_project, data):
         screens = data.get('screens')
+        project = data.get('project')
+        previewScreenId = project['previewScreenId']
+        screen_data = Screen.objects.get(previewScreenId)
         for screen in screens:
-            Screen.objects.create(
+            new_screen = Screen.objects.create(
                 title=screen['title'],
                 layout=screen['layout'],
                 project_id=new_project.id,
@@ -840,6 +848,9 @@ class ScreenVersion(APIView):
                 styles=screen['styles'],
                 base=screen['base']
             )
+            if screen_data.position == new_screen:
+                project = Project.objects.get(project['id'])
+                project.previewScreenId = previewScreenId
 
     def copy_userElement(self, new_project, data):
         elements = data.get('userElements')
