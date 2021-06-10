@@ -543,7 +543,7 @@ class ProjectCopyView(APIView):
             pass
 
     def copy_screen(self, copy, project_id):
-        project = Project.objects.get(project_id)
+        project = Project.objects.get(id=project_id)
         previewScreenId = project['previewScreenId']
         screen_data = Screen.objects.get(previewScreenId)
         screens = Screen.objects.filter(project_id=project_id)
