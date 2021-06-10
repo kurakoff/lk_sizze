@@ -543,8 +543,7 @@ class ProjectCopyView(APIView):
 
     def copy_screen(self, copy, project_id):
         project = Project.objects.get(id=project_id)
-        previewScreenId = project['previewScreenId']
-        screen_data = Screen.objects.get(previewScreenId)
+        screen_data = Screen.objects.get(id=project.previewScreenId)
         screens = Screen.objects.filter(project_id=project_id)
         if screens.count() > 0:
             for screen in screens:
@@ -562,7 +561,7 @@ class ProjectCopyView(APIView):
                 )
                 copy_screen.save
                 if screen_data.position == copy_screen:
-                    copy.previewScreenId = previewScreenId
+                    copy.previewScreenId = screen_data
                     copy.save()
             copy_screens = Screen.objects.filter(project_id=copy.id)
             copy_screen_serializer = ScreenSerializer(copy_screens, many=True)
