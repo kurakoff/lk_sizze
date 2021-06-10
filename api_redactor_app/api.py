@@ -559,7 +559,7 @@ class ProjectCopyView(APIView):
                     base=screen.base
                 )
                 if project.previewScreenId.position == copy_screen.position:
-                    copy.previewScreenId = copy.previewScreenId
+                    copy.previewScreenId = copy_screen
                     copy.save()
                 copy_screen.save()
             copy_screens = Screen.objects.filter(project_id=copy.id)
