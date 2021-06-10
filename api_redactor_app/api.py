@@ -520,8 +520,7 @@ class ProjectCopyView(APIView):
             prototype=project.prototype,
             colors=project.colors,
             theLastAppliedWidth=project.theLastAppliedWidth,
-            theLastAppliedHeight=project.theLastAppliedHeight,
-            previewScreenId=project.previewScreenId
+            theLastAppliedHeight=project.theLastAppliedHeight
         )
         copy.save()
         return copy
