@@ -262,3 +262,10 @@ class UserAbout(models.Model):
     framework = models.CharField(null=True, blank=True, default=None, max_length=30)
     news = models.CharField(null=True, blank=True, default=None, max_length=255)
     theme = models.CharField(null=True, blank=True, default=None, max_length=30)
+
+    class Meta:
+        verbose_name = 'Опросник'
+        verbose_name_plural = 'Опросники'
+
+    def __str__(self):
+        return str(self.user)
