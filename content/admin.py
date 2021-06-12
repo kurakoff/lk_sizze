@@ -216,6 +216,18 @@ class ModesSettings(admin.ModelAdmin):
     search_fields = ['id', 'project__id', 'project__name']
 
 
+class UserAboutSettings(admin.ModelAdmin):
+    actions_selection_counter = True
+    list_display = ['id', 'user', 'profession', 'framework', 'news', 'theme']
+    readonly_fields = ['user']
+    ordering = ['profession', 'framework', 'news', 'theme']
+    list_display_links = ('id', 'user')
+    list_filter = ['profession', 'framework', 'news', 'theme']
+    preserve_filters = False
+    save_as = True
+    search_fields = ['user__email', 'user__id']
+
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
@@ -234,4 +246,4 @@ admin.site.register(ClientStrip)
 admin.site.register(Price)
 admin.site.register(Subscription)
 admin.site.register(UserPermission, UserPermissionSetting)
-admin.site.register(UserAbout)
+admin.site.register(UserAbout, UserAboutSettings)
