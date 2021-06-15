@@ -558,9 +558,11 @@ class ProjectCopyView(APIView):
                     styles=screen.styles,
                     base=screen.base
                 )
-                if project.previewScreenId.position == copy_screen.position:
-                    copy.previewScreenId = copy_screen
-                    copy.save()
+                try:
+                    if project.previewScreenId.position == copy_screen.position:
+                        copy.previewScreenId = copy_screen
+                        copy.save()
+                except: pass
                 copy_screen.save()
             copy_screens = Screen.objects.filter(project_id=copy.id)
             copy_screen_serializer = ScreenSerializer(copy_screens, many=True)
