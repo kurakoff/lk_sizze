@@ -158,7 +158,7 @@ class PrototypeAdmin(nested_admin.NestedModelAdmin):
 
 class ProjectSetting(admin.ModelAdmin):
     actions_selection_counter = True
-    list_display = ['id', 'name', 'prototype', 'colors', 'count']
+    list_display = ['id', 'name', 'prototype', 'colors', 'count', 'previewScreenId']
     readonly_fields = ['count']
     list_display_links = ('id', 'name')
     list_filter = ('prototype',)
