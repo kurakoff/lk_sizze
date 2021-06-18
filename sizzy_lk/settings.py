@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -178,7 +179,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.sizze.io'
 EMAIL_PORT = '465'
 EMAIL_HOST_USER = "support@sizze.io"
-EMAIL_HOST_PASSWORD = "fzOppTKoc4ga"
+EMAIL_HOST_PASSWORD = config("smtp_password")
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = "mail.sizze.io"
