@@ -203,6 +203,7 @@ class StripeWebhook(APIView):
 
             stripe.api_key = config('stripe_secret')
             client = ClientStrip.objects.get(client=data_object['customer'])
+            client.use_trial = True
             plan = Price.objects.get(price=data_object['plan']['id'])
             try:
                 past_sub = Subscription.objects.get(customer=client)
@@ -222,6 +223,7 @@ class StripeWebhook(APIView):
                 subscription_end=data_object['ended_at'],
                 livemode=data_object['livemode']
             )
+            client.save()
         elif event_type == 'customer.subscription.updated':
             try:
                 sub = Subscription.objects.get(
@@ -322,7 +324,7 @@ class PriceWebhook(APIView):
                 past_client = ClientStrip.objects.filter(user=user)
             except: pass
             ClientStrip.objects.create(user=user, client=client,
-                                       seanse=data_object['id'], livemode=data_object["livemode"])
+                                       seanse=data_object['id'], livemode=data_object["livemode"], use_trial=False)
             try:
                 past_client.delete()
             except: pass
