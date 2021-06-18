@@ -320,10 +320,12 @@ class PriceWebhook(APIView):
             user = User.objects.get(email=email)
             try:
                 past_client = ClientStrip.objects.filter(user=user)
-                past_client.delete()
             except: pass
             ClientStrip.objects.create(user=user, client=client,
                                        seanse=data_object['id'], livemode=data_object["livemode"])
+            try:
+                past_client.delete()
+            except: pass
         elif event_type == 'customer.updated':
             try:
                 client = ClientStrip.objects.get(user=request.user)
