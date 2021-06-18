@@ -317,17 +317,20 @@ class PriceWebhook(APIView):
             except Exception:
                 return JsonResponse({'result': False})
         elif event_type == 'customer.created':
-            client = data['object']['id']
-            email = data['object']['email']
-            user = User.objects.get(email=email)
             try:
-                past_client = ClientStrip.objects.filter(user=user)
-            except: pass
-            ClientStrip.objects.create(user=user, client=client,
-                                       seanse=data_object['id'], livemode=data_object["livemode"], use_trial=False)
-            try:
-                past_client.delete()
-            except: pass
+                client = data['object']['id']
+                email = data['object']['email']
+                user = User.objects.get(email=email)
+                try:
+                    past_client = ClientStrip.objects.filter(user=user)
+                except: pass
+                ClientStrip.objects.create(user=user, client=client,
+                                           seanse=data_object['id'], livemode=data_object["livemode"], use_trial=False)
+                try:
+                    past_client.delete()
+                except: pass
+                return JsonResponse({'result': True})
+            except: return JsonResponse({'result': False})
         elif event_type == 'customer.updated':
             try:
                 client = ClientStrip.objects.get(user=request.user)
