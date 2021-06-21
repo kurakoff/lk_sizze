@@ -175,12 +175,11 @@ class ScreenView(APIView):
             if i.position > position:
                 i.position -= 1
                 i.save()
+        serializer = ScreenSerializer(screens, many=True)
         if int(project.previewScreenId.position) == int(position):
-            new_screen = Screen.objects.get(project=project, position=1)
+            new_screen = Screen.objects.get(project_id=project_id, position=1)
             project.previewScreenId = new_screen
             project.save()
-        serializer = ScreenSerializer(screens, many=True)
-
         return JsonResponse({'result': True, 'screen': serializer.data})
 
 
