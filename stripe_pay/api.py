@@ -203,7 +203,7 @@ class StripeWebhook(APIView):
 
             stripe.api_key = config('stripe_secret')
             client = ClientStrip.objects.get(client=data_object['customer'])
-            client.use_trial = True
+            # client.use_trial = True
             plan = Price.objects.get(price=data_object['plan']['id'])
             try:
                 past_sub = Subscription.objects.get(customer=client)
