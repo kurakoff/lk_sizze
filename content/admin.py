@@ -86,7 +86,6 @@ class DecadeBornListFilter(admin.SimpleListFilter):
 class ShareProjectSetting(admin.ModelAdmin):
     actions_selection_counter = True
     list_display = ['project_id', 'project', 'from_user_email', 'to_user', 'permission', 'all_users']
-    readonly_fields = ['all_users']
     ordering = ['project_id']
     list_display_links = ('project_id', 'project')
     list_filter = ('all_users', DecadeBornListFilter)
