@@ -175,7 +175,7 @@ class ScreenView(APIView):
             if i.position > position:
                 i.position -= 1
                 i.save()
-        if project.previewScreenId.position == screen.position:
+        if project.previewScreenId.position == position:
             new_screen = Screen.objects.get(project=project, position=1)
             project.save()
             project.previewScreenId = new_screen
