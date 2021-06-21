@@ -57,41 +57,41 @@ class StripeApi(APIView):
             for i in sub['data']:
                 if i['plan']['id'] == data['priceId'] and i['status'] != 'incomplete':
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
-            if customer.use_trial is False:
-                checkout_session = stripe.checkout.Session.create(
-                    success_url='https://dashboard.sizze.io/',
-                    # '?session_id={CHECKOUT_SESSION_ID}',
-                    cancel_url='https://dashboard.sizze.io/',
-                    customer=customer.client,
-                    payment_method_types=['card'],
-                    mode='subscription',
-                    allow_promotion_codes=True,
-                    locale='en',
-                    line_items=[{
-                        'price': data['priceId'],
-                        'quantity': 1
-                    }],
-                    subscription_data={
-                        "trial_period_days": 7
-                    }
-                )
-                customer.use_trial = True
-                customer.save()
-            else:
-                checkout_session = stripe.checkout.Session.create(
-                    success_url='https://dashboard.sizze.io/',
-                                #'?session_id={CHECKOUT_SESSION_ID}',
-                    cancel_url='https://dashboard.sizze.io/',
-                    customer=customer.client,
-                    payment_method_types=['card'],
-                    mode='subscription',
-                    allow_promotion_codes=True,
-                    locale='en',
-                    line_items=[{
-                        'price': data['priceId'],
-                        'quantity': 1
-                    }]
-                )
+            # if customer.use_trial is False:
+            #     checkout_session = stripe.checkout.Session.create(
+            #         success_url='https://dashboard.sizze.io/',
+            #         # '?session_id={CHECKOUT_SESSION_ID}',
+            #         cancel_url='https://dashboard.sizze.io/',
+            #         customer=customer.client,
+            #         payment_method_types=['card'],
+            #         mode='subscription',
+            #         allow_promotion_codes=True,
+            #         locale='en',
+            #         line_items=[{
+            #             'price': data['priceId'],
+            #             'quantity': 1
+            #         }],
+            #         subscription_data={
+            #             "trial_period_days": 7
+            #         }
+            #     )
+            #     customer.use_trial = True
+            #     customer.save()
+            # else:
+            checkout_session = stripe.checkout.Session.create(
+                success_url='https://dashboard.sizze.io/',
+                            #'?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url='https://dashboard.sizze.io/',
+                customer=customer.client,
+                payment_method_types=['card'],
+                mode='subscription',
+                allow_promotion_codes=True,
+                locale='en',
+                line_items=[{
+                    'price': data['priceId'],
+                    'quantity': 1
+                }]
+            )
             return JsonResponse({'sessionId': checkout_session['id']})
         else:
             try:
@@ -108,10 +108,10 @@ class StripeApi(APIView):
                         'price': data['priceId'],
                         # For metered billing, do not pass quantity
                         'quantity': 1
-                    }],
-                    subscription_data={
-                        "trial_period_days": 7
-                    }
+                    }]
+                    # subscription_data={
+                    #     "trial_period_days": 7
+                    # }
                 )
                 return JsonResponse({'sessionId': checkout_session['id']})
             except Exception as e:
