@@ -169,17 +169,18 @@ class ScreenView(APIView):
         except Screen.DoesNotExist:
             return JsonResponse({'message': 'Screen not found', "result": False})
         position = screen.position
+        preview = project.previewScreenId.position
         screen.delete()
         screens = project.screen_set.all()
         for i in screens:
             if i.position > position:
                 i.position -= 1
                 i.save()
-        serializer = ScreenSerializer(screens, many=True)
-        if int(project.previewScreenId.position) == int(position):
+        if int(preview) == int(position):
             new_screen = Screen.objects.get(project_id=project_id, position=1)
             project.previewScreenId = new_screen
             project.save()
+        serializer = ScreenSerializer(screens, many=True)
         return JsonResponse({'result': True, 'screen': serializer.data})
 
 
