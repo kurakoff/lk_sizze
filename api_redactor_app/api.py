@@ -837,7 +837,6 @@ class ScreenVersion(APIView):
         screens = data.get('screens')
         project = data.get('project')
         previewScreenId = project['previewScreenId']
-        screen_data = Screen.objects.get(previewScreenId)
         for screen in screens:
             new_screen = Screen.objects.create(
                 title=screen['title'],
@@ -851,7 +850,7 @@ class ScreenVersion(APIView):
                 styles=screen['styles'],
                 base=screen['base']
             )
-            if screen_data.position == new_screen.position:
+            if screen.id == previewScreenId:
                 new_project.previewScreenId = new_screen
                 new_project.save()
 
