@@ -851,9 +851,9 @@ class ScreenVersion(APIView):
                 styles=screen['styles'],
                 base=screen['base']
             )
-            if screen_data.position == new_screen:
-                project = Project.objects.get(project['id'])
-                project.previewScreenId = previewScreenId
+            if screen_data.position == new_screen.position:
+                new_project.previewScreenId = new_screen
+                new_project.save()
 
     def copy_userElement(self, new_project, data):
         elements = data.get('userElements')
