@@ -850,7 +850,7 @@ class ScreenVersion(APIView):
                 styles=screen['styles'],
                 base=screen['base']
             )
-            if screen.id == previewScreenId:
+            if screen['id'] == previewScreenId:
                 new_project.previewScreenId = new_screen
                 new_project.save()
 
