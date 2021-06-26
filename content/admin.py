@@ -228,6 +228,7 @@ class UserAboutSettings(admin.ModelAdmin):
 
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(CategoryPrototype)
 admin.site.register(Settings, SettingsAdmin)
 admin.site.register(Project, ProjectSetting)
 admin.site.register(SharedProject, ShareProjectSetting)
