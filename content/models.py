@@ -112,6 +112,7 @@ class Category(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
     slug = models.CharField(max_length=64, verbose_name='slug')
     two_in_row = models.BooleanField(verbose_name='По 2 элемента', default=False)
+    prototype = models.ManyToManyField(Prototype, null=True, verbose_name='Прототипы')
 
     class Meta:
         verbose_name = 'картегория'
@@ -120,29 +121,12 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-    def get_elements_on_prototype(self, prototype_id):
-        return Element.objects.filter(category_prototype__category=self.id,
-                                      category_prototype__prototype=prototype_id).all()
-
-
-class CategoryPrototype(models.Model):
-    category = models.ForeignKey('Category', on_delete=CASCADE, verbose_name='категория')
-    prototype = models.ForeignKey('Prototype', on_delete=CASCADE)
-
-    class Meta:
-        verbose_name = 'картегория'
-        verbose_name_plural = 'категории'
-
-    def __str__(self):
-        return self.category.title
-
 
 class Element(models.Model):
     title = models.CharField(max_length=64, verbose_name='название')
-    category_prototype = models.ForeignKey('CategoryPrototype', on_delete=CASCADE, default=1)
+    category_prototype = models.ForeignKey('Category', on_delete=CASCADE, default=1, null=True)
     light_image = models.FileField(upload_to='images_elements/', verbose_name='light_cover')
     dark_image = models.FileField(upload_to='images_elements/', verbose_name='dark_cover')
-    # TODO: сделать редактор кода
     light_layout = models.TextField(verbose_name='light_макет')
     dark_layout = models.TextField(verbose_name='dark_макет')
     active = models.BooleanField(verbose_name='on', default=True)
