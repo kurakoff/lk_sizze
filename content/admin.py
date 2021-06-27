@@ -8,7 +8,6 @@ from .models import (
     Screen,
     Prototype,
     Category,
-    CategoryPrototype,
     Element,
     Settings,
     BaseWidthPrototype,
@@ -35,16 +34,25 @@ def make_unpublished(modeladmin, request, queryset):
     queryset.update(active=False)
 make_unpublished.short_description = "Деактивировать выбранные элементы"
 
+def make_icon_basic(modeladmin, request, queryset):
+    queryset.update(category_prototype_id=18)
+make_icon_basic.short_description = "Сделать икон базик"
+
+
+def make_icon_arrow(modeladmin, request, queryset):
+    queryset.update(category_prototype_id=12)
+make_icon_basic.short_description = "Сделать икон ароу"
+
 
 class ElementSetting(admin.ModelAdmin):
     actions_selection_counter = True
     list_display = ['title', 'category_prototype', 'light_image', 'dark_image', 'active']
     fields = ('title', 'category_prototype', 'light_image', 'dark_image', 'light_layout', 'dark_layout', 'active')
-    actions = [make_published, make_unpublished]
+    actions = [make_published, make_unpublished, make_icon_basic]
     ordering = ['title']
     empty_value_display = '-empty-'
     list_display_links = ('title',)
-    list_editable = ('active',)
+    list_editable = ('active', 'category_prototype')
     list_filter = ('active', 'category_prototype')
     preserve_filters = False
     save_as = True
@@ -125,34 +133,10 @@ class ElementInline(nested_admin.NestedTabularInline):
     extra = 0
 
 
-class CategoryPrototypeInline(nested_admin.NestedStackedInline):
-    model = CategoryPrototype
-    inlines = [ElementInline]
-    extra = 0
-
-    # def get_queryset(self, request):
-    #     qs = super(CategoryPrototypeInline, self).get_queryset(request)
-    #     created_categories = self.parent_obj.created_categories
-    #     print(list(created_categories))
-    #     qs.filter(pk__notin=list(created_categories))
-    #     print(qs)
-    #     return qs
-    #
-    # def get_formset(self, request, obj=None, **kwargs):
-    #     self.parent_obj = obj
-    #     return super(CategoryPrototypeInline, self).get_formset(request, obj, **kwargs)
-
 
 class BaseWidthInline(admin.TabularInline):
     model = Prototype.base_width.through
     extra = 1
-
-
-class PrototypeAdmin(nested_admin.NestedModelAdmin):
-    inlines = [CategoryPrototypeInline]
-    formfield_overrides = {
-        HTMLField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
-    }
 
 
 class ProjectSetting(admin.ModelAdmin):
@@ -228,7 +212,6 @@ class UserAboutSettings(admin.ModelAdmin):
 
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(CategoryPrototype)
 admin.site.register(Settings, SettingsAdmin)
 admin.site.register(Project, ProjectSetting)
 admin.site.register(SharedProject, ShareProjectSetting)
