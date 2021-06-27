@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from content.models import Screen, Prototype, Project, UserElement, SharedProject, ModesState, Constant_colors
+from content.models import Screen, Prototype, Project, UserElement, SharedProject, ModesState, Constant_colors, Category,\
+    Element
 
 
 class ScreenSerializer(serializers.ModelSerializer):
@@ -99,3 +100,15 @@ class ConstantColorsSerializer(serializers.ModelSerializer):
             "id": {"read_only": True},
             "project": {"read_only": True}
         }
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class ElemetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Element
+        fields = '__all__'

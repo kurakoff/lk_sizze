@@ -16,9 +16,9 @@ from reversion.models import Version, Revision
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
-    PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer
+    PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer, CategorySerializer, ElemetSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
-    BaseWidthPrototype, ModesState, Constant_colors
+    BaseWidthPrototype, ModesState, Constant_colors, Element
 from .permissions import IsAuthor, EditPermission, DeletePermission, StartPermission, ProfessionalPermission, TeamPermission
 
 
@@ -32,21 +32,23 @@ def get_random_string(length):
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
 
-
 class InitProject(APIView):
     def get(self, request, project, *args, **kwargs):
         response = []
         project = get_object_or_404(Project, pk=project)
         prototype_pk = project.prototype.pk
-        categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
+        categories = Category.objects.filter(prototype=prototype_pk)
+        print(categories)
         for category in categories:
+            print(category.title)
             category_j = {}
             category_j['title'] = category.title
             category_j['two_in_row'] = category.two_in_row
             elements = category_j['elements'] = []
             icons = category_j['icons'] = []
             response.append(category_j)
-            for element in category.get_elements_on_prototype(prototype_pk).all():
+            for element in Element.objects.filter(category_prototype=category.id,
+                                                  category_prototype__prototype=prototype_pk):
                 j_element = {}
                 j_element['title'] = element.title
                 j_element['layout'] = [element.light_layout, element.dark_layout]
@@ -57,6 +59,31 @@ class InitProject(APIView):
                 else:
                     elements.append(j_element)
         return JsonResponse({'categories': response})
+
+# class InitProject(APIView):
+#     def get(self, request, project, *args, **kwargs):
+#         response = []
+#         project = get_object_or_404(Project, pk=project)
+#         prototype_pk = project.prototype.pk
+#         categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
+#         for category in categories:
+#             category_j = {}
+#             category_j['title'] = category.title
+#             category_j['two_in_row'] = category.two_in_row
+#             elements = category_j['elements'] = []
+#             icons = category_j['icons'] = []
+#             response.append(category_j)
+#             for element in category.get_elements_on_prototype(prototype_pk).all():
+#                 j_element = {}
+#                 j_element['title'] = element.title
+#                 j_element['layout'] = [element.light_layout, element.dark_layout]
+#                 j_element['image'] = [str(element.light_image), str(element.dark_image)]
+#                 j_element['active'] = element.active
+#                 if 'icons_' in category.title:
+#                     icons.append(j_element)
+#                 else:
+#                     elements.append(j_element)
+#         return JsonResponse({'categories': response})
 
 
 class ScreenView(APIView):
@@ -984,3 +1011,95 @@ class ConstantColorsView(APIView):
         queryset = Constant_colors.objects.get(id=kwargs['constant_color_id'])
         queryset.delete()
         return JsonResponse({"result": True, "message": "Constant_colors delete success"})
+
+
+class CategoriApi(APIView):
+    def post(self, request):
+        data = request.data
+        category = Category.objects.create(
+            title=data['title'],
+            slug=data['slug'],
+            two_in_row=data['two_in_row'],
+        )
+        category.prototype.add(request.data['prototype'])
+        serializer = CategorySerializer(category)
+        category.save()
+        return JsonResponse(serializer.data)
+
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
+class CategoryDetailApi(APIView):
+    def get(self, request, category_id):
+        category = Category.objects.get(id=category_id)
+        serialzier = CategorySerializer(category)
+        return JsonResponse(serialzier.data)
+
+    def put(self, request, category_id):
+        category = Category.objects.get(id=category_id)
+        if request.data.get('title'): category.title = request.data['title']
+        if request.data.get('slug'): category.slug = request.data['slug']
+        if request.data.get('two_in_row'): category.two_in_row = request.data['two_in_row']
+        if request.data.get('prototype'): category.prototype.add(*request.data['prototype'])
+        serialzier = CategorySerializer(category)
+        category.save()
+        return JsonResponse(serialzier.data)
+
+
+    def delete(self, request, category_id):
+        try:
+            category = Category.objects.get(id=category_id)
+            category.delete()
+            return JsonResponse({"result": True})
+        except:
+            return JsonResponse({'result': False})
+
+
+class ElementApi(APIView):
+    def get(self, request):
+        elements = Element.objects.all()
+        serializer = ElemetSerializer(elements, many=True)
+        return JsonResponse(serializer.data)
+
+    def post(self, request):
+        data = request.data
+        new_element = Element.objects.create(
+            title=data['title'],
+            category_prototype_id=data['category_prototype'],
+            light_image=request.FILES['light_image'],
+            dark_image=request.FILES['dark_image'],
+            light_layout=data['light_layout'],
+            dark_layout=data['dark_layout'],
+            active=data['active']
+        )
+        serializer = ElemetSerializer(new_element)
+        new_element.save()
+        return JsonResponse(serializer.data)
+
+
+class ElementDetailApi(APIView):
+    def get(self, request, element_id):
+        element = Element.objects.get(id=element_id)
+        serializer = ElemetSerializer(element)
+        return JsonResponse(serializer.data)
+
+    def put(self, request, element_id):
+        element = Element.objects.get(id=element_id)
+        if request.data.get('title'): element.title = request.data.get('title')
+        if request.data.get('category_prototype'): element.category_prototype_id = request.data.get('category_prototype')
+        if request.FILES.get('light_image'): element.light_image = request.FILES.get('light_image')
+        if request.FILES.get('dark_image'): element.dark_image = request.FILES.get('dark_image')
+        if request.data.get('light_layout'): element.light_layout = request.data.get('light_layout')
+        if request.data.get('dark_layout'): element.dark_layout = request.data.get('dark_layout')
+        if request.data.get('active'): element.active = request.data.get('active')
+        serializer = ElemetSerializer(element)
+        element.save()
+        return JsonResponse(serializer.data)
+
+    def delete(self, element_id):
+        element = Element.objects.get(id=element_id)
+        element.delete()
+        return JsonResponse({'result': True})

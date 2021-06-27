@@ -30,5 +30,11 @@ urlpatterns = [
 
     path('project/<int:project_id>/elements/', api.ModesStateView.as_view()),
     path('project/<int:project_id>/constant_colors/', api.ConstantColorsView.as_view()),
-    path('project/<int:project_id>/constant_colors/<int:constant_color_id>/', api.ConstantColorsView.as_view())
+    path('project/<int:project_id>/constant_colors/<int:constant_color_id>/', api.ConstantColorsView.as_view()),
+
+    path('category/', api.CategoriApi.as_view()),
+    path('category/<int:category_id>/', api.CategoryDetailApi.as_view()),
+
+    path('element/', api.ElementApi.as_view()),
+    path('element/<int:element_id>/', api.ElementDetailApi.as_view())
 ]
