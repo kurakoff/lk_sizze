@@ -48,7 +48,7 @@ class ElementSetting(admin.ModelAdmin):
     actions_selection_counter = True
     list_display = ['title', 'category_prototype', 'light_image', 'dark_image', 'active']
     fields = ('title', 'category_prototype', 'light_image', 'dark_image', 'light_layout', 'dark_layout', 'active')
-    actions = [make_published, make_unpublished, make_icon_basic]
+    actions = [make_published, make_unpublished, make_icon_basic, make_icon_arrow]
     ordering = ['title']
     empty_value_display = '-empty-'
     list_display_links = ('title',)
