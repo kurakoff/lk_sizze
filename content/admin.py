@@ -41,7 +41,7 @@ make_icon_basic.short_description = "Сделать икон базик"
 
 def make_icon_arrow(modeladmin, request, queryset):
     queryset.update(category_prototype_id=12)
-make_icon_basic.short_description = "Сделать икон ароу"
+make_icon_arrow.short_description = "Сделать икон ароу"
 
 
 class ElementSetting(admin.ModelAdmin):
