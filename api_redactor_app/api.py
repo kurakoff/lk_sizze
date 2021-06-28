@@ -38,9 +38,7 @@ class InitProject(APIView):
         project = get_object_or_404(Project, pk=project)
         prototype_pk = project.prototype.pk
         categories = Category.objects.filter(prototype=prototype_pk)
-        print(categories)
         for category in categories:
-            print(category.title)
             category_j = {}
             category_j['title'] = category.title
             category_j['two_in_row'] = category.two_in_row
