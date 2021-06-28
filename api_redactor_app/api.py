@@ -1067,6 +1067,7 @@ class ElementApi(APIView):
 
     def post(self, request):
         data = request.data
+        print(data)
         new_element = Element.objects.create(
             title=data['title'],
             category_prototype_id=data['category_prototype'],
