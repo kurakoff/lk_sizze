@@ -11,6 +11,7 @@ from gphotospy.media import Media
 from gphotospy.album import Album
 
 from rest_framework import generics, viewsets, status, response
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
 from reversion.models import Version, Revision
 
@@ -1057,6 +1058,8 @@ class CategoryDetailApi(APIView):
 
 
 class ElementApi(APIView):
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
+
     def get(self, request):
         elements = Element.objects.all()
         serializer = ElemetSerializer(elements, many=True)
@@ -1079,6 +1082,8 @@ class ElementApi(APIView):
 
 
 class ElementDetailApi(APIView):
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
+
     def get(self, request, element_id):
         element = Element.objects.get(id=element_id)
         serializer = ElemetSerializer(element)
