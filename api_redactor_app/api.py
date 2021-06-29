@@ -1068,14 +1068,15 @@ class ElementApi(APIView):
     def post(self, request):
         data = request.data
         print(data)
+        print(request.POST.get('active'))
         new_element = Element.objects.create(
-            title=data['title'],
-            category_prototype_id=data['category_prototype'],
-            light_image=request.FILES['light_image'],
-            dark_image=request.FILES['dark_image'],
-            light_layout=data['light_layout'],
-            dark_layout=data['dark_layout'],
-            active=data['active']
+            title=request.data.get('title')[0],
+            category_prototype_id=request.data.get('category_prototype')[0],
+            light_image=request.data.get('light_image'),
+            dark_image=request.data.get('dark_image'),
+            light_layout=request.data.get('light_layout')[0],
+            dark_layout=request.data.get('dark_layout')[0],
+            active=request.data.get('active')[0]
         )
         serializer = ElemetSerializer(new_element)
         new_element.save()
