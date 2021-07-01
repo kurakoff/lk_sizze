@@ -22,18 +22,18 @@ class UserElement(models.Model):
 
 @reversion.register(follow=['screen_set', 'userelement_set', 'modes_state', 'constant_colors'])
 class Project(models.Model):
-    name = models.CharField(max_length=255, verbose_name='название', blank=False)
+    name = models.CharField(max_length=255, verbose_name='name', blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     prototype = models.ForeignKey('Prototype', on_delete=models.CASCADE)
     colors = jsonfield.JSONField()
-    count = models.IntegerField(verbose_name='Период версий', default=0)
+    count = models.IntegerField(verbose_name='version period', default=0)
     theLastAppliedWidth = models.IntegerField(default=0)
     theLastAppliedHeight = models.IntegerField(default=0)
     previewScreenId = models.ForeignKey("Screen", related_name='project_preview', on_delete=models.SET_NULL, default=None, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'проект'
-        verbose_name_plural = 'проекты'
+        verbose_name = 'project'
+        verbose_name_plural = 'projects'
 
     def __str__(self):
         return str(self.name)
@@ -42,24 +42,24 @@ class Project(models.Model):
 class BaseWidthPrototype(models.Model):
     title = models.CharField(max_length=255)
     width = models.IntegerField()
-    light_image = models.FileField(upload_to='images_prototype_width/', verbose_name='light изображение')
-    dark_image = models.FileField(upload_to='images_prototype_width/', verbose_name='dark изображение')
+    light_image = models.FileField(upload_to='images_prototype_width/', verbose_name='light image')
+    dark_image = models.FileField(upload_to='images_prototype_width/', verbose_name='dark image')
 
     def __str__(self):
         return str(self.title)
 
 
 class Prototype(models.Model):
-    device_name = models.CharField(max_length=64, verbose_name='название')
-    width = models.IntegerField(verbose_name='ширина', default=0)
-    height = models.IntegerField(verbose_name='высота', default=0)
-    image = models.FileField(upload_to='images_prototypes/', verbose_name='изображение')
+    device_name = models.CharField(max_length=64, verbose_name='name')
+    width = models.IntegerField(verbose_name='width', default=0)
+    height = models.IntegerField(verbose_name='height', default=0)
+    image = models.FileField(upload_to='images_prototypes/', verbose_name='image')
     image_hover = models.FileField(upload_to='images_prototypes/hover/', verbose_name='hover', default='')
-    base_width = models.ManyToManyField(BaseWidthPrototype, null=True, verbose_name='Список width')
+    base_width = models.ManyToManyField(BaseWidthPrototype, null=True, verbose_name='base width')
 
     class Meta:
-        verbose_name = 'прототип'
-        verbose_name_plural = 'прототипы'
+        verbose_name = 'prototype'
+        verbose_name_plural = 'prototypes'
 
     def __str__(self):
         return str(self.device_name)
@@ -79,73 +79,73 @@ class Constant_colors(models.Model):
                                      blank=True)
 
     class Meta:
-        verbose_name = 'цвет'
-        verbose_name_plural = 'цвета'
+        verbose_name = 'color'
+        verbose_name_plural = 'colors'
 
     def __str__(self):
         return str(self.title)
 
 @reversion.register()
 class Screen(models.Model):
-    title = models.CharField(max_length=32, verbose_name='название', default='')
-    layout = models.TextField(verbose_name='макет', default='')
+    title = models.CharField(max_length=32, verbose_name='title', default='')
+    layout = models.TextField(verbose_name='layout', default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
-    last_change = models.DateTimeField(verbose_name='последние изменение', default=now)
-    width = models.IntegerField(verbose_name='ширина', default=0)
-    height = models.IntegerField(verbose_name='высота', default=0)
+    last_change = models.DateTimeField(verbose_name='last change', default=now)
+    width = models.IntegerField(verbose_name='width', default=0)
+    height = models.IntegerField(verbose_name='height', default=0)
     background_color = models.TextField(default='#FFFFFF')
-    position = models.IntegerField(verbose_name='позиция', default=0)
+    position = models.IntegerField(verbose_name='position', default=0)
     constant_color = models.ForeignKey(Constant_colors, on_delete=models.CASCADE, related_name='constant_screen',
                                        null=True, blank=True)
     styles = jsonfield.JSONField(null=True, blank=True)
     base = models.CharField(max_length=50, default=0)
 
     class Meta:
-        verbose_name = 'экран'
-        verbose_name_plural = 'экраны'
+        verbose_name = 'screen'
+        verbose_name_plural = 'screens'
 
     def __str__(self):
         return str(self.pk)
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=64, verbose_name='название')
+    title = models.CharField(max_length=64, verbose_name='title')
     slug = models.CharField(max_length=64, verbose_name='slug')
-    two_in_row = models.BooleanField(verbose_name='По 2 элемента', default=False)
-    prototype = models.ManyToManyField(Prototype, null=True, verbose_name='Прототипы')
+    two_in_row = models.BooleanField(verbose_name='2 elements', default=False)
+    prototype = models.ManyToManyField(Prototype, null=True, verbose_name='prototypes')
 
     class Meta:
-        verbose_name = 'картегория'
-        verbose_name_plural = 'категории'
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
 
     def __str__(self):
         return self.title
 
 
 class Element(models.Model):
-    title = models.CharField(max_length=64, verbose_name='название')
+    title = models.CharField(max_length=64, verbose_name='title')
     category_prototype = models.ForeignKey('Category', on_delete=CASCADE, default=1, null=True)
     light_image = models.FileField(upload_to='images_elements/', verbose_name='light_cover')
     dark_image = models.FileField(upload_to='images_elements/', verbose_name='dark_cover')
-    light_layout = models.TextField(verbose_name='light_макет')
-    dark_layout = models.TextField(verbose_name='dark_макет')
+    light_layout = models.TextField(verbose_name='light_layout')
+    dark_layout = models.TextField(verbose_name='dark_layout')
     active = models.BooleanField(verbose_name='on', default=True)
 
     class Meta:
-        verbose_name = 'графический элемент'
-        verbose_name_plural = 'графические элементы'
+        verbose_name = 'element'
+        verbose_name_plural = 'elements'
 
     def __str__(self):
         return self.title
 
 
 class Settings(models.Model):
-    value = models.PositiveIntegerField(verbose_name='Значение', blank=False)
+    value = models.PositiveIntegerField(verbose_name='value', blank=False)
     slug = models.CharField(max_length=64, verbose_name='slug')
 
     class Meta:
-        verbose_name = 'настройка'
-        verbose_name_plural = 'настройки'
+        verbose_name = 'setting'
+        verbose_name_plural = 'settings'
 
     def __str__(self):
         return self.slug
@@ -153,11 +153,11 @@ class Settings(models.Model):
 
 class SocialUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='social_user')
-    provider = models.CharField(verbose_name='Провайдер', max_length=50)
+    provider = models.CharField(verbose_name='provider', max_length=50)
 
     class Meta:
-        verbose_name = 'Социальный пользователь'
-        verbose_name_plural = 'Социальные пользователи'
+        verbose_name = 'social user'
+        verbose_name_plural = 'social users'
 
     def __str__(self):
         return self.provider
@@ -174,8 +174,8 @@ class SharedProject(models.Model):
         return str(self.project)
 
     class Meta:
-        verbose_name = 'Права на проект'
-        verbose_name_plural = 'Права на проекты'
+        verbose_name = 'shared project'
+        verbose_name_plural = 'shared projects'
 
 
 class PasswordReset(models.Model):
@@ -248,8 +248,8 @@ class UserAbout(models.Model):
     theme = models.CharField(null=True, blank=True, default=None, max_length=30)
 
     class Meta:
-        verbose_name = 'Опросник'
-        verbose_name_plural = 'Опросники'
+        verbose_name = 'questionnaire'
+        verbose_name_plural = 'questionnaires'
 
     def __str__(self):
         return str(self.user)

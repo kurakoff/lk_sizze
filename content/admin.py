@@ -27,21 +27,19 @@ from django.utils.translation import gettext_lazy as _
 
 def make_published(modeladmin, request, queryset):
     queryset.update(active=True)
-make_published.short_description = "Активировать выбранные элементы"
-
+make_published.short_description = "Activate elements"
 
 def make_unpublished(modeladmin, request, queryset):
     queryset.update(active=False)
-make_unpublished.short_description = "Деактивировать выбранные элементы"
+make_unpublished.short_description = "Deactivate elements"
 
 def make_icon_basic(modeladmin, request, queryset):
     queryset.update(category_prototype_id=18)
-make_icon_basic.short_description = "Сделать икон базик"
-
+make_icon_basic.short_description = "Make icon basic"
 
 def make_icon_arrow(modeladmin, request, queryset):
     queryset.update(category_prototype_id=12)
-make_icon_arrow.short_description = "Сделать икон ароу"
+make_icon_arrow.short_description = "Make icon arrow"
 
 
 class ElementSetting(admin.ModelAdmin):
