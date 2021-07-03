@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django_crontab',
     'rest_framework',
     'rest_framework.authtoken',
+    'simple_sso.sso_server'
 ]
 
 MIDDLEWARE = [

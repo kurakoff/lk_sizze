@@ -2,7 +2,6 @@ from django.urls import path, include
 from . import views
 from . import api
 
-
 urlpatterns = [
     # path('', include('social_django.urls', namespace='social')),
     path('login/', views.LoginView.as_view(), name='login'),
