@@ -51,7 +51,6 @@ class LoginView(TemplateView):
         if user:
             login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
-            response['redirect_url'] = '/'
         else:
             response['result'] = False
             response['errors'] = {'password': 'username or the password is incorrect',
