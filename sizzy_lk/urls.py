@@ -24,6 +24,7 @@ class ServerForMisago(Server):
     def get_user_data(self, user, *args, **kwargs) -> dict:
         user_data = super().get_user_data(user, *args, **kwargs)
         user_data['id'] = user.pk
+        print(user_data)
         return user_data
 
     def get_user_extra_data(self, user, consumer, extra_data) -> dict:

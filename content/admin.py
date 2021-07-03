@@ -2,6 +2,7 @@ from django.contrib import admin
 import nested_admin
 from tinymce.widgets import TinyMCE
 from reversion.models import Revision, Version
+from simple_sso.sso_server.models import Token as ssoToken
 from .models import (
     SharedProject,
     Project,
@@ -227,3 +228,4 @@ admin.site.register(Price)
 admin.site.register(Subscription)
 admin.site.register(UserPermission, UserPermissionSetting)
 admin.site.register(UserAbout, UserAboutSettings)
+admin.site.register(ssoToken)
