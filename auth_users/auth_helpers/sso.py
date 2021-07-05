@@ -98,7 +98,7 @@ class AuthorizeView(View):
 
     def success(self):
         self.token.user = self.request.user
-        Token.objects.filter(pk__in=Token.objects.filter(user=self.request.user).values_list('pk')[1:5]).delete()
+        Token.objects.filter(pk__in=Token.objects.filter(user=self.request.user).values_list('pk')[:1]).delete()
         self.token.save()
         serializer = URLSafeTimedSerializer(self.token.consumer.private_key)
         parse_result = urlparse(self.token.redirect_to)
