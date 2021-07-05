@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from simple_sso.sso_server.server import Server
+from auth_users.auth_helpers.sso import Server
 
 
 class ServerForMisago(Server):
