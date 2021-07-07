@@ -6,6 +6,7 @@ urlpatterns = [
     # path('', include('social_django.urls', namespace='social')),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+
     path('users', api.UserCreate.as_view()),
     path('login', api.ApiLoginView.as_view()),
     path('logout', api.Logout.as_view()),
@@ -31,5 +32,6 @@ urlpatterns = [
     path('figma/auth/refresh/', api.FigmaUserRefresh.as_view()),
     # path('figma/user/', api.FigmaUserProfile.as_view()),
 
-    path('user/about/', api.UserAboutView.as_view())
+    path('user/about/', api.UserAboutView.as_view()),
+    path('token/', api.TokenCheckApi.as_view())
 ]

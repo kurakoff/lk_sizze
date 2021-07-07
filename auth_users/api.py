@@ -447,3 +447,23 @@ class UserAboutView(APIView):
         about = models.UserAbout.objects.get(user=request.user)
         about.delete()
         return JsonResponse({"Result": "Success"}, status=status.HTTP_200_OK)
+
+
+class TokenCheckApi(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    def get(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+            try:
+                bearer = request.headers['Authorization']
+                parsed_bearer = bearer.split()[1]
+                if token.key == parsed_bearer:
+                    return JsonResponse({'result': True})
+            except:
+                cookie_token = request.COOKIES['access_token']
+                if token.key == cookie_token:
+                    return JsonResponse({'result': True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'result': False})
