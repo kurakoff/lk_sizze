@@ -451,19 +451,21 @@ class UserAboutView(APIView):
 
 class TokenCheckApi(APIView):
     permission_classes = [AllowAny]
-    authentication_classes = []
     def get(self, request):
+        token = Token.objects.get(user=request.user)
         try:
-            token = Token.objects.get(user=request.user)
             try:
                 bearer = request.headers['Authorization']
                 parsed_bearer = bearer.split()[1]
-                if token.key == parsed_bearer:
+                if token.key != parsed_bearer:
+                    return Exception
+                else:
                     return JsonResponse({'result': True})
-            except:
+            except Exception as e:
                 cookie_token = request.COOKIES['access_token']
                 if token.key == cookie_token:
                     return JsonResponse({'result': True})
-        except Exception as e:
-            print(e)
+                else:
+                    return Exception
+        except:
             return JsonResponse({'result': False})
