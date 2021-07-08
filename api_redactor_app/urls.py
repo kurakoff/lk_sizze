@@ -32,6 +32,7 @@ urlpatterns = [
     path('project/<int:project_id>/constant_colors/', api.ConstantColorsView.as_view()),
     path('project/<int:project_id>/constant_colors/<int:constant_color_id>/', api.ConstantColorsView.as_view()),
     path('project/<int:project_id>/request/', api.RequestApi.as_view()),
+    path('project/<int:project_id>/request/<int:request_id>/', api.RequestApiDetail.as_view()),
 
     path('category/', api.CategoriApi.as_view()),
     path('category/<int:category_id>/', api.CategoryDetailApi.as_view()),

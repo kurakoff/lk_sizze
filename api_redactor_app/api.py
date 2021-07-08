@@ -1111,7 +1111,7 @@ class ElementDetailApi(APIView):
 
 class RequestApi(APIView):
     def post(self, request, project_id):
-        request = Request.objects.create(
+        requests = Request.objects.create(
             request_type=request.data.get('type'),
             header=request.data.get('header'),
             url=request.data.get('url'),
@@ -1119,11 +1119,33 @@ class RequestApi(APIView):
             data=request.data.get('data'),
             project_id=project_id
         )
-        request.save()
-        serializer = RequestSerializer(request)
+        requests.save()
+        serializer = RequestSerializer(requests)
         return JsonResponse(serializer.data)
 
     def get(self, request, project_id):
         request = Request.objects.filter(project=project_id)
         serializer = RequestSerializer(request, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+class RequestApiDetail(APIView):
+    def put(self, request, project_id, request_id):
+        requests = Request.objects.get(id=request_id)
+        if request.data.get('type'): requests.request_type = requests.data.get('type')
+        if request.data.get('header'): requests.header = request.data.get('header')
+        if request.data.get('url'): requests.url = request.data.get('url')
+        if request.data.get('title'): requests.title = request.data.get('title')
+        if request.data.get('data'): requests.data = request.data.get('data')
+        requests.save()
+        serializer = RequestSerializer(requests)
+        return JsonResponse(serializer.data)
+
+    def get(self, request, project_id, request_id):
+        requests = Request.objects.get(id=request_id)
+        serializer = RequestSerializer(requests)
+        return JsonResponse(serializer.data, safe=False)
+
+    def delete(self, request, project_id, request_id):
+        requests = Request.objects.get(id=request_id)
+        requests.delete()
+        return JsonResponse({'result': True})
