@@ -17,9 +17,10 @@ from reversion.models import Version, Revision
 
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
-    PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer, CategorySerializer, ElemetSerializer
+    PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer, CategorySerializer, ElemetSerializer, \
+    RequestSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
-    BaseWidthPrototype, ModesState, Constant_colors, Element
+    BaseWidthPrototype, ModesState, Constant_colors, Element, Request
 from .permissions import IsAuthor, EditPermission, DeletePermission, StartPermission, ProfessionalPermission, TeamPermission
 
 
@@ -1106,3 +1107,23 @@ class ElementDetailApi(APIView):
         element = Element.objects.get(id=element_id)
         element.delete()
         return JsonResponse({'result': True})
+
+
+class RequestApi(APIView):
+    def post(self, request, project_id):
+        request = Request.objects.create(
+            request_type=request.data.get('type'),
+            header=request.data.get('header'),
+            url=request.data.get('url'),
+            title=request.data.get('title'),
+            data=request.data.get('data'),
+            project_id=project_id
+        )
+        request.save()
+        serializer = RequestSerializer(request)
+        return JsonResponse(serializer.data)
+
+    def get(self, request, project_id):
+        request = Request.objects.filter(project=project_id)
+        serializer = RequestSerializer(request, many=True)
+        return JsonResponse(serializer.data, safe=False)

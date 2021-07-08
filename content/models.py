@@ -253,3 +253,12 @@ class UserAbout(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+
+class Request(models.Model):
+    request_type = models.CharField(max_length=100)
+    header = models.TextField(blank=True, null=True)
+    url = models.TextField()
+    title = models.CharField(max_length=255, blank=True, null=True)
+    data = models.TextField(blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
