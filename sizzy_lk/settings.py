@@ -106,8 +106,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'lk_sizze',
-        'USER': 'sergey',
-        'PASSWORD': 'sergey',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -238,32 +238,32 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console'
         },
-        'auth': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'formatter': 'console',
-            'filename': '/var/www/html/lk_sizze/logs/access.log'
-        },
-        'figma': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'formatter': 'console',
-            'filename': '/var/www/html/lk_sizze/logs/figma.log'
-        }
+        # 'auth': {
+        #     'level': 'INFO',
+        #     'class': 'logging.FileHandler',
+        #     'formatter': 'console',
+        #     'filename': '/var/www/html/lk_sizze/logs/access.log'
+        # },
+        # 'figma': {
+        #     'level': 'INFO',
+        #     'class': 'logging.FileHandler',
+        #     'formatter': 'console',
+        #     'filename': '/var/www/html/lk_sizze/logs/figma.log'
+        # }
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
-        'auth': {
-            'handlers': ['auth'],
-            'level': 'INFO'
-        },
-        'figma': {
-            'handlers': ['figma'],
-            'level': 'INFO'
-        }
+        # 'auth': {
+        #     'handlers': ['auth'],
+        #     'level': 'INFO'
+        # },
+        # 'figma': {
+        #     'handlers': ['figma'],
+        #     'level': 'INFO'
+        # }
     },
 }
 

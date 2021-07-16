@@ -1,10 +1,17 @@
+import os.path
+
 import jsonfield, reversion
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 from . import models as this
-
 CASCADE = models.CASCADE
+
+
+def update_filename(instance, filename):
+    path = 'firebase_credentials/'
+    return f'{path}{instance.user}__{instance.project_id}.json'
+
 
 
 class UserProfile(models.Model):
@@ -262,3 +269,19 @@ class Request(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     data = models.TextField(blank=True, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+
+class FirebaseSettings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    credentials_file = models.FileField(upload_to=update_filename, unique=True, blank=True)
+    credentials = jsonfield.JSONField(blank=True)
+
+    def __str__(self):
+        return str(self.user.email)
+
+
+class FirebaseRequest(models.Model):
+    request = models.ForeignKey(FirebaseSettings, on_delete=models.CASCADE)
+    collection = models.CharField(max_length=255)
+    fields = jsonfield.JSONField(null=True, blank=True)

@@ -20,7 +20,9 @@ from .models import (
     Price,
     Subscription,
     UserPermission,
-    UserAbout
+    UserAbout,
+    FirebaseSettings,
+    FirebaseRequest
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -229,3 +231,5 @@ admin.site.register(Subscription)
 admin.site.register(UserPermission, UserPermissionSetting)
 admin.site.register(UserAbout, UserAboutSettings)
 admin.site.register(ssoToken)
+admin.site.register(FirebaseSettings)
+admin.site.register(FirebaseRequest)

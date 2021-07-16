@@ -430,4 +430,4 @@ class EmailSpammer(View):
                 send_html_mail(subject=form.cleaned_data['theme'], html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=user_list)
                 return redirect('/email/')
-        return redirect('/email/')
+        return redirect('/')

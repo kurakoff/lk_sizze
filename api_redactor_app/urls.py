@@ -1,4 +1,5 @@
 from . import api
+from firebase.api import FirebaseSettingsApi, FirebaseRequestApi, FirebaseRequestDetailApi, DataApi
 from django.urls import path
 
 
@@ -33,6 +34,10 @@ urlpatterns = [
     path('project/<int:project_id>/constant_colors/<int:constant_color_id>/', api.ConstantColorsView.as_view()),
     path('project/<int:project_id>/request/', api.RequestApi.as_view()),
     path('project/<int:project_id>/request/<int:request_id>/', api.RequestApiDetail.as_view()),
+    path('project/<int:project_id>/firebase/', FirebaseSettingsApi.as_view()),
+    path('project/<int:project_id>/firebase/request/', FirebaseRequestApi.as_view()),
+    path('project/<int:project_id>/firebase/request/<int:fire_req_id>/', FirebaseRequestDetailApi.as_view()),
+    path('project/<int:project_id>/firebase/request/<int:fire_req_id>/data/', DataApi.as_view()),
 
     path('category/', api.CategoriApi.as_view()),
     path('category/<int:category_id>/', api.CategoryDetailApi.as_view()),
