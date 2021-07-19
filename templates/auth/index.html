@@ -24,7 +24,7 @@
       <div class="div-block-2"><img src="{% static 'images/Logo2.svg' %}" loading="lazy" alt=""></div>
       <div class="form-block w-form"><img src="{% static 'images/Community2.svg' %}" loading="lazy" alt="">
         <h1>Sign In to Sizze</h1>
-        <form id="email-form" name="email-form" data-name="Email Form" class="form" action="http://127.0.0.1:8000/api/auth/login/" method="post">
+        <form id="email-form" name="email-form" data-name="Email Form" class="form" action="https://lk.sizze.io/api/auth/login/" method="post">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.GET.next }}"/>
           <input type="text" class="text-field w-input" maxlength="256" name="email" data-name="email" placeholder="email" id="email">
