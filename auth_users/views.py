@@ -35,7 +35,7 @@ class CustomLogoutView(LogoutView):
 
 
 class LoginView(TemplateView):
-    template_name = 'auth/login.html'
+    template_name = 'auth/index.html'
     form_class = LogInForm
 
     def get(self, request, *args, **kwargs):
@@ -44,6 +44,7 @@ class LoginView(TemplateView):
         return response
 
     def post(self, request, *args, **kwargs):
+        print(request.POST)
         response = {}
         email = request.POST['email']
         password = request.POST['password']
@@ -51,11 +52,10 @@ class LoginView(TemplateView):
         if user:
             login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
-            print(request.GET['next'])
-            if request.GET['next']:
+            if request.GET.get('next'):
                 response['redirect_url'] = request.GET['next']
             else:
-                response['redirect_url'] = '/'
+                return redirect('/')
         else:
             response['result'] = False
             response['errors'] = {'password': 'username or the password is incorrect',
