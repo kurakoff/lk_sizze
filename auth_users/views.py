@@ -44,7 +44,6 @@ class LoginView(TemplateView):
         return response
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         response = {}
         email = request.POST['email']
         password = request.POST['password']
@@ -52,8 +51,8 @@ class LoginView(TemplateView):
         if user:
             login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
-            if request.GET.get('next'):
-                return HttpResponseRedirect(request.GET.get('next'))
+            if request.POST.get('next'):
+                return HttpResponseRedirect(request.POST.get('next'))
             else:
                 return redirect('/')
         else:
