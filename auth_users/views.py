@@ -3,7 +3,7 @@ from django.contrib.auth.backends import UserModel
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, LogoutView
 from django.core.mail import send_mail
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template.defaulttags import url
 from django.template.loader import render_to_string
@@ -53,7 +53,7 @@ class LoginView(TemplateView):
             login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
             if request.GET.get('next'):
-                response['redirect_url'] = request.GET['next']
+                return HttpResponseRedirect(request.GET.get('next'))
             else:
                 return redirect('/')
         else:
