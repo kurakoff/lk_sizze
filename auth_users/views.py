@@ -52,7 +52,7 @@ class LoginView(TemplateView):
             login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
             if request.POST.get('next'):
-                return HttpResponseRedirect(request.POST.get('next'))
+                return redirect(request.POST.get('next'))
             else:
                 return redirect('/')
         else:
