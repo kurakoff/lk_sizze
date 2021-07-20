@@ -207,8 +207,7 @@ class ScreenView(APIView):
             new_screen = Screen.objects.get(project_id=project_id, position=1)
             project.previewScreenId = new_screen
             project.save()
-        serializer = ScreenSerializer(screens, many=True)
-        return JsonResponse({'result': True, 'screen': serializer.data})
+        return JsonResponse({'result': True})
 
 
 class ProjectApiView(APIView):
