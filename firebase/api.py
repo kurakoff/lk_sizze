@@ -13,9 +13,6 @@ class FirebaseSettingsApi(APIView):
         past_settings = FirebaseSettings.objects.filter(user=request.user, project=project_id)
         if len(past_settings) > 0:
             past_settings.delete()
-            try:
-                os.remove(f'{settings.MEDIA_ROOT}/firebase_credentials/{request.user}__{project_id}.json')
-            except: pass
         # credential_dict = str(request.data.get('credentials'))
         # credential = credential_dict.split()
         # new_credential = ''
@@ -29,7 +26,6 @@ class FirebaseSettingsApi(APIView):
         firebase = FirebaseSettings.objects.create(
             user=request.user,
             project_id=project_id,
-            credentials_file=request.FILES.get('credentials_file'),
             credentials=request.data.get('credentials')
         )
         firebase.save()
@@ -43,9 +39,6 @@ class FirebaseSettingsApi(APIView):
 
     def put(self, request, project_id):
         firebase = FirebaseSettings.objects.get(user=request.user, project=project_id)
-        if request.FILES.get('credentials_file'):
-            os.remove(f'{settings.MEDIA_ROOT}/firebase_credentials/{request.user}__{project_id}.json')
-            firebase.credentials_file = request.FILES.get('credentials_file')
         if request.data.get('credentials'):
             firebase.credentials = request.data.get('credentials')
         firebase.save()
@@ -55,7 +48,6 @@ class FirebaseSettingsApi(APIView):
     def delete(self, request, project_id):
         firebase = FirebaseSettings.objects.get(user=request.user, project=project_id)
         firebase.delete()
-        os.remove(f'{settings.MEDIA_ROOT}/firebase_credentials/{request.user}__{project_id}.json')
         serializer = FirebaseSerializer(firebase)
         return JsonResponse(serializer.data)
 

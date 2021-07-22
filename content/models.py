@@ -275,7 +275,6 @@ class Request(models.Model):
 class FirebaseSettings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    credentials_file = models.FileField(upload_to=update_filename, unique=True, blank=True)
     credentials = jsonfield.JSONField(blank=True)
 
     def __str__(self):
