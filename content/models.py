@@ -269,6 +269,7 @@ class Request(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     data = models.TextField(blank=True, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    backendType = models.TextField(blank=True, null=True)
 
 
 class FirebaseSettings(models.Model):

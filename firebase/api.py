@@ -16,7 +16,8 @@ class FirebaseSettingsApi(APIView):
             try:
                 os.remove(f'{settings.MEDIA_ROOT}/firebase_credentials/{request.user}__{project_id}.json')
             except: pass
-        credential = request.data.get('credentials').split()
+        credential_dict = str(request.data.get('credentials'))
+        credential = credential_dict.split()
         new_credential = ''
         for i in range(len(credential)):
             if i % 2 != 0:

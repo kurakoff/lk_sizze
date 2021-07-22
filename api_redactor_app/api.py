@@ -1116,7 +1116,8 @@ class RequestApi(APIView):
             url=request.data.get('url'),
             title=request.data.get('title'),
             data=request.data.get('data'),
-            project_id=project_id
+            project_id=project_id,
+            backendType=request.data.get("backendType")
         )
         requests.save()
         serializer = RequestSerializer(requests)
@@ -1135,6 +1136,7 @@ class RequestApiDetail(APIView):
         if request.data.get('url'): requests.url = request.data.get('url')
         if request.data.get('title'): requests.title = request.data.get('title')
         if request.data.get('data'): requests.data = request.data.get('data')
+        if request.data.get('backendType'): requests.backendType = request.data.get('backendType')
         requests.save()
         serializer = RequestSerializer(requests)
         return JsonResponse(serializer.data)
