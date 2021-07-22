@@ -16,21 +16,21 @@ class FirebaseSettingsApi(APIView):
             try:
                 os.remove(f'{settings.MEDIA_ROOT}/firebase_credentials/{request.user}__{project_id}.json')
             except: pass
-        credential_dict = str(request.data.get('credentials'))
-        credential = credential_dict.split()
-        new_credential = ''
-        for i in range(len(credential)):
-            if i % 2 != 0:
-                try:
-                    new_credential += (f' "{credential[i][:-1]}": {credential[i+1]}')
-                except: pass
-        new_credential = "{" + new_credential + "}"
-        new_str = ast.literal_eval(new_credential)
+        # credential_dict = str(request.data.get('credentials'))
+        # credential = credential_dict.split()
+        # new_credential = ''
+        # for i in range(len(credential)):
+        #     if i % 2 != 0:
+        #         try:
+        #             new_credential += (f' "{credential[i][:-1]}": {credential[i+1]}')
+        #         except: pass
+        # new_credential = "{" + new_credential + "}"
+        # new_str = ast.literal_eval(new_credential)
         firebase = FirebaseSettings.objects.create(
             user=request.user,
             project_id=project_id,
             credentials_file=request.FILES.get('credentials_file'),
-            credentials = new_str
+            credentials=request.data.get('credentials')
         )
         firebase.save()
         serializer = FirebaseSerializer(firebase)
