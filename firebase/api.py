@@ -47,7 +47,7 @@ class FirebaseSettingsApi(APIView):
             os.remove(f'{settings.MEDIA_ROOT}/firebase_credentials/{request.user}__{project_id}.json')
             firebase.credentials_file = request.FILES.get('credentials_file')
         if request.data.get('credentials'):
-            firebase.credentials_file = request.data.get('credentials')
+            firebase.credentials = request.data.get('credentials')
         firebase.save()
         serializer = FirebaseSerializer(firebase)
         return JsonResponse(serializer.data)
