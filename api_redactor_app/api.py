@@ -354,7 +354,7 @@ class PrototypeApiView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         print(request.COOKIES)
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = self.filter_queryset(self.get_queryset()).order_by("-id")
         serializer = self.get_serializer(queryset, many=True)
         for i in serializer.data:
             width = BaseWidthPrototype.objects.\
