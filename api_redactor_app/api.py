@@ -358,7 +358,7 @@ class PrototypeApiView(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         for i in serializer.data:
             width = BaseWidthPrototype.objects.\
-                    filter(prototype=i['-id'])
+                    filter(prototype=i['id'])
             i['base_width'] = width.values()
         return response.Response(serializer.data)
 
