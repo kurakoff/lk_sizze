@@ -19,9 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}, 'is_staff': {'read_only': True}}
 
     def get_plan(self, obj):
-        if obj.userpermission.team is True:
+        if obj.userpermission.permission == "TEAM":
             return 'team'
-        elif obj.userpermission.professional is True:
+        elif obj.userpermission.permission == "PROFESSIONAL":
             return 'professional'
         else: return 'start'
 
