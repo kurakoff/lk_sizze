@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from content.models import ClientStrip, Price, Subscription
 
-
 class PriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Price

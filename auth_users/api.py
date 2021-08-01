@@ -1,3 +1,4 @@
+import datetime
 import json, secrets, string, logging, requests
 
 from django.template.loader import render_to_string
@@ -25,7 +26,8 @@ from .serializers import \
     GoogleSocialAuthSerializer,\
     EmailLoginSerializer,\
     FigmaUserSerializer, \
-    UserAboutSerializer
+    UserAboutSerializer, \
+    TasksSerializer
 
 logger = logging.getLogger('django')
 auth = logging.getLogger('auth')
@@ -469,3 +471,42 @@ class TokenCheckApi(APIView):
                     return Exception
         except:
             return JsonResponse({'result': False})
+
+
+class TasksApi(APIView):
+    def get(self, request, user_id):
+        task = models.Tasks.objects.filter(user_id=user_id)
+        serializer = TasksSerializer(task, many=True)
+        return JsonResponse(serializer.data)
+
+    def post(self, request, user_id):
+        task = models.Tasks.objects.create(
+            stage=None,
+            update=datetime.date.today,
+            status=request.data['status'],
+            description=request.data['description']
+        )
+        task.save()
+        serializer = TasksSerializer(task, many=True)
+        return JsonResponse(serializer.data)
+
+
+class TaskDetailApi(APIView):
+    def get(self, request, task_id):
+        task = models.Tasks.objects.get(id=task_id)
+        serializer = TasksSerializer(task)
+        return JsonResponse(serializer.data)
+
+    def put(self, request, task_id):
+        task = models.Tasks.objects.get(id=task_id)
+        if request.data.get('stage'): task.stage = request.data.get('stage')
+        if request.data.get('status'): task.status = request.data.get('status')
+        if request.data.get('description'): task.description = request.data.get('description')
+        task.save()
+        serializer = TasksSerializer(task)
+        return JsonResponse(serializer.data)
+
+    def delete(self, request, task_id):
+        task = models.Tasks.objects.get(id=task_id)
+        task.delete()
+        return JsonResponse({"result": True})

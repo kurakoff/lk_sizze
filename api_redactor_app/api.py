@@ -1,5 +1,7 @@
 import base64, json, os, random, string, googleapiclient, reversion, datetime, requests
 from mimetypes import guess_extension, guess_type
+from typing import Union
+
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -288,7 +290,7 @@ class ProjectApiView(APIView):
             return JsonResponse({'message': 'Prototype not found', "result": False})
         project = Project()
         project_list = Project.objects.filter(user=request.user)
-        if request.user.userpermission.start is True:
+        if request.user.userpermission.permission == 'START':
             if len(project_list) > 3:
                 return JsonResponse({'message': 'Project limit reached', 'result': False}, status=status.HTTP_403_FORBIDDEN)
         project.prototype = prototype
@@ -536,7 +538,7 @@ class ScreenCopyView(APIView):
 
 
 class ProjectCopyView(APIView):
-    permission_classes = [IsAuthor | EditPermission]
+    permission_classes = [IsAuthor or EditPermission]
 
     '''Копирование проекта'''
     def copy_project(self, request, project_id):
@@ -633,7 +635,7 @@ class ProjectCopyView(APIView):
 
     def post(self, request, *args, **kwargs):
         project_list = Project.objects.filter(user=request.user)
-        if request.user.userpermission.start is True:
+        if request.user.userpermission.permission == 'START':
             if len(project_list) > 3:
                 return JsonResponse({'message': 'Project limit reached', 'result': False}, status=status.HTTP_403_FORBIDDEN)
         copy = self.copy_project(request=request, project_id=kwargs['project_id'])
@@ -655,10 +657,10 @@ class ShareProjectAllView(APIView):
 
     def check_max_share_limit(self, user, project):
         share_list = SharedProject.objects.filter(project=project)
-        if user.userpermission.professional is True:
+        if user.userpermission.permission == 'PROFESSIONAL':
             if len(share_list)>=3:
                 return True
-        if user.userpermission.start is True:
+        if user.userpermission.permission == 'START':
             if len(share_list)>=1:
                 return True
         return False
@@ -920,7 +922,7 @@ class ScreenVersion(APIView):
     def post(self, request, *args, **kwargs):
         # try:
         project_list = Project.objects.filter(user=request.user)
-        if request.user.userpermission.start is True:
+        if request.user.userpermission.permission == "START":
             if len(project_list) > 3:
                 return JsonResponse({'message': 'Project limit reached', 'result': False},
                                     status=status.HTTP_403_FORBIDDEN)

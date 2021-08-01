@@ -120,3 +120,9 @@ class UserAboutSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserAbout
         fields = '__all__'
+
+
+class TasksSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Tasks
+        fields = '__all__'

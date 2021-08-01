@@ -239,10 +239,14 @@ class Subscription(models.Model):
 
 
 class UserPermission(models.Model):
+    CHOICES = (
+        ('START', 'start'),
+        ('PROFESSIONAL', 'professional'),
+        ('TEAM', 'team'),
+        ('ENTERPRISE', 'enterprise')
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    start = models.BooleanField(default=True)
-    professional = models.BooleanField(default=False)
-    team = models.BooleanField(default=False)
+    permission = models.CharField(max_length=25, choices=CHOICES, default='START')
     last_update = models.DateTimeField(null=True, default=None)
     downloadCount = models.IntegerField(default=0)
 
@@ -285,3 +289,20 @@ class FirebaseRequest(models.Model):
     request = models.ForeignKey(FirebaseSettings, on_delete=models.CASCADE)
     collection = models.CharField(max_length=255)
     fields = jsonfield.JSONField(null=True, blank=True)
+
+
+class EnterpriseUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    telegram = models.CharField(max_length=255, null=True, blank=True)
+
+
+class Tasks(models.Model):
+    CHOICES = (
+        ('DONE', 'Done'),
+        ('IN PROGRESS', 'In progress'),
+        ('NOT STARTED', 'Not started')
+    )
+    stage = models.CharField(max_length=255, null=True)
+    update = models.DateField(default=now)
+    status = models.CharField(max_length=100, choices=CHOICES, default="NOT STARTED")
+    description = models.TextField(null=True)

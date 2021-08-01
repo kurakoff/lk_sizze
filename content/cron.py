@@ -36,7 +36,7 @@ def create_backup():
     today = datetime.datetime.today()
     print("Начато создание backup базы данных ", today)
     os.system(f"mkdir /var/www/html/lk_sizze/backup/{today.month}-{today.year}")
-    os.system(f'PGPASSWORD="sergey" pg_dump -U sergey lk_sizze> /var/www/html/lk_sizze/backup/{today.month}-{today.year}/db_{datetime.date.today()}.dump')
+    os.system(f'pg_dump -p 5432 lk_sizze > /var/www/html/lk_sizze/backup/{today.month}-{today.year}/db_{datetime.date.today()}.sql')
     return print("Создание backup оконченно")
 
 

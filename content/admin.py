@@ -187,9 +187,9 @@ class ConstantColorsSetting(admin.ModelAdmin):
 
 class UserPermissionSetting(admin.ModelAdmin):
     actions_selection_counter = True
-    list_display = ['id', 'user', 'start', 'professional', 'team', 'last_update']
+    list_display = ['id', 'user', 'permission', 'last_update']
     list_display_links = ('id', 'user')
-    list_filter = ('start', 'team', 'professional', 'team')
+    list_filter = ('permission',)
     preserve_filters = False
     save_as = True
     search_fields = ['id', 'user__email', 'last_update']

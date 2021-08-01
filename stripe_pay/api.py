@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from decouple import config
-from content.models import ClientStrip, Price, Subscription, UserPermission
+from content.models import ClientStrip, Price, Subscription, UserPermission, EnterpriseUser
 from django.contrib.auth.models import User
 from .serializers import *
 from django.template.loader import render_to_string
@@ -145,16 +145,23 @@ class StripeWebhook(APIView):
             return JsonResponse({"result": True})
         elif event_type == 'invoice.paid':
             user = User.objects.get(email=data_object['customer_email'])
-            permission = UserPermission.objects.get(user=user)
             product = Price.objects.get(price=data_object['lines']['data'][0]['price']['id'])
+            if product.name == "Enterprise":
+                event_args = {"user_id": str(user.id), "event_type": "Subscription (Enterprise)"}
+                event = amplitude_logger.create_event(**event_args)
+                amplitude_logger.log_event(event)
+                user.userpermission.permission = 'ENTERPRISE'
+                user.save()
+                msg_html = render_to_string('content/plan_enterprise.html')
+                send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
+                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
+                               recipient_list=[user.email])
             if product.name == "Team":
                 event_args = {"user_id": str(user.id), "event_type": "Subscription (Team)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
-                permission.start = False
-                permission.team = True
-                permission.professional = False
-                permission.save()
+                user.userpermission.permission = 'TEAM'
+                user.save()
                 msg_html = render_to_string('content/plan_team.html')
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -163,10 +170,8 @@ class StripeWebhook(APIView):
                 event_args = {"user_id": str(user.id), "event_type": "Subscription (Professional)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
-                permission.start = False
-                permission.professional = True
-                permission.team = False
-                permission.save()
+                user.userpermission.permission = 'PROFESSIONAL'
+                user.save()
                 msg_html = render_to_string('content/Plan.html',)
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -176,23 +181,18 @@ class StripeWebhook(APIView):
             event_args = {"user_id": str(user.id), "event_type": "Subscription (Start)"}
             event = amplitude_logger.create_event(**event_args)
             amplitude_logger.log_event(event)
-            permission = UserPermission.objects.get(user=user)
-            permission.start = True
-            permission.team = False
-            permission.professional = False
+            user.userpermission.permission = 'START'
             msg_html = render_to_string('content/plan_free.html')
             send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                            sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
                            recipient_list=[user.email])
-            permission.save
+            user.save()
         elif event_type == 'customer.subscription.deleted':
             # try:
             sub = Subscription.objects.get(subscription=data_object['id'])
             customer = sub.customer.user
             permission = UserPermission.objects.get(user=customer)
-            permission.start = True
-            permission.professional = False
-            permission.team = False
+            permission.permission = 'START'
             permission.save()
             sub.delete()
             event_amplitude = Amplitude()
@@ -224,6 +224,12 @@ class StripeWebhook(APIView):
                 livemode=data_object['livemode']
             )
             client.save()
+
+            enterprise = EnterpriseUser.objects.create(
+                user=client.user,
+                telegram=None
+            )
+            enterprise.save()
         elif event_type == 'customer.subscription.updated':
             try:
                 sub = Subscription.objects.get(
@@ -339,9 +345,7 @@ class PriceWebhook(APIView):
         elif event_type == 'customer.deleted':
             client = ClientStrip.objects.get(client=data_object['id'])
             permission = UserPermission.objects.get(user=client.user)
-            permission.start = True
-            permission.team = False
-            permission.professional = False
+            permission.permission = 'START'
             permission.save()
             client.delete()
             return JsonResponse({'result': True})
