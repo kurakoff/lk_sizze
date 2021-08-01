@@ -27,7 +27,8 @@ from .serializers import \
     EmailLoginSerializer,\
     FigmaUserSerializer, \
     UserAboutSerializer, \
-    TasksSerializer
+    TasksSerializer, \
+    EnterpriseSerializer
 
 logger = logging.getLogger('django')
 auth = logging.getLogger('auth')
@@ -473,11 +474,31 @@ class TokenCheckApi(APIView):
             return JsonResponse({'result': False})
 
 
+class EnterpriseApi(APIView):
+    def get(self, request):
+        user = models.EnterpriseUser.objects.all()
+        serializer = EnterpriseSerializer(user, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
+class EnterpriseDetailApi(APIView):
+    def get(self, request, user_id):
+        user = models.EnterpriseUser.objects.get(user_id=user_id)
+        serializer = EnterpriseSerializer(user, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def put(self, request, user_id):
+        user = models.EnterpriseUser.objects.get(user_id=user_id)
+        if request.data.get('telegram'): user.telegram = request.data.get('telegram')
+        serializer = EnterpriseSerializer(user)
+        return JsonResponse(serializer.data)
+
+
 class TasksApi(APIView):
     def get(self, request, user_id):
         task = models.Tasks.objects.filter(enterpriseUser_id=user_id)
         serializer = TasksSerializer(task, many=True)
-        return JsonResponse(serializer.data)
+        return JsonResponse(serializer.data, safe=False)
 
     def post(self, request, user_id):
         user = models.EnterpriseUser.objects.get(user_id=user_id)
@@ -497,7 +518,7 @@ class TaskDetailApi(APIView):
     def get(self, request, task_id):
         task = models.Tasks.objects.get(id=task_id)
         serializer = TasksSerializer(task)
-        return JsonResponse(serializer.data)
+        return JsonResponse(serializer.data, safe=False)
 
     def put(self, request, task_id):
         task = models.Tasks.objects.get(id=task_id)

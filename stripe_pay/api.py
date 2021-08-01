@@ -152,6 +152,11 @@ class StripeWebhook(APIView):
                 amplitude_logger.log_event(event)
                 user.userpermission.permission = 'ENTERPRISE'
                 user.save()
+                enterprise = EnterpriseUser.objects.create(
+                    user=user,
+                    telegram=None
+                )
+                enterprise.save()
                 msg_html = render_to_string('content/plan_enterprise.html')
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -225,11 +230,6 @@ class StripeWebhook(APIView):
             )
             client.save()
 
-            enterprise = EnterpriseUser.objects.create(
-                user=client.user,
-                telegram=None
-            )
-            enterprise.save()
         elif event_type == 'customer.subscription.updated':
             try:
                 sub = Subscription.objects.get(

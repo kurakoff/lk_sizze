@@ -33,5 +33,10 @@ urlpatterns = [
     # path('figma/user/', api.FigmaUserProfile.as_view()),
 
     path('user/about/', api.UserAboutView.as_view()),
-    path('token/', api.TokenCheckApi.as_view())
+    path('token/', api.TokenCheckApi.as_view()),
+
+    path('enterprise/', api.EnterpriseApi.as_view()),
+    path('enterprise/<int:user_id>/', api.EnterpriseDetailApi.as_view()),
+    path('enterprise/<int:user_id>/task/', api.TasksApi.as_view()),
+    path('enterprise/<int:user_id>/task/<int:task_id>/', api.TaskDetailApi.as_view())
 ]

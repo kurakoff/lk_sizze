@@ -126,3 +126,9 @@ class TasksSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tasks
         fields = '__all__'
+
+
+class EnterpriseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnterpriseUser
+        fields = '__all__'
