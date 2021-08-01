@@ -295,6 +295,9 @@ class EnterpriseUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     telegram = models.CharField(max_length=255, null=True, blank=True)
 
+    def __str__(self):
+        return str(self.user.email)
+
 
 class Tasks(models.Model):
     CHOICES = (

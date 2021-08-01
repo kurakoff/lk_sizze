@@ -216,17 +216,14 @@ class UserAboutSettings(admin.ModelAdmin):
 class EnterpriseUserSettings(admin.ModelAdmin):
     actions_selection_counter = True
     list_display = ['id', 'user', 'telegram']
-    readonly_fields = ['user']
-    ordering = ['user']
-    list_filter = ['user']
     search_fields = ['id', 'user']
 
 
 class TaskSettings(admin.ModelAdmin):
     actions_selection_counter = True
     list_display = ['id', 'enterpriseUser', 'stage', 'update', 'status', 'description']
-    ordering = ['status']
-    list_filter = ['status']
+    ordering = ['status', 'enterpriseUser']
+    list_filter = ['enterpriseUser__id', 'status']
     search_fields = ['id', 'stage', 'enterpriseUser', 'status']
 
 
