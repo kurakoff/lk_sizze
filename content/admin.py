@@ -22,7 +22,9 @@ from .models import (
     UserPermission,
     UserAbout,
     FirebaseSettings,
-    FirebaseRequest
+    FirebaseRequest,
+    EnterpriseUser,
+    Tasks
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -211,6 +213,23 @@ class UserAboutSettings(admin.ModelAdmin):
     search_fields = ['user__email', 'user__id']
 
 
+class EnterpriseUserSettings(admin.ModelAdmin):
+    actions_selection_counter = True
+    list_display = ['id', 'user', 'telegram']
+    readonly_fields = ['user']
+    ordering = ['user']
+    list_filter = ['user']
+    search_fields = ['id', 'user']
+
+
+class TaskSettings(admin.ModelAdmin):
+    actions_selection_counter = True
+    list_display = ['id', 'enterpriseUser', 'stage', 'update', 'status', 'description']
+    ordering = ['status']
+    list_filter = ['status']
+    search_fields = ['id', 'stage', 'enterpriseUser', 'status']
+
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
@@ -233,3 +252,5 @@ admin.site.register(UserAbout, UserAboutSettings)
 admin.site.register(ssoToken)
 admin.site.register(FirebaseSettings)
 admin.site.register(FirebaseRequest)
+admin.site.register(EnterpriseUser, EnterpriseUserSettings)
+admin.site.register(Tasks, TaskSettings)

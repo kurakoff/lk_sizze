@@ -302,6 +302,7 @@ class Tasks(models.Model):
         ('IN PROGRESS', 'In progress'),
         ('NOT STARTED', 'Not started')
     )
+    enterpriseUser = models.ForeignKey(EnterpriseUser, on_delete=models.CASCADE)
     stage = models.CharField(max_length=255, null=True)
     update = models.DateField(default=now)
     status = models.CharField(max_length=100, choices=CHOICES, default="NOT STARTED")

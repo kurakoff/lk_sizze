@@ -475,12 +475,14 @@ class TokenCheckApi(APIView):
 
 class TasksApi(APIView):
     def get(self, request, user_id):
-        task = models.Tasks.objects.filter(user_id=user_id)
+        task = models.Tasks.objects.filter(enterpriseUser_id=user_id)
         serializer = TasksSerializer(task, many=True)
         return JsonResponse(serializer.data)
 
     def post(self, request, user_id):
+        user = models.EnterpriseUser.objects.get(user_id=user_id)
         task = models.Tasks.objects.create(
+            enterpriseUser=user,
             stage=None,
             update=datetime.date.today,
             status=request.data['status'],
