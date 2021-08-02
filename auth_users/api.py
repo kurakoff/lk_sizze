@@ -525,6 +525,7 @@ class TaskDetailApi(APIView):
         if request.data.get('stage'): task.stage = request.data.get('stage')
         if request.data.get('status'): task.status = request.data.get('status')
         if request.data.get('description'): task.description = request.data.get('description')
+        task.update = datetime.date.today
         task.save()
         serializer = TasksSerializer(task)
         return JsonResponse(serializer.data)
