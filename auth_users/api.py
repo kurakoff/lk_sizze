@@ -484,7 +484,7 @@ class EnterpriseApi(APIView):
 class EnterpriseDetailApi(APIView):
     def get(self, request, user_id):
         user = models.EnterpriseUser.objects.get(user_id=user_id)
-        serializer = EnterpriseSerializer(user, many=True)
+        serializer = EnterpriseSerializer(user)
         return JsonResponse(serializer.data, safe=False)
 
     def put(self, request, user_id):
@@ -496,7 +496,7 @@ class EnterpriseDetailApi(APIView):
 
 class TasksApi(APIView):
     def get(self, request, user_id):
-        task = models.Tasks.objects.filter(enterpriseUser_id=user_id)
+        task = models.Tasks.objects.filter(enterpriseUser__user_id=user_id)
         serializer = TasksSerializer(task, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -505,32 +505,32 @@ class TasksApi(APIView):
         task = models.Tasks.objects.create(
             enterpriseUser=user,
             stage=None,
-            update=datetime.date.today,
+            update=datetime.date.today(),
             status=request.data['status'],
             description=request.data['description']
         )
         task.save()
-        serializer = TasksSerializer(task, many=True)
+        serializer = TasksSerializer(task)
         return JsonResponse(serializer.data)
 
 
 class TaskDetailApi(APIView):
-    def get(self, request, task_id):
+    def get(self, request, user_id, task_id):
         task = models.Tasks.objects.get(id=task_id)
         serializer = TasksSerializer(task)
         return JsonResponse(serializer.data, safe=False)
 
-    def put(self, request, task_id):
+    def put(self, request, user_id, task_id):
         task = models.Tasks.objects.get(id=task_id)
         if request.data.get('stage'): task.stage = request.data.get('stage')
         if request.data.get('status'): task.status = request.data.get('status')
         if request.data.get('description'): task.description = request.data.get('description')
-        task.update = datetime.date.today
+        task.update = datetime.date.today()
         task.save()
         serializer = TasksSerializer(task)
         return JsonResponse(serializer.data)
 
-    def delete(self, request, task_id):
+    def delete(self, request, task_id, user_id):
         task = models.Tasks.objects.get(id=task_id)
         task.delete()
         return JsonResponse({"result": True})

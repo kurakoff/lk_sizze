@@ -301,9 +301,9 @@ class EnterpriseUser(models.Model):
 
 class Tasks(models.Model):
     CHOICES = (
-        ('DONE', 'Done'),
-        ('IN PROGRESS', 'In progress'),
-        ('NOT STARTED', 'Not started')
+        ('Done', 'Done'),
+        ('In progress', 'In progress'),
+        ('Not started', 'Not started')
     )
     enterpriseUser = models.ForeignKey(EnterpriseUser, on_delete=models.CASCADE)
     stage = models.CharField(max_length=255, null=True)
