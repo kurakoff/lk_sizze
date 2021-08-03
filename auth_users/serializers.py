@@ -23,6 +23,8 @@ class UserSerializer(serializers.ModelSerializer):
             return 'team'
         elif obj.userpermission.permission == "PROFESSIONAL":
             return 'professional'
+        elif obj.userpermission.permission == "ENTERPRISE":
+            return 'enterprise'
         else: return 'start'
 
     def get_downloadCount(self, obj):

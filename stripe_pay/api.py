@@ -150,13 +150,17 @@ class StripeWebhook(APIView):
                 event_args = {"user_id": str(user.id), "event_type": "Subscription (Enterprise)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
-                user.userpermission.permission = 'ENTERPRISE'
-                user.save()
-                enterprise = EnterpriseUser.objects.create(
-                    user=user,
-                    telegram=None
-                )
-                enterprise.save()
+                perm = user.userpermission
+                perm.permission = 'ENTERPRISE'
+                perm.save()
+                try:
+                    EnterpriseUser.objects.get(user=user)
+                except:
+                    enterprise = EnterpriseUser.objects.create(
+                        user=user,
+                        telegram=None
+                    )
+                    enterprise.save()
                 msg_html = render_to_string('content/plan_enterprise.html')
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -165,8 +169,9 @@ class StripeWebhook(APIView):
                 event_args = {"user_id": str(user.id), "event_type": "Subscription (Team)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
-                user.userpermission.permission = 'TEAM'
-                user.save()
+                perm = user.userpermission
+                perm.permission = 'TEAM'
+                perm.save()
                 msg_html = render_to_string('content/plan_team.html')
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -175,8 +180,9 @@ class StripeWebhook(APIView):
                 event_args = {"user_id": str(user.id), "event_type": "Subscription (Professional)"}
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
-                user.userpermission.permission = 'PROFESSIONAL'
-                user.save()
+                perm = user.userpermission
+                perm = permission = 'PROFESSIONAL'
+                perm.save()
                 msg_html = render_to_string('content/Plan.html',)
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                                sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
@@ -186,7 +192,9 @@ class StripeWebhook(APIView):
             event_args = {"user_id": str(user.id), "event_type": "Subscription (Start)"}
             event = amplitude_logger.create_event(**event_args)
             amplitude_logger.log_event(event)
-            user.userpermission.permission = 'START'
+            perm = user.userpermission
+            perm = permission = 'START'
+            perm.save()
             msg_html = render_to_string('content/plan_free.html')
             send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                            sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
