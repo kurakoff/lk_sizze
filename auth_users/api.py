@@ -107,7 +107,7 @@ class UserUpdate(APIView):
             perm = models.UserPermission.objects.get(user=user)
             perm.downloadCount = request.data.get("downloadCount")
             perm.save()
-        if request.data.get("isVideoExamplesDisabled"):
+        if request.data.get("isVideoExamplesDisabled") or request.data.get("isVideoExamplesDisabled") is False:
             perm = models.UserPermission.objects.get(user=user)
             perm.isVideoExamplesDisabled = request.data.get("isVideoExamplesDisabled")
             perm.save()
