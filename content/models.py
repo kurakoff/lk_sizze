@@ -120,6 +120,7 @@ class Category(models.Model):
     slug = models.CharField(max_length=64, verbose_name='slug')
     two_in_row = models.BooleanField(verbose_name='2 elements', default=False)
     prototype = models.ManyToManyField(Prototype, null=True, verbose_name='prototypes')
+    link = models.TextField(null=True)
 
     class Meta:
         verbose_name = 'category'

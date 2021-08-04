@@ -46,6 +46,7 @@ class InitProject(APIView):
             category_j = {}
             category_j['title'] = category.title
             category_j['two_in_row'] = category.two_in_row
+            category_j['link'] = category.link
             elements = category_j['elements'] = []
             icons = category_j['icons'] = []
             response.append(category_j)
@@ -1021,6 +1022,7 @@ class CategoriApi(APIView):
             title=data['title'],
             slug=data['slug'],
             two_in_row=data['two_in_row'],
+            link=data['link']
         )
         category.prototype.add(request.data['prototype'])
         serializer = CategorySerializer(category)
@@ -1044,6 +1046,7 @@ class CategoryDetailApi(APIView):
         if request.data.get('title'): category.title = request.data['title']
         if request.data.get('slug'): category.slug = request.data['slug']
         if request.data.get('two_in_row'): category.two_in_row = request.data['two_in_row']
+        if request.data.get('link'): category.link = request.data['link']
         if request.data.get('prototype'): category.prototype.add(*request.data['prototype'])
         serialzier = CategorySerializer(category)
         category.save()
