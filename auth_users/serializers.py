@@ -12,10 +12,11 @@ class UserSerializer(serializers.ModelSerializer):
     is_staff = serializers.BooleanField(required=False)
     plan = serializers.SerializerMethodField()
     downloadCount = serializers.SerializerMethodField()
+    isVideoExamplesDisabled = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan', 'downloadCount')
+        fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan', 'downloadCount', 'isVideoExamplesDisabled')
         extra_kwargs = {'password': {'write_only': True}, 'is_staff': {'read_only': True}}
 
     def get_plan(self, obj):
@@ -30,6 +31,10 @@ class UserSerializer(serializers.ModelSerializer):
     def get_downloadCount(self, obj):
         count = obj.userpermission.downloadCount
         return count
+
+    def get_isVideoExamplesDisabled(self, obj):
+        isVideoExamplesDisabled = obj.userpermission.isVideoExamplesDisabled
+        return isVideoExamplesDisabled
 
     def create(self, validated_data):
         user = User(

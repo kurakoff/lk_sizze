@@ -120,7 +120,6 @@ class Category(models.Model):
     slug = models.CharField(max_length=64, verbose_name='slug')
     two_in_row = models.BooleanField(verbose_name='2 elements', default=False)
     prototype = models.ManyToManyField(Prototype, null=True, verbose_name='prototypes')
-    link = models.TextField(null=True)
 
     class Meta:
         verbose_name = 'category'
@@ -250,6 +249,7 @@ class UserPermission(models.Model):
     permission = models.CharField(max_length=25, choices=CHOICES, default='START')
     last_update = models.DateTimeField(null=True, default=None)
     downloadCount = models.IntegerField(default=0)
+    isVideoExamplesDisabled = models.BooleanField(default=False)
 
 
 class UserAbout(models.Model):
@@ -311,3 +311,8 @@ class Tasks(models.Model):
     update = models.DateField(default=now)
     status = models.CharField(max_length=100, choices=CHOICES, default="NOT STARTED")
     description = models.TextField(null=True)
+
+
+class Tutorials(models.Model):
+    name = models.CharField(max_length=255)
+    source = models.CharField(max_length=255, null=True)

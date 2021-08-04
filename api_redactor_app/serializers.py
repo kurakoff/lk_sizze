@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from content.models import Screen, Prototype, Project, UserElement, SharedProject, ModesState, Constant_colors, Category,\
-    Element, Request
+    Element, Request, Tutorials
 
 
 class ScreenSerializer(serializers.ModelSerializer):
@@ -117,4 +117,10 @@ class ElemetSerializer(serializers.ModelSerializer):
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
+        fields = '__all__'
+
+
+class TutorialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tutorials
         fields = '__all__'

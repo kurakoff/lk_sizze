@@ -24,7 +24,8 @@ from .models import (
     FirebaseSettings,
     FirebaseRequest,
     EnterpriseUser,
-    Tasks
+    Tasks,
+    Tutorials
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -115,7 +116,7 @@ class ShareProjectSetting(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     actions_selection_counter = True
-    list_display = ['title', 'slug', 'two_in_row', 'link']
+    list_display = ['title', 'slug', 'two_in_row']
     ordering = ['id']
     list_filter = ('two_in_row',)
     preserve_filters = False
@@ -251,3 +252,4 @@ admin.site.register(FirebaseSettings)
 admin.site.register(FirebaseRequest)
 admin.site.register(EnterpriseUser, EnterpriseUserSettings)
 admin.site.register(Tasks, TaskSettings)
+admin.site.register(Tutorials)

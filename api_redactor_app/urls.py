@@ -44,4 +44,7 @@ urlpatterns = [
 
     path('element/', api.ElementApi.as_view()),
     path('element/<int:element_id>/', api.ElementDetailApi.as_view()),
+
+    path('tutorial/', api.TutorialApi.as_view()),
+    path('tutorial/<int:tutorial_id>/', api.TutorialDetailApi.as_view())
 ]

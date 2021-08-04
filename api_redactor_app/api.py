@@ -20,9 +20,9 @@ from reversion.models import Version, Revision
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
     PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer, CategorySerializer, ElemetSerializer, \
-    RequestSerializer
+    RequestSerializer, TutorialSerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
-    BaseWidthPrototype, ModesState, Constant_colors, Element, Request
+    BaseWidthPrototype, ModesState, Constant_colors, Element, Request, Tutorials
 from .permissions import IsAuthor, EditPermission, DeletePermission, StartPermission, ProfessionalPermission, TeamPermission
 
 
@@ -46,7 +46,6 @@ class InitProject(APIView):
             category_j = {}
             category_j['title'] = category.title
             category_j['two_in_row'] = category.two_in_row
-            category_j['link'] = category.link
             elements = category_j['elements'] = []
             icons = category_j['icons'] = []
             response.append(category_j)
@@ -1021,8 +1020,7 @@ class CategoriApi(APIView):
         category = Category.objects.create(
             title=data['title'],
             slug=data['slug'],
-            two_in_row=data['two_in_row'],
-            link=data['link']
+            two_in_row=data['two_in_row']
         )
         category.prototype.add(request.data['prototype'])
         serializer = CategorySerializer(category)
@@ -1046,7 +1044,6 @@ class CategoryDetailApi(APIView):
         if request.data.get('title'): category.title = request.data['title']
         if request.data.get('slug'): category.slug = request.data['slug']
         if request.data.get('two_in_row'): category.two_in_row = request.data['two_in_row']
-        if request.data.get('link'): category.link = request.data['link']
         if request.data.get('prototype'): category.prototype.add(*request.data['prototype'])
         serialzier = CategorySerializer(category)
         category.save()
@@ -1155,3 +1152,38 @@ class RequestApiDetail(APIView):
         requests = Request.objects.get(id=request_id)
         requests.delete()
         return JsonResponse({'result': True})
+
+
+class TutorialApi(APIView):
+    def get(self, request):
+        tutor = Tutorials.objects.all()
+        serializer = TutorialSerializer(tutor, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def post(self, request):
+        tutor = Tutorials.objects.create(
+            name=request.data.get('name'),
+            source=request.data.get('source')
+        )
+        serializer = TutorialSerializer(tutor)
+        return JsonResponse(serializer.data)
+
+
+class TutorialDetailApi(APIView):
+    def get(self, request, tutorial_id):
+        tutor = Tutorials.objects.get(id=tutorial_id)
+        serializer = TutorialSerializer(tutor)
+        return JsonResponse(serializer.data)
+
+    def put(self, request, tutorial_id):
+        tutor = Tutorials.objects.get(id=tutorial_id)
+        if request.data.get('name'): tutor.name = request.data.get('name')
+        if request.data.get('source'): tutor.source = request.data.get('source')
+        tutor.save()
+        serializer = TutorialSerializer(tutor)
+        return JsonResponse(serializer.data)
+
+    def delete(self, request, tutorial_id):
+        tutor = Tutorials.objects.get(id=tutorial_id)
+        tutor.delete()
+        return JsonResponse({"result": True})

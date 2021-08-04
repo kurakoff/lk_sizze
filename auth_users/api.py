@@ -107,6 +107,10 @@ class UserUpdate(APIView):
             perm = models.UserPermission.objects.get(user=user)
             perm.downloadCount = request.data.get("downloadCount")
             perm.save()
+        if request.data.get("isVideoExamplesDisabled"):
+            perm = models.UserPermission.objects.get(user=user)
+            perm.isVideoExamplesDisabled = request.data.get("isVideoExamplesDisabled")
+            perm.save()
         user.save()
         serialize = UserSerializer(user)
         return JsonResponse({"result": True, 'user': serialize.data})
@@ -278,7 +282,7 @@ class GoogleSocialAuthView(generics.GenericAPIView):
             user.set_unusable_password()
             user.is_verified = True
             user.save()
-            models.UserPermission.objects.create(user=user)
+            models.UserPermission.objects.create(user=user, isVideoExamplesDisabled=False)
             new_user = True
         user = self.auth(email)
         response = JsonResponse({"result": True, "token": user.auth_token.key, "new_user": new_user})
@@ -421,6 +425,7 @@ class FigmaUserProfile(APIView):
         res = requests.get(external_api_url, data=data, headers={'X-FIGMA-TOKEN': figma_token})
         figma.info("User {} get profile {}".format(request.user, str(request.body)))
         return JsonResponse(res.json())
+
 
 class UserAboutView(APIView):
     def post(self, request):
