@@ -66,16 +66,17 @@ MIDDLEWARE = [
 ]
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:8000",
-    "https://dashboard.sizze.io",
-    "https://romantic-thompson-d5f37d.netlify.app",
-    "https://sizze.io",
-    "https://lk.sizze.io",
-    "http://0.0.0.0:3000"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:8000",
+#     "https://dashboard.sizze.io",
+#     "https://romantic-thompson-d5f37d.netlify.app",
+#     "https://sizze.io",
+#     "https://lk.sizze.io",
+#     "http://0.0.0.0:3000"
+# ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'sizzy_lk.urls'
