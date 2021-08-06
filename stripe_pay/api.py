@@ -1,4 +1,4 @@
-import json
+from datetime import date, datetime
 import stripe
 from django.http import JsonResponse
 from rest_framework import status
@@ -57,6 +57,22 @@ class StripeApi(APIView):
             for i in sub['data']:
                 if i['plan']['id'] == data['priceId'] and i['status'] != 'incomplete':
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
+            if customer.user.promocode.activate is not None and sub[0].items.data[0].plan.product != "prod_JxSPOj7Blartnr":
+                discount = sub[0].discount
+                if discount is not None:
+                    if discount.coupon.duration == "once":
+                        stripe.Subscription.modify(sub[0].id, coupon="Sc7tw02X")
+                        customer.user.promocode.discount = True
+                    elif discount.coupon.duration == "repeating":
+                        end = sub[0].end
+                        end = datetime.utcfromtimestamp(end)
+                        result = date.today() > end.date()
+                        if result is True:
+                            stripe.Subscription.modify(sub[0].id, coupon="Sc7tw02X")
+                            customer.user.promocode.discount = True
+                else:
+                    stripe.Subscription.modify(sub[0].id, coupon="Sc7tw02X")
+                    customer.user.promocode.discount = True
             # if customer.use_trial is False:
             #     checkout_session = stripe.checkout.Session.create(
             #         success_url='https://dashboard.sizze.io/',
@@ -80,7 +96,6 @@ class StripeApi(APIView):
             # else:
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://dashboard.sizze.io/',
-                            #'?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url='https://dashboard.sizze.io/',
                 customer=customer.client,
                 payment_method_types=['card'],
@@ -181,7 +196,7 @@ class StripeWebhook(APIView):
                 event = amplitude_logger.create_event(**event_args)
                 amplitude_logger.log_event(event)
                 perm = user.userpermission
-                perm = permission = 'PROFESSIONAL'
+                perm.permission = 'PROFESSIONAL'
                 perm.save()
                 msg_html = render_to_string('content/Plan.html',)
                 send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
@@ -193,7 +208,7 @@ class StripeWebhook(APIView):
             event = amplitude_logger.create_event(**event_args)
             amplitude_logger.log_event(event)
             perm = user.userpermission
-            perm = permission = 'START'
+            perm.permission = 'START'
             perm.save()
             msg_html = render_to_string('content/plan_free.html')
             send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
@@ -376,3 +391,4 @@ class GetPrice(APIView):
             else:
                 i['user_status'] = False
         return Response(serializer.data)
+

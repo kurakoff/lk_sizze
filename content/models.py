@@ -316,3 +316,11 @@ class Tasks(models.Model):
 class Tutorials(models.Model):
     name = models.CharField(max_length=255)
     source = models.CharField(max_length=255, null=True)
+
+
+class Promocode(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='promocode')
+    promo = models.CharField(unique=True, max_length=5)
+    activate = models.CharField(max_length=5, null=True, default=None)
+    activated = models.IntegerField(default=0)
+    discount = models.BooleanField(default=False)

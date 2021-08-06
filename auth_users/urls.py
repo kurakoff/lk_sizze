@@ -40,3 +40,17 @@ urlpatterns = [
     path('enterprise/<int:user_id>/task/', api.TasksApi.as_view()),
     path('enterprise/<int:user_id>/task/<int:task_id>/', api.TaskDetailApi.as_view())
 ]
+#
+#
+# >>> from content import models
+# >>> from django.contrib.auth.models import User
+# >>> import os, base64
+# >>> users = User.objects.all()
+# >>> for user in users:
+# ...     uniq = False
+    # ...     while uniq is False:
+# ...             promo = os.urandom(5)
+# ...             promo = base64.b64encode(promo)
+# ...             check_uniq = models.Pr
+# models.Price(      models.Project(    models.Promocode(  models.Prototype(
+# ...             check_uniq = models.Promocode.objects.filter(promo=promo)

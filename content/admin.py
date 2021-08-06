@@ -25,7 +25,8 @@ from .models import (
     FirebaseRequest,
     EnterpriseUser,
     Tasks,
-    Tutorials
+    Tutorials,
+    Promocode
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -228,6 +229,15 @@ class TaskSettings(admin.ModelAdmin):
     search_fields = ['id', 'stage', 'enterpriseUser', 'status']
 
 
+class PromoSettings(admin.ModelAdmin):
+    list_display = ['id', 'user', 'promo', 'activate', 'activated']
+    search_fields = ['user__email']
+
+
+class SubsciprionSettings(admin.ModelAdmin):
+    list_display = ['id', 'subscription', 'customer', 'status', 'livemode']
+    search_fields = ['id', 'subscription', 'customer', 'status']
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
@@ -244,7 +254,7 @@ admin.site.register(FigmaUser)
 admin.site.register(PasswordReset)
 admin.site.register(ClientStrip)
 admin.site.register(Price)
-admin.site.register(Subscription)
+admin.site.register(Subscription, SubsciprionSettings)
 admin.site.register(UserPermission, UserPermissionSetting)
 admin.site.register(UserAbout, UserAboutSettings)
 admin.site.register(ssoToken)
@@ -253,3 +263,4 @@ admin.site.register(FirebaseRequest)
 admin.site.register(EnterpriseUser, EnterpriseUserSettings)
 admin.site.register(Tasks, TaskSettings)
 admin.site.register(Tutorials)
+admin.site.register(Promocode, PromoSettings)
