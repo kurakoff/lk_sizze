@@ -273,11 +273,6 @@ class GoogleSocialAuthView(generics.GenericAPIView):
         return username
 
     def post(self, request):
-        """
-        POST with "auth_token"
-        Send an idtoken as from google to get user information
-        """
-
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = (serializer.validated_data['auth_token'])
@@ -292,11 +287,15 @@ class GoogleSocialAuthView(generics.GenericAPIView):
             models.SocialUser.objects.create(user=user, provider='google')
             user.set_unusable_password()
             user.is_verified = True
-            user.save()
-            models.UserPermission.objects.create(user=user, isVideoExamplesDisabled=False)
+            perm = models.UserPermission.objects.create(user=user, isVideoExamplesDisabled=False)
             ser = UserSerializer()
             promo = ser.get_promo_code(num_chars=5)
-            models.Promocode.objects.create(user=user, promo=promo)
+            promo = models.Promocode.objects.create(user=user, promo=promo)
+            about = models.UserAbout.objects.create(user=user)
+            user.save()
+            promo.save()
+            perm.save()
+            about.save()
             new_user = True
         user = self.auth(email)
         response = JsonResponse({"result": True, "token": user.auth_token.key, "new_user": new_user})

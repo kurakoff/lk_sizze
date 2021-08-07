@@ -73,14 +73,17 @@ class UserSerializer(serializers.ModelSerializer):
             username=validated_data['username']
         )
         user.set_password(validated_data['password'])
-        user.save()
         promo=self.get_promo_code(num_chars=5)
-        models.UserPermission.objects.create(user=user)
-        models.Promocode.objects.create(user=user, promo=promo)
+        perm = models.UserPermission.objects.create(user=user)
+        promo = models.Promocode.objects.create(user=user, promo=promo)
+        about = models.UserAbout.objects.create(user=user)
+        user.save()
+        perm.save()
+        promo.save()
+        about.save()
         msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
         send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                        sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])
-        models.UserAbout.objects.create(user=user)
         # send_mail(
         #     f"Добро пожаловать на sizze",
         #     msg_html,
