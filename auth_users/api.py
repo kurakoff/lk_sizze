@@ -294,6 +294,9 @@ class GoogleSocialAuthView(generics.GenericAPIView):
             user.is_verified = True
             user.save()
             models.UserPermission.objects.create(user=user, isVideoExamplesDisabled=False)
+            ser = UserSerializer()
+            promo = ser.get_promo_code(num_chars=5)
+            models.Promocode.objects.create(user=user, promo=promo)
             new_user = True
         user = self.auth(email)
         response = JsonResponse({"result": True, "token": user.auth_token.key, "new_user": new_user})

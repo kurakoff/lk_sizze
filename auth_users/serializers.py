@@ -54,7 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
         isVideoExamplesDisabled = obj.userpermission.isVideoExamplesDisabled
         return isVideoExamplesDisabled
 
-    def get_promo_code(num_chars):
+    def get_promo_code(self, num_chars):
         uniq = False
         while uniq is False:
             code_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -74,9 +74,9 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
-        promo=self.get_promo_code(5)
+        promo=self.get_promo_code(num_chars=5)
         models.UserPermission.objects.create(user=user)
-        models.Promocode.objects.create(promo=promo)
+        models.Promocode.objects.create(user=user, promo=promo)
         msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
         send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                        sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])
