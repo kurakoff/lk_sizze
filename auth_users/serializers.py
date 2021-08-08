@@ -1,3 +1,4 @@
+import datetime
 import random
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
@@ -14,15 +15,13 @@ class UserSerializer(serializers.ModelSerializer):
     plan = serializers.SerializerMethodField()
     downloadCount = serializers.SerializerMethodField()
     isVideoExamplesDisabled = serializers.SerializerMethodField()
-    promocode = serializers.SerializerMethodField()
-    activate = serializers.SerializerMethodField()
-    activated = serializers.SerializerMethodField()
+    promo = serializers.SerializerMethodField()
 
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan', 'downloadCount', 'isVideoExamplesDisabled',
-                  'promocode', 'activate', 'activated')
+                  'promo')
         extra_kwargs = {'password': {'write_only': True}, 'is_staff': {'read_only': True}}
 
     def get_plan(self, obj):
@@ -34,17 +33,16 @@ class UserSerializer(serializers.ModelSerializer):
             return 'enterprise'
         else: return 'start'
 
-    def get_promocode(self, obj):
-        promo = obj.promocode.promo
-        return promo
-
-    def get_activate(self, obj):
-        promo = obj.promocode.activate
-        return promo
-
-    def get_activated(self, obj):
-        promo = obj.promocode.activated
-        return promo
+    def get_promo(self, obj):
+        data = {}
+        data['promocode'] = obj.promocode.promo
+        data['activate'] = obj.promocode.activate
+        data['activated'] = obj.promocode.activated
+        data['discount'] = obj.promocode.discount
+        data['free_month'] = obj.promocode.free_month
+        data['start_date'] = obj.promocode.start_date
+        data['end_date'] = obj.promocode.end_date
+        return data
 
     def get_downloadCount(self, obj):
         count = obj.userpermission.downloadCount

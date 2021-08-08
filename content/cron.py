@@ -9,6 +9,7 @@ django.setup()
 
 from reversion.models import Version, Revision
 from rest_framework.authtoken.models import Token
+from content import models
 
 
 def delete_past_project():
@@ -39,6 +40,15 @@ def create_backup():
     os.system(f'pg_dump -p 5432 lk_sizze > /var/www/html/lk_sizze/backup/{today.month}-{today.year}/db_{datetime.date.today()}.sql')
     return print("Создание backup оконченно")
 
+
+def stop_free_moth():
+    print("Начата отмена бесплатных подписок")
+    promos = models.Promocode.objects.filter(end_date__lt=datetime.date.today())
+    for promo in promos:
+        perm = promo.user.userpermission
+        perm.permission = "START"
+        perm.save()
+    return print("Бесплатные подписки отменены")
 
 if __name__ == "__main__":
     create_backup()

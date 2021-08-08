@@ -324,3 +324,6 @@ class Promocode(models.Model):
     activate = models.CharField(max_length=5, null=True, default=None)
     activated = models.IntegerField(default=0)
     discount = models.BooleanField(default=False)
+    free_month = models.BooleanField(default=False)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
