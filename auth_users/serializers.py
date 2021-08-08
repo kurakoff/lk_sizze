@@ -73,11 +73,11 @@ class UserSerializer(serializers.ModelSerializer):
             username=validated_data['username']
         )
         user.set_password(validated_data['password'])
+        user.save()
         promo=self.get_promo_code(num_chars=5)
         perm = models.UserPermission.objects.create(user=user)
         promo = models.Promocode.objects.create(user=user, promo=promo)
         about = models.UserAbout.objects.create(user=user)
-        user.save()
         perm.save()
         promo.save()
         about.save()

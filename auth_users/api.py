@@ -284,15 +284,15 @@ class GoogleSocialAuthView(generics.GenericAPIView):
         if queryset.exists() is False:
             user = User.objects.create_user(email=email, username=self.generate_username(email),
                                             first_name=full_name[0], last_name=full_name[1])
+            user.save()
             models.SocialUser.objects.create(user=user, provider='google')
             user.set_unusable_password()
             user.is_verified = True
             perm = models.UserPermission.objects.create(user=user, isVideoExamplesDisabled=False)
-            ser = UserSerializer()
-            promo = ser.get_promo_code(num_chars=5)
+            user_serial = UserSerializer()
+            promo = user_serial.get_promo_code(num_chars=5)
             promo = models.Promocode.objects.create(user=user, promo=promo)
             about = models.UserAbout.objects.create(user=user)
-            user.save()
             promo.save()
             perm.save()
             about.save()
