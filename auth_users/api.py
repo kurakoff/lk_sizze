@@ -109,6 +109,7 @@ class UserUpdate(APIView):
         if request.data.get("isVideoExamplesDisabled") or request.data.get("isVideoExamplesDisabled") is False:
             perm = models.UserPermission.objects.get(user=user)
             perm.isVideoExamplesDisabled = request.data.get("isVideoExamplesDisabled")
+            perm.save()
         if request.data.get('activate'):
             try:
                 promo = models.Promocode.objects.get(user=request.user)
@@ -116,16 +117,17 @@ class UserUpdate(APIView):
                 promo_count.activated += 1
                 promo.activate = request.data['activate']
                 if promo_count.activated >= 5:
+                    perm = models.UserPermission.objects.get(user=user)
                     promo.free_month = True
                     promo.start_date = datetime.date.today(),
                     promo.end_date = datetime.date.today() + datetime.timedelta(days=30)
                     perm.permission = 'PROFESSIONAL'
+                    perm.save()
                 promo.save()
                 promo_count.save()
             except Exception as e:
                 print(e)
                 return JsonResponse({'result': False, "error": "Promo not found"}, status=status.HTTP_400_BAD_REQUEST)
-        perm.save()
         user.save()
         serialize = UserSerializer(user)
         return JsonResponse({"result": True, 'user': serialize.data})
