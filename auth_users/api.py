@@ -1,6 +1,7 @@
 import datetime
 import json, secrets, string, logging, requests
 
+import stripe
 from django.template.loader import render_to_string
 
 from .social.backend import PasswordlessAuthBackend
@@ -116,11 +117,29 @@ class UserUpdate(APIView):
                 promo_count = models.Promocode.objects.get(promo=request.data['activate'])
                 promo_count.activated += 1
                 promo.activate = request.data['activate']
+                sub = models.Subscription.objects.filter(user=promo.user, status="active", livemode=True)
+                if len(sub) == 1:
+                    if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
+                        sub = stripe.Subscription.retrieve(sub.subscription)
+                        if sub.discount is not None:
+                            if sub.discount.coupon.duration == "once":
+                                stripe.Subscription.modify(sub.id, coupon="Sc7tw02X")
+                                promo.discount = True
+                            elif sub.discount.coupon.duration == "repeating":
+                                end = sub.end
+                                end = datetime.utcfromtimestamp(end)
+                                result = datetime.date.today() > end.date()
+                                if result is True:
+                                    stripe.Subscription.modify(sub.id, coupon="Sc7tw02X")
+                                    promo.discount = True
+                        else:
+                            stripe.Subscription.modify(sub.id, coupon="Sc7tw02X")
+                            promo.discount = True
                 if promo_count.activated >= 5:
-                    perm = models.UserPermission.objects.get(user=user)
-                    promo.free_month = True
-                    promo.start_date = datetime.date.today(),
-                    promo.end_date = datetime.date.today() + datetime.timedelta(days=30)
+                    perm = models.UserPermission.objects.get(user=promo_count.user)
+                    promo_count.free_month = True
+                    promo_count.start_date = datetime.date.today(),
+                    promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
                     perm.permission = 'PROFESSIONAL'
                     perm.save()
                 promo.save()

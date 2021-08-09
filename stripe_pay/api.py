@@ -57,22 +57,6 @@ class StripeApi(APIView):
             for i in sub['data']:
                 if i['plan']['id'] == data['priceId'] and i['status'] != 'incomplete':
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
-            if customer.user.promocode.activate is not None and sub[0].items.data[0].plan.product != "prod_JxSPOj7Blartnr":
-                discount = sub[0].discount
-                if discount is not None:
-                    if discount.coupon.duration == "once":
-                        stripe.Subscription.modify(sub[0].id, coupon="Sc7tw02X")
-                        customer.user.promocode.discount = True
-                    elif discount.coupon.duration == "repeating":
-                        end = sub[0].end
-                        end = datetime.utcfromtimestamp(end)
-                        result = date.today() > end.date()
-                        if result is True:
-                            stripe.Subscription.modify(sub[0].id, coupon="Sc7tw02X")
-                            customer.user.promocode.discount = True
-                else:
-                    stripe.Subscription.modify(sub[0].id, coupon="Sc7tw02X")
-                    customer.user.promocode.discount = True
             # if customer.use_trial is False:
             #     checkout_session = stripe.checkout.Session.create(
             #         success_url='https://dashboard.sizze.io/',
@@ -94,20 +78,37 @@ class StripeApi(APIView):
             #     customer.use_trial = True
             #     customer.save()
             # else:
-            checkout_session = stripe.checkout.Session.create(
-                success_url='https://dashboard.sizze.io/',
-                cancel_url='https://dashboard.sizze.io/',
-                customer=customer.client,
-                payment_method_types=['card'],
-                mode='subscription',
-                allow_promotion_codes=True,
-                locale='en',
-                line_items=[{
-                    'price': data['priceId'],
-                    'quantity': 1
-                }]
-            )
-            return JsonResponse({'sessionId': checkout_session['id']})
+            if customer.user.promocode.discount is False:
+                checkout_session = stripe.checkout.Session.create(
+                    success_url='https://dashboard.sizze.io/',
+                    cancel_url='https://dashboard.sizze.io/',
+                    customer=customer.client,
+                    payment_method_types=['card'],
+                    mode='subscription',
+                    allow_promotion_codes=True,
+                    locale='en',
+                    discounts=[{"coupon": "Sc7tw02X"}],
+                    line_items=[{
+                        'price': data['priceId'],
+                        'quantity': 1
+                    }]
+                )
+                return JsonResponse({'sessionId': checkout_session['id']})
+            else:
+                checkout_session = stripe.checkout.Session.create(
+                    success_url='https://dashboard.sizze.io/',
+                    cancel_url='https://dashboard.sizze.io/',
+                    customer=customer.client,
+                    payment_method_types=['card'],
+                    mode='subscription',
+                    allow_promotion_codes=True,
+                    locale='en',
+                    line_items=[{
+                        'price': data['priceId'],
+                        'quantity': 1
+                    }]
+                )
+                return JsonResponse({'sessionId': checkout_session['id']})
         else:
             try:
                 checkout_session = stripe.checkout.Session.create(
