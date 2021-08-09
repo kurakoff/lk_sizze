@@ -85,7 +85,6 @@ class StripeApi(APIView):
                     customer=customer.client,
                     payment_method_types=['card'],
                     mode='subscription',
-                    allow_promotion_codes=False,
                     locale='en',
                     discounts=[{"coupon": "Sc7tw02X"}],
                     line_items=[{
@@ -93,6 +92,9 @@ class StripeApi(APIView):
                         'quantity': 1
                     }]
                 )
+                promo = customer.client.user.promocode
+                promo.discount = True
+                promo.save()
                 return JsonResponse({'sessionId': checkout_session['id']})
             else:
                 checkout_session = stripe.checkout.Session.create(
