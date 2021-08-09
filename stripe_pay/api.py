@@ -92,7 +92,7 @@ class StripeApi(APIView):
                         'quantity': 1
                     }]
                 )
-                promo = customer.client.user.promocode
+                promo = customer.user.promocode
                 promo.discount = True
                 promo.save()
                 return JsonResponse({'sessionId': checkout_session['id']})
