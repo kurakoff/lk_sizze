@@ -119,6 +119,7 @@ class UserUpdate(APIView):
                 promo.activate = request.data['activate']
                 sub = models.Subscription.objects.filter(customer__user=promo.user, status="active", livemode=True)
                 if len(sub) == 1:
+                    sub = sub[0]
                     if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
                         sub = stripe.Subscription.retrieve(sub.subscription)
                         if sub.discount is not None:
