@@ -85,7 +85,7 @@ class StripeApi(APIView):
                     customer=customer.client,
                     payment_method_types=['card'],
                     mode='subscription',
-                    allow_promotion_codes=True,
+                    allow_promotion_codes=False,
                     locale='en',
                     discounts=[{"coupon": "Sc7tw02X"}],
                     line_items=[{
