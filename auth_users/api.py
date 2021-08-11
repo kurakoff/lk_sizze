@@ -580,6 +580,8 @@ class TaskDetailApi(APIView):
 
 
 class GetRandomKeyWrite(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         result = False
         while result is False:
@@ -595,6 +597,8 @@ class GetRandomKeyWrite(APIView):
 
 
 class PostWrite(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         data = request.data
         token = models.PluginAuth.objects.get(write=data['write'])
