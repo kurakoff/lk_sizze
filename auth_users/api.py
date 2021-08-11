@@ -1,8 +1,5 @@
-import datetime
+import datetime, binascii, os, stripe
 import json, secrets, string, logging, requests
-
-import stripe
-from django.template.loader import render_to_string
 
 from .social.backend import PasswordlessAuthBackend
 from content import models
@@ -11,6 +8,8 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
+from django.core.cache import cache
+from django.template.loader import render_to_string
 
 from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
@@ -578,3 +577,37 @@ class TaskDetailApi(APIView):
         task = models.Tasks.objects.get(id=task_id)
         task.delete()
         return JsonResponse({"result": True})
+
+
+class GetRandomKeyWrite(APIView):
+    def post(self, request):
+        result = False
+        while result is False:
+            key = binascii.hexlify(os.urandom(20)).decode()
+            write = binascii.hexlify(os.urandom(20)).decode()
+            try:
+                credentials = models.PluginAuth.objects.create(key=key, write=write)
+                credentials.save()
+                result = True
+            except:
+                result = False
+        return JsonResponse({"key": key, "write": write})
+
+
+class PostWrite(APIView):
+    def post(self, request):
+        data = request.data
+        token = models.PluginAuth.objects.get(write=data['write'])
+        cache.set(str(token.key), str(data['token']), 30)
+        return JsonResponse({"result": True})
+
+    def get(self, request, key):
+        try:
+            token = cache.get(str(key))
+            res = {}
+            res["token"] = token
+            token = models.PluginAuth.objects.get(key=key)
+            token.delete()
+            return JsonResponse(res)
+        except:
+            return JsonResponse({"result": False})

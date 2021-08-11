@@ -38,7 +38,11 @@ urlpatterns = [
     path('enterprise/', api.EnterpriseApi.as_view()),
     path('enterprise/<int:user_id>/', api.EnterpriseDetailApi.as_view()),
     path('enterprise/<int:user_id>/task/', api.TasksApi.as_view()),
-    path('enterprise/<int:user_id>/task/<int:task_id>/', api.TaskDetailApi.as_view())
+    path('enterprise/<int:user_id>/task/<int:task_id>/', api.TaskDetailApi.as_view()),
+
+    path('generate_key_write/', api.GetRandomKeyWrite.as_view()),
+    path('write/', api.PostWrite.as_view()),
+    path('write/<str:key>/', api.PostWrite.as_view()),
 ]
 #
 #

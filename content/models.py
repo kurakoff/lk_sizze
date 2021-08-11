@@ -327,3 +327,8 @@ class Promocode(models.Model):
     free_month = models.BooleanField(default=False)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
+
+
+class PluginAuth(models.Model):
+    key = models.CharField(max_length=255, unique=True)
+    write = models.CharField(max_length=255, unique=True)
