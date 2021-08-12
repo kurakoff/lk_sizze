@@ -50,5 +50,6 @@ def stop_free_moth():
         perm.save()
     return print("Бесплатные подписки отменены")
 
+
 if __name__ == "__main__":
     create_backup()

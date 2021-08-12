@@ -48,6 +48,7 @@ class StripeApi(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        return_url = 'https://dashboard.sizze.io/'
         data = json.loads(request.body)
         try:
             customer = ClientStrip.objects.get(user=request.user, livemode=live_mode_turn)
@@ -57,66 +58,25 @@ class StripeApi(APIView):
             for i in sub['data']:
                 if i['plan']['id'] == data['priceId'] and i['status'] != 'incomplete':
                     return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
-            # if customer.use_trial is False:
-            #     checkout_session = stripe.checkout.Session.create(
-            #         success_url='https://dashboard.sizze.io/',
-            #         # '?session_id={CHECKOUT_SESSION_ID}',
-            #         cancel_url='https://dashboard.sizze.io/',
-            #         customer=customer.client,
-            #         payment_method_types=['card'],
-            #         mode='subscription',
-            #         allow_promotion_codes=True,
-            #         locale='en',
-            #         line_items=[{
-            #             'price': data['priceId'],
-            #             'quantity': 1
-            #         }],
-            #         subscription_data={
-            #             "trial_period_days": 7
-            #         }
-            #     )
-            #     customer.use_trial = True
-            #     customer.save()
-            # else:
-            if customer.user.promocode.discount is False:
-                checkout_session = stripe.checkout.Session.create(
-                    success_url='https://dashboard.sizze.io/',
-                    cancel_url='https://dashboard.sizze.io/',
-                    customer=customer.client,
-                    payment_method_types=['card'],
-                    mode='subscription',
-                    locale='en',
-                    discounts=[{"coupon": "Sc7tw02X"}],
-                    line_items=[{
-                        'price': data['priceId'],
-                        'quantity': 1
-                    }]
-                )
-                promo = customer.user.promocode
-                promo.discount = True
-                promo.save()
-                return JsonResponse({'sessionId': checkout_session['id']})
-            else:
-                checkout_session = stripe.checkout.Session.create(
-                    success_url='https://dashboard.sizze.io/',
-                    cancel_url='https://dashboard.sizze.io/',
-                    customer=customer.client,
-                    payment_method_types=['card'],
-                    mode='subscription',
-                    allow_promotion_codes=True,
-                    locale='en',
-                    line_items=[{
-                        'price': data['priceId'],
-                        'quantity': 1
-                    }]
-                )
-                return JsonResponse({'sessionId': checkout_session['id']})
+            checkout_session = stripe.checkout.Session.create(
+                success_url=return_url,
+                cancel_url=return_url,
+                customer=customer.client,
+                payment_method_types=['card'],
+                mode='subscription',
+                allow_promotion_codes=True,
+                locale='en',
+                line_items=[{
+                    'price': data['priceId'],
+                    'quantity': 1
+                }]
+            )
+            return JsonResponse({'sessionId': checkout_session['id']})
         else:
             try:
                 checkout_session = stripe.checkout.Session.create(
-                    success_url='https://dashboard.sizze.io/',
-                                #'?session_id={CHECKOUT_SESSION_ID}',
-                    cancel_url='https://dashboard.sizze.io/',
+                    success_url=return_url,
+                    cancel_url=return_url,
                     payment_method_types=['card'],
                     mode='subscription',
                     allow_promotion_codes=True,
@@ -124,12 +84,59 @@ class StripeApi(APIView):
                     customer_email=request.user.email,
                     line_items=[{
                         'price': data['priceId'],
-                        # For metered billing, do not pass quantity
                         'quantity': 1
                     }]
-                    # subscription_data={
-                    #     "trial_period_days": 7
-                    # }
+                )
+                return JsonResponse({'sessionId': checkout_session['id']})
+            except Exception as e:
+                return JsonResponse({'error': {'message': str(e)}}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CheckoutPromocode(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        return_url = 'https://dashboard.sizze.io/'
+        data = json.loads(request.body)
+        try:
+            customer = ClientStrip.objects.get(user=request.user, livemode=live_mode_turn)
+        except Exception as e: customer = None
+        if customer and customer.user.promocode.discount is True:
+            sub = stripe.Subscription.list(customer=customer.client)
+            for i in sub['data']:
+                if i['plan']['id'] == data['priceId'] and i['status'] != 'incomplete':
+                    return JsonResponse({'result': False, 'message': 'Sub is exist'}, status=status.HTTP_400_BAD_REQUEST)
+            checkout_session = stripe.checkout.Session.create(
+                success_url=return_url,
+                cancel_url=return_url,
+                customer=customer.client,
+                payment_method_types=['card'],
+                mode='subscription',
+                locale='en',
+                discounts=[{"coupon": "Sc7tw02X"}],
+                line_items=[{
+                    'price': data['priceId'],
+                    'quantity': 1
+                }]
+            )
+            promo = customer.user.promocode
+            promo.discount = True
+            promo.save()
+            return JsonResponse({'sessionId': checkout_session['id']})
+        else:
+            try:
+                checkout_session = stripe.checkout.Session.create(
+                    success_url=return_url,
+                    cancel_url=return_url,
+                    payment_method_types=['card'],
+                    mode='subscription',
+                    discounts=[{"coupon": "Sc7tw02X"}],
+                    locale='en',
+                    customer_email=request.user.email,
+                    line_items=[{
+                        'price': data['priceId'],
+                        'quantity': 1
+                    }]
                 )
                 return JsonResponse({'sessionId': checkout_session['id']})
             except Exception as e:
@@ -144,16 +151,13 @@ class StripeWebhook(APIView):
         webhook_secret = config('stripe_webhook')
         request_data = json.loads(request.body)
         if webhook_secret:
-            # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
             signature = request.headers.get('stripe-signature')
             try:
                 event = stripe.Webhook.construct_event(
                     payload=request.body, sig_header=signature, secret=webhook_secret)
                 data = event['data']
             except Exception as e:
-                print(e)
                 return e
-            # Get the type of webhook event sent - used to check the status of PaymentIntents.
             event_type = event['type']
         else:
             data = request_data['data']
@@ -352,11 +356,6 @@ class PriceWebhook(APIView):
             client = data['object']['id']
             email = data['object']['email']
             user = User.objects.get(email=email)
-            # try:
-            #     past_client = ClientStrip.objects.filter(user=user)
-            #     past_client.delete()
-            # except:
-            #     pass
             new_client = ClientStrip.objects.create(
                 user=user, client=client, seanse=data_object['id'], livemode=data_object["livemode"], use_trial=False)
             new_client.save()

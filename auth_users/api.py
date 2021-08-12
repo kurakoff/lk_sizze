@@ -122,19 +122,11 @@ class UserUpdate(APIView):
                     if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
                         sub = stripe.Subscription.retrieve(sub.subscription)
                         if sub.discount is not None:
-                            if sub.discount.coupon.duration == "once":
-                                stripe.Subscription.modify(sub.id, coupon="Sc7tw02X")
-                                promo.discount = True
-                            elif sub.discount.coupon.duration == "repeating":
-                                end = sub.end
-                                end = datetime.utcfromtimestamp(end)
-                                result = datetime.date.today() > end.date()
-                                if result is True:
-                                    stripe.Subscription.modify(sub.id, coupon="Sc7tw02X")
-                                    promo.discount = True
-                        else:
-                            stripe.Subscription.modify(sub.id, coupon="Sc7tw02X")
-                            promo.discount = True
+                            customer = sub.customer.client
+                            upcoming_total = stripe.Invoice.upcoming(customer=customer)
+                            upcoming_total = upcoming_total['total']
+                            discount = (int(upcoming_total) / 100) * 30
+                            stripe.InvoiceItem.create(customer=customer, amount=-int(discount), currency="usd")
                 if promo_count.activated >= 5:
                     perm = models.UserPermission.objects.get(user=promo_count.user)
                     promo_count.free_month = True
