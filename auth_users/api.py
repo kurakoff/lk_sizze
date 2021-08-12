@@ -610,8 +610,6 @@ class PostWrite(APIView):
             token = cache.get(str(key))
             res = {}
             res["token"] = token
-            token = models.PluginAuth.objects.get(key=key)
-            token.delete()
             return JsonResponse(res)
         except:
             return JsonResponse({"result": False})
