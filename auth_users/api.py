@@ -114,28 +114,29 @@ class UserUpdate(APIView):
             try:
                 promo = models.Promocode.objects.get(user=request.user)
                 promo_count = models.Promocode.objects.get(promo=request.data['activate'])
-                promo_count.activated += 1
-                promo.activate = request.data['activate']
-                sub = models.Subscription.objects.filter(customer__user=promo.user, status="active", livemode=True)
-                if len(sub) == 1:
-                    sub = sub[0]
-                    if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
-                        sub = stripe.Subscription.retrieve(sub.subscription)
-                        if sub.discount is not None:
-                            customer = sub.customer.client
-                            upcoming_total = stripe.Invoice.upcoming(customer=customer)
-                            upcoming_total = upcoming_total['total']
-                            discount = (int(upcoming_total) / 100) * 30
-                            stripe.InvoiceItem.create(customer=customer, amount=-int(discount), currency="usd")
-                if promo_count.activated >= 5:
-                    perm = models.UserPermission.objects.get(user=promo_count.user)
-                    promo_count.free_month = True
-                    promo_count.start_date = datetime.date.today(),
-                    promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
-                    perm.permission = 'PROFESSIONAL'
-                    perm.save()
-                promo.save()
-                promo_count.save()
+                if promo.activate is None:
+                    promo_count.activated += 1
+                    promo.activate = request.data['activate']
+                    sub = models.Subscription.objects.filter(customer__user=promo.user, status="active", livemode=True)
+                    if len(sub) == 1:
+                        sub = sub[0]
+                        if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
+                            sub = stripe.Subscription.retrieve(sub.subscription)
+                            if sub.discount is not None:
+                                customer = sub.customer.client
+                                upcoming_total = stripe.Invoice.upcoming(customer=customer)
+                                upcoming_total = upcoming_total['total']
+                                discount = (int(upcoming_total) / 100) * 30
+                                stripe.InvoiceItem.create(customer=customer, amount=-int(discount), currency="usd")
+                    if promo_count.activated >= 5:
+                        perm = models.UserPermission.objects.get(user=promo_count.user)
+                        promo_count.free_month = True
+                        promo_count.start_date = datetime.date.today(),
+                        promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
+                        perm.permission = 'PROFESSIONAL'
+                        perm.save()
+                    promo.save()
+                    promo_count.save()
             except Exception as e:
                 print(e)
                 return JsonResponse({'result': False, "error": "Promo not found"}, status=status.HTTP_400_BAD_REQUEST)
