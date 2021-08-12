@@ -197,19 +197,22 @@ class ScreenView(APIView):
             screen = project.screen_set.get(id=screen_id)
         except Screen.DoesNotExist:
             return JsonResponse({'message': 'Screen not found', "result": False})
-        position = screen.position
-        preview = project.previewScreenId.position
-        screen.delete()
         screens = project.screen_set.all()
-        for i in screens:
-            if i.position > position:
-                i.position -= 1
-                i.save()
-        if int(preview) == int(position):
-            new_screen = Screen.objects.get(project_id=project_id, position=1)
-            project.previewScreenId = new_screen
-            project.save()
-        return JsonResponse({'result': True})
+        if len(screens) != 1:
+            position = screen.position
+            preview = project.previewScreenId.position
+            screen.delete()
+            for i in screens:
+                if i.position > position:
+                    i.position -= 1
+                    i.save()
+            if int(preview) == int(position):
+                new_screen = Screen.objects.get(project_id=project_id, position=1)
+                project.previewScreenId = new_screen
+                project.save()
+            return JsonResponse({'result': True})
+        else:
+            return JsonResponse({"result": False})
 
 
 class ProjectApiView(APIView):
