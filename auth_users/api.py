@@ -606,3 +606,18 @@ class PostWrite(APIView):
             return JsonResponse(res)
         except:
             return JsonResponse({"result": False})
+
+
+class PostPromoEmail(APIView):
+
+    def post(self, request):
+        email = request.data.get('email')
+        promocode = request.user.promocode.promo
+        msg_html = render_to_string('mail/referral_code.html', {'promocode': promocode, "from_user": email,
+                                                                "to_user": request.user.email})
+        from .utils import send_html_mail
+        send_html_mail(subject=f"Referral code for 30% discount.",
+                       html_content=msg_html,
+                       sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
+                       recipient_list=[email])
+        return JsonResponse({"result": True})
