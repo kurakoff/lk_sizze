@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$#@!4_9^kzr-9+0-@ob-5=cx(!bv7lu*hzi0w(ayq+*2ltay)n'
+SECRET_KEY = config('secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['sizze.io', 'www.sizze.io', 'lk.sizze.io', 'www.lk.sizze.io', '127.0.0.1', '89.223.122.154']
 
@@ -210,14 +210,8 @@ REST_FRAMEWORK = {
 APPEND_SLASH = False
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
-GOOGLE_PHOTO_API = {"web": {"client_id": "334729455720-v3rk8a7n810m2u52d7ekn5gr2q2rkqua.apps.googleusercontent.com",
-                            "project_id": "sizze-photo", "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                            "token_uri": "https://oauth2.googleapis.com/token",
-                            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-                            "client_secret": "6QHX7jQht8kLwY1PlXntC1pL", "redirect_uris": ["https://sizze.io/"]}}
-
-GOOGLE_CLIENT_SECRET = 'dKKeVeH8zZWy9aBcfgKnO5a5'
-GOOGLE_CLIENT_ID = '334729455720-d4pno273r6kaoe49cjautkg9isov59ke.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = config("google_client_secret")
+GOOGLE_CLIENT_ID = config("google_client_id")
 
 SILENCED_SYSTEM_CHECKS = ["auth.W004"]
 
@@ -270,8 +264,8 @@ LOGGING = {
     },
 }
 
-FIGMA_SECRET = "mIiNtkfnRQxLTTUn4fPHjmG6iP0BEu"
-FIGMA_CLIENT = "hZWPD96SWEmc4QnMGxpRcw"
+FIGMA_SECRET = config('figma_secret')
+FIGMA_CLIENT = config('figma_client')
 FIGMA_REDIRECT_URI = "https://dashboard.sizze.io/0auth/callback"
 
 CACHES = {
