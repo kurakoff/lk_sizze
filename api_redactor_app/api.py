@@ -541,7 +541,7 @@ class ScreenCopyView(APIView):
 
 
 class ProjectCopyView(APIView):
-    permission_classes = [IsAuthor or EditPermission]
+    permission_classes = [IsAuthor | EditPermission]
 
     '''Копирование проекта'''
     def copy_project(self, request, project_id):
