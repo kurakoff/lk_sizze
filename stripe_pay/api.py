@@ -167,11 +167,14 @@ class StripeWebhook(APIView):
             return JsonResponse({"result": True})
         elif event_type == 'invoice.paid':
             user = User.objects.get(email=data_object['customer_email'])
-            from auth_users.utils import send_text_mail
-            send_text_mail(f"{user.email} купил подпику, проверьте страйп",
-                           f"{user.email} купил подпику, проверьте страйп",
-                           sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
-                           recipient_list=['kabiljanz0301@gmail.com', 'kurakoff19@gmail.com'])
+            try:
+                from auth_users.utils import send_text_mail
+                send_text_mail(f"{user.email} купил подпику, проверьте страйп",
+                               f"{user.email} купил подпику, проверьте страйп",
+                               sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>',
+                               recipient_list=['kabiljanz0301@gmail.com', 'kurakoff19@gmail.com'])
+            except:
+                pass
             product = Price.objects.get(price=data_object['lines']['data'][0]['price']['id'])
             if product.name == "Enterprise":
                 event_args = {"user_id": str(user.id), "event_type": "Subscription (Enterprise)"}
