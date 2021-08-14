@@ -242,6 +242,7 @@ class SubsciprionSettings(admin.ModelAdmin):
 class PriceSettings(admin.ModelAdmin):
     list_display = ['id', 'price', 'product', 'status', 'live_mode', 'cost', 'name']
 
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
@@ -257,7 +258,7 @@ admin.site.register(ModesState, ModesSettings)
 admin.site.register(FigmaUser)
 admin.site.register(PasswordReset)
 admin.site.register(ClientStrip)
-admin.site.register(Price)
+admin.site.register(Price, PriceSettings)
 admin.site.register(Subscription, SubsciprionSettings)
 admin.site.register(UserPermission, UserPermissionSetting)
 admin.site.register(UserAbout, UserAboutSettings)
