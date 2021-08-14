@@ -238,6 +238,10 @@ class SubsciprionSettings(admin.ModelAdmin):
     list_display = ['id', 'subscription', 'customer', 'status', 'livemode']
     search_fields = ['id', 'subscription', 'customer', 'status']
 
+
+class PriceSettings(admin.ModelAdmin):
+    list_display = ['id', 'price', 'product', 'status', 'live_mode', 'cost', 'name']
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
