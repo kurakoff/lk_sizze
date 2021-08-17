@@ -231,7 +231,7 @@ class TaskSettings(admin.ModelAdmin):
 
 class PromoSettings(admin.ModelAdmin):
     list_display = ['id', 'user', 'promo', 'activate', 'activated']
-    search_fields = ['user__email']
+    search_fields = ['user__email', 'promo', 'activate']
 
 
 class SubsciprionSettings(admin.ModelAdmin):
