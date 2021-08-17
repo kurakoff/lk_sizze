@@ -130,11 +130,12 @@ class UserUpdate(APIView):
                                 stripe.InvoiceItem.create(customer=customer, amount=-int(discount), currency="usd")
                     if promo_count.activated >= 5:
                         perm = models.UserPermission.objects.get(user=promo_count.user)
-                        promo_count.free_month = True
-                        promo_count.start_date = datetime.date.today(),
-                        promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
-                        perm.permission = 'PROFESSIONAL'
-                        perm.save()
+                        if perm.permission != 'TEAM' or perm.permission != 'ENTERPRISE':
+                            promo_count.free_month = True
+                            promo_count.start_date = datetime.date.today(),
+                            promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
+                            perm.permission = 'TEAM'
+                            perm.save()
                     promo.save()
                     promo_count.save()
             except Exception as e:
