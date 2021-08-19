@@ -40,7 +40,7 @@ class InitProject(APIView):
         response = []
         project = get_object_or_404(Project, pk=project)
         prototype_pk = project.prototype.pk
-        categories = Category.objects.filter(prototype=prototype_pk)
+        categories = Category.objects.filter(prototype=prototype_pk).order_by('position')
         for category in categories:
             category_j = {}
             category_j['title'] = category.title

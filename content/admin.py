@@ -118,7 +118,8 @@ class ShareProjectSetting(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     actions_selection_counter = True
-    list_display = ['title', 'slug', 'two_in_row']
+    list_display = ['title', 'slug', 'two_in_row', 'position']
+    list_editable = ('position',)
     ordering = ['id']
     list_filter = ('two_in_row',)
     preserve_filters = False
