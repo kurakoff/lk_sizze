@@ -332,3 +332,13 @@ class Promocode(models.Model):
 class PluginAuth(models.Model):
     key = models.CharField(max_length=255, unique=True)
     write = models.CharField(max_length=255, unique=True)
+
+
+class ScreenCategory(models.Model):
+    title = models.CharField(max_length=255)
+    screen = models.ManyToManyField(Screen, null=True)
+    active = models.BooleanField(default=False)
+    position = models.SmallIntegerField(default=0)
+
+    def __str__(self):
+        return self.title

@@ -1,6 +1,5 @@
 import base64, json, os, random, string, googleapiclient, reversion, datetime, requests
 from mimetypes import guess_extension, guess_type
-from typing import Union
 
 from django.conf import settings
 from django.http import JsonResponse
@@ -20,10 +19,10 @@ from reversion.models import Version, Revision
 from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSerializer, ScreenSerializer,\
     ShareProjectSerializer, SharedProjectDeleteUserSerializer, ShareProjectBaseSerializer, OtherProjectSerializer,\
     PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer, CategorySerializer, ElemetSerializer, \
-    RequestSerializer, TutorialSerializer
+    RequestSerializer, TutorialSerializer, ScreenCategorySerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
-    BaseWidthPrototype, ModesState, Constant_colors, Element, Request, Tutorials
-from .permissions import IsAuthor, EditPermission, DeletePermission, StartPermission, ProfessionalPermission, TeamPermission
+    BaseWidthPrototype, ModesState, Constant_colors, Element, Request, Tutorials, ScreenCategory
+from .permissions import IsAuthor, EditPermission, DeletePermission
 
 
 CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
@@ -61,31 +60,6 @@ class InitProject(APIView):
                 else:
                     elements.append(j_element)
         return JsonResponse({'categories': response})
-
-# class InitProject(APIView):
-#     def get(self, request, project, *args, **kwargs):
-#         response = []
-#         project = get_object_or_404(Project, pk=project)
-#         prototype_pk = project.prototype.pk
-#         categories = Category.objects.filter(categoryprototype__prototype=prototype_pk)
-#         for category in categories:
-#             category_j = {}
-#             category_j['title'] = category.title
-#             category_j['two_in_row'] = category.two_in_row
-#             elements = category_j['elements'] = []
-#             icons = category_j['icons'] = []
-#             response.append(category_j)
-#             for element in category.get_elements_on_prototype(prototype_pk).all():
-#                 j_element = {}
-#                 j_element['title'] = element.title
-#                 j_element['layout'] = [element.light_layout, element.dark_layout]
-#                 j_element['image'] = [str(element.light_image), str(element.dark_image)]
-#                 j_element['active'] = element.active
-#                 if 'icons_' in category.title:
-#                     icons.append(j_element)
-#                 else:
-#                     elements.append(j_element)
-#         return JsonResponse({'categories': response})
 
 
 class ScreenView(APIView):
@@ -1190,3 +1164,79 @@ class TutorialDetailApi(APIView):
         tutor = Tutorials.objects.get(id=tutorial_id)
         tutor.delete()
         return JsonResponse({"result": True})
+
+
+class ScreenCategoryApi(APIView):
+    def get(self, request):
+        category_screen = ScreenCategory.objects.all().order_by("position")
+        serializer = ScreenCategorySerializer(category_screen, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def post(self, request):
+        screens = ScreenCategory.objects.all()
+        data = request.data
+        category_screen = ScreenCategory.objects.create(
+            title=data['title'],
+            active=data.get('active') or False,
+            position=len(screens) + 1
+        )
+        for i in data['screen']:
+            screen = Screen.objects.get(id=i)
+            category_screen.screen.add(screen)
+        category_screen.save()
+        serializer = ScreenCategorySerializer(category_screen)
+        return JsonResponse(serializer.data)
+
+
+class ScreenCategoryDetailApi(APIView):
+    def get(self, request, screen_category_id):
+        try:
+            screen_category = ScreenCategory.objects.get(id=screen_category_id)
+            seriazlier = ScreenCategorySerializer(screen_category)
+            return JsonResponse(seriazlier.data)
+        except screen_category.DoesNotExist:
+            return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, screen_category_id):
+        try:
+            screen_category = ScreenCategory.objects.get(id=screen_category_id)
+            if request.data.get('title'): screen_category.title = request.data.get('title')
+            if request.data.get('active'): screen_category.title = request.data.get('active')
+            if request.data.get('position'):
+                if request.data.get('position') < screen_category.position:
+                    positions = ScreenCategory.objects.filter(position__gte=request.data.get('position'))
+                    for i in positions:
+                        i.position += 1
+                        i.save()
+                    screen_category.position = request.data.get('position')
+                elif request.data.get('position') > screen_category.position:
+                    positions = ScreenCategory.objects.filter(position__lte=request.data.get('position'))
+                    for i in positions:
+                        i.position -= 1
+                        i.save()
+                    screen_category.position = request.data.get('position')
+            if request.data.get('screen'):
+                for i in request.data.get('screen'):
+                    screen = Screen.objects.get(id=i)
+                    screen_category.screen.add(screen)
+            if request.data.get('-screen'):
+                for i in request.data.get('-screen'):
+                    screen = Screen.objects.get(id=i)
+                    screen_category.screen.remove(screen)
+            screen_category.save()
+            serializer = ScreenCategorySerializer(screen_category)
+            return JsonResponse(serializer.data)
+        except screen_category.DoesNotExist:
+            return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, screen_category_id):
+        try:
+            screen_category = ScreenCategory.objects.get(id=screen_category_id)
+            screens_category = ScreenCategory.objects.filter(position__gt=screen_category.position)
+            for i in screens_category:
+                i.position -= 1
+                i.save()
+            screen_category.delete()
+            return JsonResponse({'result': True})
+        except screen_category.DoesNotExist:
+            return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)

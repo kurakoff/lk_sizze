@@ -46,5 +46,8 @@ urlpatterns = [
     path('element/<int:element_id>/', api.ElementDetailApi.as_view()),
 
     path('tutorial/', api.TutorialApi.as_view()),
-    path('tutorial/<int:tutorial_id>/', api.TutorialDetailApi.as_view())
+    path('tutorial/<int:tutorial_id>/', api.TutorialDetailApi.as_view()),
+
+    path('screen_category/', api.ScreenCategoryApi.as_view()),
+    path('screen_category/<int:screen_category_id>/', api.ScreenCategoryDetailApi.as_view())
 ]

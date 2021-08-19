@@ -26,7 +26,8 @@ from .models import (
     EnterpriseUser,
     Tasks,
     Tutorials,
-    Promocode
+    Promocode,
+    ScreenCategory
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -243,6 +244,11 @@ class PriceSettings(admin.ModelAdmin):
     list_display = ['id', 'price', 'product', 'status', 'live_mode', 'cost', 'name']
 
 
+class ScreenCategorySettings(admin.ModelAdmin):
+    list_display = ['id', 'title', 'active']
+    search_fields = ['id', 'title']
+    list_filter = ['active']
+
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Settings, SettingsAdmin)
@@ -269,3 +275,4 @@ admin.site.register(EnterpriseUser, EnterpriseUserSettings)
 admin.site.register(Tasks, TaskSettings)
 admin.site.register(Tutorials)
 admin.site.register(Promocode, PromoSettings)
+admin.site.register(ScreenCategory, ScreenCategorySettings)
