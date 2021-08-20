@@ -493,7 +493,7 @@ class ScreenCopyView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             screen = Screen.objects.get(project_id=kwargs["project_id"], id=kwargs["screen_id"])
-            sceens = Screen.objects.filter(project_id=kwargs["project_id"])
+            screens = Screen.objects.filter(project_id=kwargs["project_id"])
             copy_screen = Screen.objects.create(
                 title="Copy " + screen.title,
                 layout=screen.layout,
@@ -502,7 +502,7 @@ class ScreenCopyView(APIView):
                 height=screen.height,
                 width=screen.width,
                 background_color=screen.background_color,
-                position=(len(sceens) + 1),
+                position=(len(screens) + 1),
                 constant_color=screen.constant_color,
                 styles=screen.styles,
                 base=screen.id
@@ -1168,7 +1168,7 @@ class TutorialDetailApi(APIView):
 
 class ScreenCategoryApi(APIView):
     def get(self, request):
-        category_screen = ScreenCategory.objects.all().order_by("position")
+        category_screen = ScreenCategory.objects.filter(active=True).order_by("position")
         serializer = ScreenCategorySerializer(category_screen, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -1189,7 +1189,7 @@ class ScreenCategoryApi(APIView):
 
 
 class ScreenCategoryDetailApi(APIView):
-    def get(self, request, screen_category_id):
+    def get(self, request, screen_category_id, project_id=None):
         try:
             screen_category = ScreenCategory.objects.get(id=screen_category_id)
             seriazlier = ScreenCategorySerializer(screen_category)
@@ -1197,7 +1197,7 @@ class ScreenCategoryDetailApi(APIView):
         except screen_category.DoesNotExist:
             return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request, screen_category_id):
+    def put(self, request, screen_category_id, project_id=None):
         try:
             screen_category = ScreenCategory.objects.get(id=screen_category_id)
             if request.data.get('title'): screen_category.title = request.data.get('title')
@@ -1229,7 +1229,7 @@ class ScreenCategoryDetailApi(APIView):
         except screen_category.DoesNotExist:
             return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, screen_category_id):
+    def delete(self, request, screen_category_id, project_id=None):
         try:
             screen_category = ScreenCategory.objects.get(id=screen_category_id)
             screens_category = ScreenCategory.objects.filter(position__gt=screen_category.position)
@@ -1240,3 +1240,24 @@ class ScreenCategoryDetailApi(APIView):
             return JsonResponse({'result': True})
         except screen_category.DoesNotExist:
             return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)
+
+
+    def post(self, request, project_id, screen_id, screen_category_id=None):
+        base = Screen.objects.get(id=screen_id)
+        screens = Screen.objects.filter(project_id=project_id)
+        project = Project.objects.get(id=project_id)
+        screen = Screen.objects.create(
+            title=base.title,
+            layout=base.layout,
+            project=project,
+            width=project.prototype.width,
+            height=project.prototype.height,
+            background_color=base.background_color,
+            position=len(screens) + 1,
+            constant_color=base.constant_color,
+            styles=base.styles,
+            base=base.base
+        )
+        screen.save()
+        serializer = ScreenSerializer(screen)
+        return JsonResponse(serializer.data)

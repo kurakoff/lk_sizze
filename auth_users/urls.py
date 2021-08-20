@@ -44,7 +44,7 @@ urlpatterns = [
     path('write/', api.PostWrite.as_view()),
     path('write/<str:key>/', api.PostWrite.as_view()),
 
-    path('referral_send/', api.PostPromoEmail.as_view())
+    path('referral_send/', api.PostPromoEmail.as_view()),
 ]
 #
 #

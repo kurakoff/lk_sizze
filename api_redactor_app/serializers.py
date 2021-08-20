@@ -126,7 +126,28 @@ class TutorialSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ScreenListingField(serializers.RelatedField):
+    def to_representation(self, value):
+        res = {}
+        res['id'] = value.id
+        res['title'] = value.title
+        res['project'] = value.project.id
+        res['last_change'] = value.last_change
+        res['width'] = value.width
+        res['height'] = value.height
+        res['background_color'] = value.background_color
+        res['position'] = value.position
+        if value.constant_color is None:
+            res['constant_color'] = None
+        else:
+            res['constant_color'] = value.constant_color.id
+        res['styles'] = value.styles
+        res['base'] = value.base
+        return res
+
+
 class ScreenCategorySerializer(serializers.ModelSerializer):
+    screen = ScreenListingField(many=True, read_only=True)
     class Meta:
         model = ScreenCategory
-        fields = '__all__'
+        fields = ['id', 'title', 'screen', 'active', 'position']
