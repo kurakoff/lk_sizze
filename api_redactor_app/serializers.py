@@ -131,6 +131,7 @@ class ScreenListingField(serializers.RelatedField):
         res = {}
         res['id'] = value.id
         res['title'] = value.title
+        res['layout'] = value.layout
         res['project'] = value.project.id
         res['last_change'] = value.last_change
         res['width'] = value.width
