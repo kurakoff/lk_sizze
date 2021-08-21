@@ -337,9 +337,16 @@ class PluginAuth(models.Model):
 
 class ScreenCategory(models.Model):
     title = models.CharField(max_length=255)
-    screen = models.ManyToManyField(Screen, null=True)
+    screen = models.ManyToManyField(Screen, through="Screen_ScreenCategory")
     active = models.BooleanField(default=False)
     position = models.SmallIntegerField(default=0)
 
     def __str__(self):
         return self.title
+
+
+class Screen_ScreenCategory(models.Model):
+    screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
+    screencategory = models.ForeignKey(ScreenCategory, on_delete=models.CASCADE)
+    image = models.FileField(upload_to='Screen_category/', null=True)
+    position = models.SmallIntegerField(default=0)

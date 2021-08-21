@@ -128,6 +128,8 @@ class TutorialSerializer(serializers.ModelSerializer):
 
 class ScreenListingField(serializers.RelatedField):
     def to_representation(self, value):
+        screen_category = ScreenCategory.objects.get(id=self.context["screen_category"])
+        screen = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen=value)
         res = {}
         res['id'] = value.id
         res['title'] = value.title
@@ -137,7 +139,11 @@ class ScreenListingField(serializers.RelatedField):
         res['width'] = value.width
         res['height'] = value.height
         res['background_color'] = value.background_color
-        res['position'] = value.position
+        res['position'] = screen.position
+        if screen.image:
+            res['image'] = screen.image.url
+        else:
+            res['image'] = None
         if value.constant_color is None:
             res['constant_color'] = None
         else:

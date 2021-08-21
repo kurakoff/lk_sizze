@@ -21,7 +21,7 @@ from .serializers import UserElementSerializer, ProjectSerializer, PrototypeSeri
     PastProjectsSerializer, ModesStateSerializer, ConstantColorsSerializer, CategorySerializer, ElemetSerializer, \
     RequestSerializer, TutorialSerializer, ScreenCategorySerializer
 from content.models import Screen, Project, Prototype, UserElement, UserProfile, Project, Category, SharedProject,\
-    BaseWidthPrototype, ModesState, Constant_colors, Element, Request, Tutorials, ScreenCategory
+    BaseWidthPrototype, ModesState, Constant_colors, Element, Request, Tutorials, ScreenCategory, Screen_ScreenCategory
 from .permissions import IsAuthor, EditPermission, DeletePermission
 
 
@@ -1042,7 +1042,7 @@ class ElementApi(APIView):
     def get(self, request):
         elements = Element.objects.all()
         serializer = ElemetSerializer(elements, many=True)
-        return JsonResponse(serializer.data)
+        return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
         data = request.data
@@ -1170,6 +1170,7 @@ class ScreenCategoryApi(APIView):
     def get(self, request):
         category_screen = ScreenCategory.objects.filter(active=True).order_by("position")
         serializer = ScreenCategorySerializer(category_screen, many=True)
+        serializer.context['screen_category'] = category_screen.id
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
@@ -1181,10 +1182,11 @@ class ScreenCategoryApi(APIView):
             position=len(screens) + 1
         )
         for i in data['screen']:
-            screen = Screen.objects.get(id=i)
-            category_screen.screen.add(screen)
+            screen = Screen.objects.get(id=i.get('id'))
+            category_screen.screen.add(screen, through_defaults={'position': i.get('position'), "image": i.get('image')})
         category_screen.save()
         serializer = ScreenCategorySerializer(category_screen)
+        serializer.context['screen_category'] = category_screen.id
         return JsonResponse(serializer.data)
 
 
@@ -1192,8 +1194,9 @@ class ScreenCategoryDetailApi(APIView):
     def get(self, request, screen_category_id, project_id=None):
         try:
             screen_category = ScreenCategory.objects.get(id=screen_category_id)
-            seriazlier = ScreenCategorySerializer(screen_category)
-            return JsonResponse(seriazlier.data)
+            serializer = ScreenCategorySerializer(screen_category)
+            serializer.context['screen_category'] = screen_category.id
+            return JsonResponse(serializer.data)
         except screen_category.DoesNotExist:
             return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)
 
@@ -1217,14 +1220,16 @@ class ScreenCategoryDetailApi(APIView):
                     screen_category.position = request.data.get('position')
             if request.data.get('screen'):
                 for i in request.data.get('screen'):
-                    screen = Screen.objects.get(id=i)
-                    screen_category.screen.add(screen)
+                    screen = Screen.objects.get(id=i['id'])
+                    screen_category.screen.add(screen, through_defaults={'position': i.get('position'),
+                                                                         "image": i.get('image')})
             if request.data.get('-screen'):
                 for i in request.data.get('-screen'):
                     screen = Screen.objects.get(id=i)
                     screen_category.screen.remove(screen)
             screen_category.save()
             serializer = ScreenCategorySerializer(screen_category)
+            serializer.context['screen_category'] = screen_category.id
             return JsonResponse(serializer.data)
         except screen_category.DoesNotExist:
             return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)

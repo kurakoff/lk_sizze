@@ -27,7 +27,8 @@ from .models import (
     Tasks,
     Tutorials,
     Promocode,
-    ScreenCategory
+    ScreenCategory,
+    Screen_ScreenCategory
 )
 from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
@@ -277,3 +278,4 @@ admin.site.register(Tasks, TaskSettings)
 admin.site.register(Tutorials)
 admin.site.register(Promocode, PromoSettings)
 admin.site.register(ScreenCategory, ScreenCategorySettings)
+admin.site.register(Screen_ScreenCategory)
