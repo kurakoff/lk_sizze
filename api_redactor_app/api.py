@@ -1170,8 +1170,6 @@ class ScreenCategoryApi(APIView):
     def get(self, request):
         category_screen = ScreenCategory.objects.filter(active=True).order_by("position")
         serializer = ScreenCategorySerializer(category_screen, many=True)
-        if len(category_screen) > 0:
-            serializer.context['screen_category'] = category_screen.id
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
@@ -1196,7 +1194,6 @@ class ScreenCategoryDetailApi(APIView):
         try:
             screen_category = ScreenCategory.objects.get(id=screen_category_id)
             serializer = ScreenCategorySerializer(screen_category)
-            serializer.context['screen_category'] = screen_category.id
             return JsonResponse(serializer.data)
         except screen_category.DoesNotExist:
             return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)

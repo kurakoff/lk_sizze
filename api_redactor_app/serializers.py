@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from content.models import Screen, Prototype, Project, UserElement, SharedProject, ModesState, Constant_colors, Category, \
     Element, Request, Tutorials, ScreenCategory
+from django.db.models import Manager
+from django.db.models.query import QuerySet
 
 
 class ScreenSerializer(serializers.ModelSerializer):
@@ -127,9 +129,18 @@ class TutorialSerializer(serializers.ModelSerializer):
 
 
 class ScreenListingField(serializers.RelatedField):
+    def to_internal_value(self, data):
+        print(data)
+
     def to_representation(self, value):
-        screen_category = ScreenCategory.objects.get(id=self.context["screen_category"])
-        screen = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen=value)
+        context = self.context['screen_category']
+        print(context)
+        screen_category = value.screencategory_set.filter(active=True)
+        print("START")
+        print(value.id)
+        for i in screen_category:
+            print(i.id)
+        print("END")
         res = {}
         res['id'] = value.id
         res['title'] = value.title
@@ -139,11 +150,6 @@ class ScreenListingField(serializers.RelatedField):
         res['width'] = value.width
         res['height'] = value.height
         res['background_color'] = value.background_color
-        res['position'] = screen.position
-        if screen.image:
-            res['image'] = screen.image.url
-        else:
-            res['image'] = None
         if value.constant_color is None:
             res['constant_color'] = None
         else:
@@ -154,7 +160,44 @@ class ScreenListingField(serializers.RelatedField):
 
 
 class ScreenCategorySerializer(serializers.ModelSerializer):
-    screen = ScreenListingField(many=True, read_only=True)
+    # screen = ScreenListingField(many=True, read_only=True)
+    id = serializers.SerializerMethodField()
+    screen = serializers.SerializerMethodField()
+
+    def get_screen(self, obj):
+        screens = obj.screen.all()
+        if len(obj.screen.all()) > 0:
+            response = []
+            for value in screens:
+                res = {}
+                screen_category = ScreenCategory.objects.get(id=self.get_id(obj))
+                screen_sc = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen=value)
+                res['id'] = value.id
+                res['title'] = value.title
+                res['layout'] = value.layout
+                res['project'] = value.project.id
+                res['last_change'] = value.last_change
+                res['width'] = value.width
+                res['height'] = value.height
+                res['background_color'] = value.background_color
+                if value.constant_color is None:
+                    res['constant_color'] = None
+                else:
+                    res['constant_color'] = value.constant_color.id
+                res['styles'] = value.styles
+                res['base'] = value.base
+                res['position'] = screen_sc.position
+                if screen_sc.image:
+                    res['image'] = screen_sc.image.url
+                else:
+                    res['image'] = None
+                response.append(res)
+            return response
+        return []
+
+    def get_id(self, obj):
+        return obj.id
+
     class Meta:
         model = ScreenCategory
         fields = ['id', 'title', 'screen', 'active', 'position']
