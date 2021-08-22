@@ -1170,7 +1170,8 @@ class ScreenCategoryApi(APIView):
     def get(self, request):
         category_screen = ScreenCategory.objects.filter(active=True).order_by("position")
         serializer = ScreenCategorySerializer(category_screen, many=True)
-        serializer.context['screen_category'] = category_screen.id
+        if len(category_screen) > 0:
+            serializer.context['screen_category'] = category_screen.id
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
