@@ -241,12 +241,12 @@ LOGGING = {
     'loggers': {
         'django.request': {
             'handlers': ['file_deb', 'file_inf'],
-            'level': 'INGO',
+            'level': 'INFO',
             'propagate': True,
         },
         'django.server': {
             'handlers': ['file_deb', 'file_inf'],
-            'level': 'INGO',
+            'level': 'INFO',
             'propagate': True,
         },
         'auth': {
