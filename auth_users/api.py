@@ -81,6 +81,7 @@ class UserUpdate(APIView):
         print(request.COOKIES)
         payload = json.loads(request.body)
         user = request.user
+        perm = models.UserPermission.objects.get(user=user)
 
         name = payload.get("username")
         email = payload.get("email")
@@ -104,12 +105,11 @@ class UserUpdate(APIView):
                 return JsonResponse({"result": False, 'message': 'Data error'})
 
         if request.data.get("downloadCount"):
-            perm = models.UserPermission.objects.get(user=user)
             perm.downloadCount = request.data.get("downloadCount")
         if request.data.get("isVideoExamplesDisabled") or request.data.get("isVideoExamplesDisabled") is False:
-            perm = models.UserPermission.objects.get(user=user)
             perm.isVideoExamplesDisabled = request.data.get("isVideoExamplesDisabled")
-            perm.save()
+        if request.data.get('copyCount'):
+            perm.copyCount = request.data.get('copyCount')
         if request.data.get('activate'):
             try:
                 promo = models.Promocode.objects.get(user=request.user)
@@ -141,6 +141,7 @@ class UserUpdate(APIView):
             except Exception as e:
                 print(e)
                 return JsonResponse({'result': False, "error": "Promo not found"}, status=status.HTTP_400_BAD_REQUEST)
+        perm.save()
         user.save()
         serialize = UserSerializer(user)
         return JsonResponse({"result": True, 'user': serialize.data})

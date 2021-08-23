@@ -251,6 +251,7 @@ class UserPermission(models.Model):
     last_update = models.DateTimeField(null=True, default=None)
     downloadCount = models.IntegerField(default=0)
     isVideoExamplesDisabled = models.BooleanField(default=False)
+    copyCount = models.IntegerField(default=0)
 
 
 class UserAbout(models.Model):
@@ -348,5 +349,5 @@ class ScreenCategory(models.Model):
 class Screen_ScreenCategory(models.Model):
     screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
     screencategory = models.ForeignKey(ScreenCategory, on_delete=models.CASCADE)
-    image = models.FileField(upload_to='Screen_category/', null=True)
+    image = models.FileField(upload_to='screen_category/', null=True)
     position = models.SmallIntegerField(default=0)
