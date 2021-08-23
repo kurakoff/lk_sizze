@@ -1182,7 +1182,7 @@ class ScreenCategoryApi(APIView):
         )
         for i in data['screen']:
             screen = Screen.objects.get(id=i.get('id'))
-            category_screen.screen.add(screen, through_defaults={'position': i.get('position'), "image": i.get('image')})
+            category_screen.screen.add(screen, through_defaults={'position': i.get('position'), "image": request.FILES.get('image')})
         category_screen.save()
         serializer = ScreenCategorySerializer(category_screen)
         serializer.context['screen_category'] = category_screen.id
@@ -1220,7 +1220,7 @@ class ScreenCategoryDetailApi(APIView):
                 for i in request.data.get('screen'):
                     screen = Screen.objects.get(id=i['id'])
                     screen_category.screen.add(screen, through_defaults={'position': i.get('position'),
-                                                                         "image": i.get('image')})
+                                                                         "image": request.FILES.get('image')})
             if request.data.get('-screen'):
                 for i in request.data.get('-screen'):
                     screen = Screen.objects.get(id=i)
