@@ -111,7 +111,6 @@ class ScreenView(APIView):
         if payload.get('background_color'): screen.background_color = payload['background_color']
         if payload.get('position'): screen.position = payload['position']
         if payload.get('constant_color'): screen.constant_color_id = payload['constant_color']
-        elif payload.get('constant_color') is None: screen.constant_color_id = None
         if payload.get('styles'): screen.styles = payload['styles']
         screen.save()
         if project.count == 10:
