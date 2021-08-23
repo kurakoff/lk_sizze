@@ -233,8 +233,8 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'handlers': ['file'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'auth': {
