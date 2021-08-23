@@ -214,7 +214,7 @@ LOGGING = {
             'formatter': 'console'
         },
         'file': {
-            'level': 'DEBUG',
+            'level': 'NOTSET',
             'class': 'logging.FileHandler',
             'filename': '/var/www/html/lk_sizze/logs/all.log',
             'formatter': 'console',
@@ -235,13 +235,11 @@ LOGGING = {
     'loggers': {
         'django.request': {
             'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
+            'level': 'NOTSET',
         },
         'django.server': {
             'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'level': 'NOTSET',
         },
         'auth': {
             'handlers': ['auth'],
