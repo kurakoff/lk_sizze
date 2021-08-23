@@ -214,7 +214,7 @@ LOGGING = {
             'formatter': 'console'
         },
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': '/var/www/html/lk_sizze/logs/all.log',
             'formatter': 'console',
