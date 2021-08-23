@@ -213,14 +213,8 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console'
         },
-        'file_deb': {
+        'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/www/html/lk_sizze/logs/all.log',
-            'formatter': 'console',
-        },
-        'file_inf': {
-            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': '/var/www/html/lk_sizze/logs/all.log',
             'formatter': 'console',
@@ -240,13 +234,13 @@ LOGGING = {
     },
     'loggers': {
         'django.request': {
-            'handlers': ['file_deb', 'file_inf'],
+            'handlers': ['file'],
             'level': 'INFO',
             'propagate': True,
         },
         'django.server': {
-            'handlers': ['file_deb', 'file_inf'],
-            'level': 'INFO',
+            'handlers': ['file'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'auth': {
