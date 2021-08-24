@@ -50,5 +50,7 @@ urlpatterns = [
 
     path('screen_category/', api.ScreenCategoryApi.as_view()),
     path('screen_category/<int:screen_category_id>/', api.ScreenCategoryDetailApi.as_view()),
+    path('screen_category/<int:screen_category_id>/screen/', api.ScreenCategoryScreen.as_view()),
+    path('screen_category/<int:screen_category_id>/screen/<int:screen_id>/', api.ScreenCategoryScreenDetail.as_view()),
     path('project/<int:project_id>/screen_category/<int:screen_id>/', api.ScreenCategoryDetailApi.as_view())
 ]
