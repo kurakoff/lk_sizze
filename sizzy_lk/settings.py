@@ -199,7 +199,7 @@ CRONJOBS = [
     ('0 0 * * 2,4,6', 'content.cron.create_backup', '>> /var/www/html/lk_sizze/cron.log'),
     ('0 0 * * *', 'content.cron.stop_free_moth', '>> /var/www/html/lk_sizze/cron.log')
 ]
-
+#
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -214,32 +214,36 @@ LOGGING = {
             'formatter': 'console'
         },
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/var/www/html/lk_sizze/logs/all.log',
+            'filename': os.path.join(BASE_DIR, 'logs/all.log'),
             'formatter': 'console',
         },
         'auth': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'console',
-            'filename': '/var/www/html/lk_sizze/logs/access.log'
+            'filename': os.path.join(BASE_DIR, 'logs/access.log')
         },
         'figma': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'console',
-            'filename': '/var/www/html/lk_sizze/logs/figma.log'
+            'filename': os.path.join(BASE_DIR, 'logs/figma.log')
         }
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
         'django.request': {
             'handlers': ['file'],
             'level': 'DEBUG',
         },
         'django.server': {
             'handlers': ['file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'auth': {
             'handlers': ['auth'],

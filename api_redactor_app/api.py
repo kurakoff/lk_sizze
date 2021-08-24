@@ -1,4 +1,4 @@
-import base64, json, os, random, string, googleapiclient, reversion, datetime, requests
+import base64, json, os, random, string, googleapiclient, reversion, datetime, logging
 from mimetypes import guess_extension, guess_type
 
 from django.conf import settings
@@ -26,8 +26,8 @@ from .permissions import IsAuthor, EditPermission, DeletePermission
 
 
 CLIENT_SECRET_FILE = f"{settings.BASE_DIR}/google_secret.json"
-print(settings.BASE_DIR)
 service = authorize.init(CLIENT_SECRET_FILE)
+logger = logging.getLogger('django.server')
 
 
 def get_random_string(length):
@@ -1169,13 +1169,15 @@ class TutorialDetailApi(APIView):
 
 class ScreenCategoryApi(APIView):
     def get(self, request):
+        logger.info(f'{request.FILES}')
+        logger.info(f'{request.data}')
         category_screen = ScreenCategory.objects.filter(active=True).order_by("position")
         serializer = ScreenCategorySerializer(category_screen, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
-        print(request.FILES)
-        print(request.data)
+        logger.info(f'{request.FILES}')
+        logger.info(f'{request.data}')
         screens = ScreenCategory.objects.all()
         data = request.data
         category_screen = ScreenCategory.objects.create(
