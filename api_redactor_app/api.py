@@ -1204,6 +1204,8 @@ class ScreenCategoryDetailApi(APIView):
             return JsonResponse({'result': False}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, screen_category_id, project_id=None):
+        logger.info(f'{request.FILES}')
+        logger.info(f'{request.data}')
         try:
             screen_category = ScreenCategory.objects.get(id=screen_category_id)
             if request.data.get('title'): screen_category.title = request.data.get('title')
