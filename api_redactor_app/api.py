@@ -1174,6 +1174,8 @@ class ScreenCategoryApi(APIView):
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
+        print(request.FILES)
+        print(request.data)
         screens = ScreenCategory.objects.all()
         data = request.data
         category_screen = ScreenCategory.objects.create(
