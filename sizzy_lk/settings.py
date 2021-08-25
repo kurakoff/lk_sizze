@@ -214,16 +214,16 @@ LOGGING = {
             'formatter': 'console'
         },
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/all.log'),
+            'filename': os.path.join(BASE_DIR, 'logs/error.log'),
             'formatter': 'console',
         },
         'auth': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'console',
-            'filename': os.path.join(BASE_DIR, 'logs/access.log')
+            'filename': os.path.join(BASE_DIR, 'logs/auth.log')
         },
         'figma': {
             'level': 'INFO',
@@ -243,7 +243,7 @@ LOGGING = {
         },
         'django.server': {
             'handlers': ['file'],
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
         'auth': {
             'handlers': ['auth'],
