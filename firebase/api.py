@@ -33,9 +33,12 @@ class FirebaseSettingsApi(APIView):
         return JsonResponse(serializer.data, safe=False)
 
     def get(self, request, project_id):
-        firebase = FirebaseSettings.objects.get(user=request.user, project=project_id)
-        serializer = FirebaseSerializer(firebase)
-        return JsonResponse(serializer.data)
+        try:
+            firebase = FirebaseSettings.objects.get(user=request.user, project=project_id)
+            serializer = FirebaseSerializer(firebase)
+            return JsonResponse(serializer.data)
+        except FirebaseSettings.DoesNotExist:
+            return JsonResponse({"result": False})
 
     def put(self, request, project_id):
         firebase = FirebaseSettings.objects.get(user=request.user, project=project_id)
