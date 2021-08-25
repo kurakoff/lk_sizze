@@ -351,3 +351,4 @@ class Screen_ScreenCategory(models.Model):
     screencategory = models.ForeignKey(ScreenCategory, on_delete=models.CASCADE)
     image = models.FileField(upload_to='screen_category/', null=True)
     position = models.SmallIntegerField(default=0)
+    title = models.CharField(max_length=255, null=True)

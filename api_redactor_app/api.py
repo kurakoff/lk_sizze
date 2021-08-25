@@ -1251,46 +1251,71 @@ class ScreenCategoryScreen(APIView):
     def post(self, request, screen_category_id):
         screen_category = ScreenCategory.objects.get(id=screen_category_id)
         screen = Screen.objects.get(id=request.data['id'])
-        ScreenCategory_Screen = screen_category.screen.add(
+        screens = screen_category.screen_screencategory_set.filter(screencategory=screen_category)
+        screen_category.screen.add(
             screen, through_defaults={
-                'position': request.data.get('position'),
-                "image": request.FILES.get('image')
+                "position": len(screens) + 1,
+                "image": request.FILES.get('image'),
+                "title": request.data.get('title', screen.title)
             }
         )
-        serializer = ScreenCategoryScreenSerializer(ScreenCategory_Screen, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return JsonResponse({"result": True}, safe=False)
 
 
 class ScreenCategoryScreenDetail(APIView):
-    def get(self, request, screen_category_id, screen_id, project_id=None):
+    def get(self, request, screen_category_id, screen_id):
         screen_category = ScreenCategory.objects.get(id=screen_category_id)
         screen = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen_id=screen_id)
         serializer = ScreenCategoryScreenSerializer(screen)
         return JsonResponse(serializer.data, safe=False)
 
-    def put(self, request, screen_category_id, screen_id, project_id=None):
+    def put(self, request, screen_category_id, screen_id):
         screen_category = ScreenCategory.objects.get(id=screen_category_id)
         screen = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen_id=screen_id)
+        positions = screen_category.screen_screencategory_set.filter(
+            screencategory=screen_category
+        )
+        if request.data.get("title"):
+            screen.title = request.data.get('title')
         if request.data.get("image"):
             screen.image = request.FILES.get('image')
-        if request.data.get("position"):
-            screen.position = request.data.get('position')
+        if request.data.get("position") and (
+                request.data.get("position") < len(positions) and
+                request.data.get('position') > len(positions)[0]):
+            if request.data.get('position') < screen.position:
+                positions = screen_category.screen_screencategory_set.filter(
+                    screencategory=screen_category, position__gte=request.data.get('position')
+                )
+                for i in positions:
+                    i.position += 1
+                    i.save()
+                screen.position = request.data.get('position')
+            elif request.data.get('position') > screen.position:
+                positions = screen_category.screen_screencategory_set.filter(
+                    screencategory=screen_category, position__lte=request.data.get('position')
+                )
+                for i in positions:
+                    i.position -= 1
+                    i.save()
+                screen.position = request.data.get('position')
         screen.save()
         serializer = ScreenCategoryScreenSerializer(screen)
         return JsonResponse(serializer.data)
 
-    def delete(self, request, screen_category_id, screen_id, project_id=None):
+    def delete(self, request, screen_category_id, screen_id):
         screen_category = ScreenCategory.objects.get(id=screen_category_id)
         screen = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen_id=screen_id)
         screen.delete()
         return JsonResponse({"result": True})
 
-    def post(self, request, project_id, screen_id, screen_category_id=None):
+    def post(self, request, screen_id, screen_category_id):
+        screen_category = ScreenCategory.objects.get(id=screen_category_id)
+        screen = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen_id=screen_id)
+        project = Project.objects.get(id=request.data.get('project'))
         base = Screen.objects.get(id=screen_id)
-        screens = Screen.objects.filter(project_id=project_id)
-        project = Project.objects.get(id=project_id)
+        screens = Screen.objects.filter(project=project)
         screen = Screen.objects.create(
-            title=base.title,
+            title=screen.title,
             layout=base.layout,
             project=project,
             width=project.prototype.width,

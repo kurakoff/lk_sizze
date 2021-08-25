@@ -174,5 +174,4 @@ class ScreenCategoryScreenSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_screen(self, value):
-        serializer = ScreenSerializer(value.screen)
-        return serializer.data
+        return value.screen.id
