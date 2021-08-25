@@ -1245,6 +1245,8 @@ class ScreenCategoryScreen(APIView):
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request, screen_category_id):
+        logger.info(request.data)
+        logger.info(request.FILES)
         screen_category = ScreenCategory.objects.get(id=screen_category_id)
         screen = Screen.objects.get(id=request.data['id'])
         screens = screen_category.screen_screencategory_set.filter(screencategory=screen_category)
@@ -1269,6 +1271,8 @@ class ScreenCategoryScreenDetail(APIView):
         return JsonResponse(serializer.data, safe=False)
 
     def put(self, request, screen_category_id, screen_id):
+        logger.info(request.data)
+        logger.info(request.FILES)
         screen_category = ScreenCategory.objects.get(id=screen_category_id)
         screen = screen_category.screen_screencategory_set.get(screencategory=screen_category, screen_id=screen_id)
         positions = screen_category.screen_screencategory_set.filter(
