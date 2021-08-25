@@ -1170,15 +1170,11 @@ class TutorialDetailApi(APIView):
 
 class ScreenCategoryApi(APIView):
     def get(self, request):
-        logger.info(f'{request.FILES}')
-        logger.info(f'{request.data}')
         category_screen = ScreenCategory.objects.filter(active=True).order_by("position")
         serializer = ScreenCategorySerializer(category_screen, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
-        logger.info(f'{request.FILES}')
-        logger.info(f'{request.data}')
         screens = ScreenCategory.objects.all()
         data = request.data
         category_screen = ScreenCategory.objects.create(
@@ -1259,7 +1255,10 @@ class ScreenCategoryScreen(APIView):
                 "title": request.data.get('title', screen.title)
             }
         )
-        return JsonResponse({"result": True}, safe=False)
+        serializer = ScreenCategoryScreenSerializer(
+            screen_category.screen_screencategory_set.get(screencategory=screen_category, screen=screen)
+        )
+        return JsonResponse(serializer.data, safe=False)
 
 
 class ScreenCategoryScreenDetail(APIView):
