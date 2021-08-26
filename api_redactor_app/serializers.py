@@ -163,7 +163,7 @@ class ScreenCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScreenCategory
-        fields = ['title', 'screen', 'active', 'position']
+        fields = ['id', 'title', 'screen', 'active', 'position']
 
 
 class ScreenCategoryScreenSerializer(serializers.ModelSerializer):
@@ -171,7 +171,7 @@ class ScreenCategoryScreenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Screen_ScreenCategory
-        fields = '__all__'
+        fields = ['screen', 'image', 'position', 'title', 'screencategory']
 
     def get_screen(self, value):
         return value.screen.id
