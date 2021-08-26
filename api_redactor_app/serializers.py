@@ -163,7 +163,7 @@ class ScreenCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScreenCategory
-        fields = ['id', 'title', 'screen', 'active', 'position']
+        fields = ['title', 'screen', 'active', 'position']
 
 
 class ScreenCategoryScreenSerializer(serializers.ModelSerializer):
