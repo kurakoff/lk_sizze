@@ -4,7 +4,6 @@ import jsonfield, reversion
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
-from . import models as this
 CASCADE = models.CASCADE
 
 
@@ -25,6 +24,10 @@ class UserElement(models.Model):
     layout = models.TextField(default='')
     project = models.ForeignKey('Project', on_delete=models.CASCADE, default=None)
     type = models.TextField(null=True, default=None)
+
+    class Meta:
+        verbose_name = 'user element'
+        verbose_name_plural = 'user elements'
 
 
 @reversion.register(follow=['screen_set', 'userelement_set', 'modes_state', 'constant_colors'])
@@ -52,6 +55,10 @@ class BaseWidthPrototype(models.Model):
     light_image = models.FileField(upload_to='images_prototype_width/', verbose_name='light image')
     dark_image = models.FileField(upload_to='images_prototype_width/', verbose_name='dark image')
 
+    class Meta:
+        verbose_name = 'base width of prototypes'
+        verbose_name_plural = 'base width of the prototype'
+
     def __str__(self):
         return str(self.title)
 
@@ -70,10 +77,6 @@ class Prototype(models.Model):
 
     def __str__(self):
         return str(self.device_name)
-    #
-    # @property
-    # def created_categories(self):
-    #     return self.categoryprototype_set.values_list('pk', flat=True)
 
 
 @reversion.register()
@@ -192,6 +195,10 @@ class PasswordReset(models.Model):
     activate = models.BooleanField()
     date = models.DateField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = 'password reset'
+        verbose_name_plural = 'password resets'
+
     def __str__(self):
         return self.pin
 
@@ -208,6 +215,10 @@ class FigmaUser(models.Model):
     figma_user = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name = 'figma user'
+        verbose_name_plural = 'figma users'
+
 
 class ClientStrip(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -215,6 +226,10 @@ class ClientStrip(models.Model):
     seanse = models.TextField()
     livemode = models.BooleanField()
     use_trial = models.BooleanField()
+
+    class Meta:
+        verbose_name = 'client stripe'
+        verbose_name_plural = 'stripe clients'
 
 
 class Price(models.Model):
@@ -225,6 +240,10 @@ class Price(models.Model):
     cost = models.IntegerField()
     interval = models.CharField(max_length=255)
     name = models.TextField()
+
+    class Meta:
+        verbose_name = 'price'
+        verbose_name_plural = 'prices'
 
 
 class Subscription(models.Model):
@@ -237,6 +256,10 @@ class Subscription(models.Model):
     status = models.CharField(max_length=255)
     subscription_end = models.CharField(max_length=255, null=True)
     livemode = models.BooleanField()
+
+    class Meta:
+        verbose_name = 'subscription'
+        verbose_name_plural = 'subscriptions'
 
 
 class UserPermission(models.Model):
@@ -252,6 +275,10 @@ class UserPermission(models.Model):
     downloadCount = models.IntegerField(default=0)
     isVideoExamplesDisabled = models.BooleanField(default=False)
     copyCount = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'user permission'
+        verbose_name_plural = 'user permissions'
 
 
 class UserAbout(models.Model):
@@ -278,11 +305,19 @@ class Request(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     backendType = models.TextField(blank=True, null=True)
 
+    class Meta:
+        verbose_name = 'request'
+        verbose_name_plural = 'requests'
+
 
 class FirebaseSettings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     credentials = jsonfield.JSONField(blank=True)
+
+    class Meta:
+        verbose_name = 'firebase settings'
+        verbose_name_plural = 'firebase settings'
 
     def __str__(self):
         return str(self.user.email)
@@ -293,10 +328,18 @@ class FirebaseRequest(models.Model):
     collection = models.CharField(max_length=255)
     fields = jsonfield.JSONField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'firebase request'
+        verbose_name_plural = 'firebase requests'
+
 
 class EnterpriseUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     telegram = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'enterprise user'
+        verbose_name_plural = 'enterprise users'
 
     def __str__(self):
         return str(self.user.email)
@@ -314,21 +357,33 @@ class Tasks(models.Model):
     status = models.CharField(max_length=100, choices=CHOICES, default="NOT STARTED")
     description = models.TextField(null=True)
 
+    class Meta:
+        verbose_name = 'task'
+        verbose_name_plural = 'tasks'
+
 
 class Tutorials(models.Model):
     name = models.CharField(max_length=255)
     source = models.CharField(max_length=255, null=True)
 
+    class Meta:
+        verbose_name = 'tutorial'
+        verbose_name_plural = 'tutorials'
+
 
 class Promocode(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='promocode')
-    promo = models.CharField(unique=True, max_length=5)
+    promocode = models.CharField(unique=True, max_length=5)
     activate = models.CharField(max_length=5, null=True, default=None)
     activated = models.IntegerField(default=0)
     discount = models.BooleanField(default=False)
     free_month = models.BooleanField(default=False)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
+
+    class Meta:
+        verbose_name = 'promo code'
+        verbose_name_plural = 'promo codes'
 
 
 class PluginAuth(models.Model):
@@ -344,6 +399,10 @@ class ScreenCategory(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = 'screen category'
+        verbose_name_plural = 'screen categories'
 
 
 class Screen_ScreenCategory(models.Model):

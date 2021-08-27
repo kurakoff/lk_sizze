@@ -1,15 +1,13 @@
-import datetime, binascii, os, stripe
-import json, secrets, string, logging, requests
+import binascii, os, stripe, json, secrets, string, logging, requests
 
 from .social.backend import PasswordlessAuthBackend
 from content import models
 
 from django.conf import settings
 from django.contrib.auth import authenticate
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.core.cache import cache
-from django.template.loader import render_to_string
 
 from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
@@ -17,18 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .serializers import \
-    ChangePasswordSerializer, \
-    SetNewPasswordSerializer, \
-    ResetPasswordEmailRequestSerializer, \
-    SetPinSerializer,\
-    UserSerializer,\
-    GoogleSocialAuthSerializer,\
-    EmailLoginSerializer,\
-    FigmaUserSerializer, \
-    UserAboutSerializer, \
-    TasksSerializer, \
-    EnterpriseSerializer
+from .serializers import *
 
 logger = logging.getLogger('django')
 auth = logging.getLogger('auth')
@@ -39,20 +26,19 @@ class ApiLoginView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
 
-    def post(self, request, ):
+    def post(self, request):
         password = request.data.get("password")
         email = request.data.get("email")
         user = authenticate(username=email, password=password)
         if user:
             try:
                 user.auth_token.delete()
-            except Exception as e:
+            except User.auth_token.RelatedObjectDoesNotExist as e:
                 pass
             Token.objects.create(user=user)
             response = Response()
             response.set_cookie(key='access_token', value=user.auth_token.key, httponly=True)
             response.data = {"result": True, "token": user.auth_token.key}
-            print(request.COOKIES)
             auth.info("user {} login".format(user))
             return response
         else:
@@ -62,7 +48,10 @@ class ApiLoginView(APIView):
 class Logout(APIView):
     def post(self, request):
         request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
+        response = Response()
+        response.delete_cookie("access_token")
+        response.status_code = status.HTTP_200_OK
+        return response
 
 
 class UserCreate(generics.CreateAPIView):
@@ -113,7 +102,7 @@ class UserUpdate(APIView):
         if request.data.get('activate'):
             try:
                 promo = models.Promocode.objects.get(user=request.user)
-                promo_count = models.Promocode.objects.get(promo=request.data['activate'])
+                promo_count = models.Promocode.objects.get(promocode=request.data['activate'])
                 if promo.activate is None:
                     promo_count.activated += 1
                     promo.activate = request.data['activate']
@@ -311,7 +300,7 @@ class GoogleSocialAuthView(generics.GenericAPIView):
             perm = models.UserPermission.objects.create(user=user, isVideoExamplesDisabled=False)
             user_serial = UserSerializer()
             promo = user_serial.get_promo_code(num_chars=5)
-            promo = models.Promocode.objects.create(user=user, promo=promo)
+            promo = models.Promocode.objects.create(user=user, promocode=promo)
             about = models.UserAbout.objects.create(user=user)
             promo.save()
             perm.save()
@@ -614,7 +603,7 @@ class PostPromoEmail(APIView):
 
     def post(self, request):
         email = request.data.get('email')
-        promocode = request.user.promocode.promo
+        promocode = request.user.promocode.promocode
         msg_html = render_to_string('mail/referral_code.html', {'promocode': promocode, "from_user": email,
                                                                 "to_user": request.user.email})
         from .utils import send_html_mail

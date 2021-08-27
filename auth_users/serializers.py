@@ -18,7 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
     promo = serializers.SerializerMethodField()
     copyCount = serializers.SerializerMethodField()
 
-
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan', 'downloadCount', 'isVideoExamplesDisabled',
@@ -26,36 +25,28 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}, 'is_staff': {'read_only': True}}
 
     def get_plan(self, obj):
-        if obj.userpermission.permission == "TEAM":
-            return 'team'
-        elif obj.userpermission.permission == "PROFESSIONAL":
-            return 'professional'
-        elif obj.userpermission.permission == "ENTERPRISE":
-            return 'enterprise'
-        else: return 'start'
+        permission = {
+            "TEAM": 'team',
+            "PROFESSIONAL": 'professional',
+            "ENTERPRISE": 'enterprise'
+            }
+        return permission[obj.userpermission.permission]
 
     def get_copyCount(self, obj):
-        copyCount = obj.userpermission.copyCount
-        return copyCount
+        return obj.userpermission.copyCount
 
     def get_promo(self, obj):
-        data = {}
-        data['promocode'] = obj.promocode.promo
-        data['activate'] = obj.promocode.activate
-        data['activated'] = obj.promocode.activated
-        data['discount'] = obj.promocode.discount
-        data['free_month'] = obj.promocode.free_month
-        data['start_date'] = obj.promocode.start_date
-        data['end_date'] = obj.promocode.end_date
-        return data
+        data = ['promocode', 'activate', 'activated', 'discount', 'free_month', 'start_date', 'end_date']
+        res = {}
+        for value in data:
+            res[value] = getattr(obj.promocode, value)
+        return res
 
     def get_downloadCount(self, obj):
-        count = obj.userpermission.downloadCount
-        return count
+        return obj.userpermission.downloadCount
 
     def get_isVideoExamplesDisabled(self, obj):
-        isVideoExamplesDisabled = obj.userpermission.isVideoExamplesDisabled
-        return isVideoExamplesDisabled
+        return obj.userpermission.isVideoExamplesDisabled
 
     def get_promo_code(self, num_chars):
         uniq = False
@@ -87,14 +78,6 @@ class UserSerializer(serializers.ModelSerializer):
         msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
         send_html_mail(subject="Welcome to sizze.io", html_content=msg_html,
                        sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])
-        # send_mail(
-        #     f"Добро пожаловать на sizze",
-        #     msg_html,
-        #     getattr(settings, "EMAIL_HOST_USER"),
-        #     [user.email],
-        #     html_message=msg_html,
-        #     fail_silently=True
-        # )
         return user
 
 

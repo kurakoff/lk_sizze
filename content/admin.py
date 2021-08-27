@@ -233,8 +233,8 @@ class TaskSettings(admin.ModelAdmin):
 
 
 class PromoSettings(admin.ModelAdmin):
-    list_display = ['id', 'user', 'promo', 'activate', 'activated']
-    search_fields = ['user__email', 'promo', 'activate']
+    list_display = ['id', 'user', 'promocode', 'activate', 'activated']
+    search_fields = ['user__email', 'promocode', 'activate']
 
 
 class SubsciprionSettings(admin.ModelAdmin):
@@ -250,6 +250,7 @@ class ScreenCategorySettings(admin.ModelAdmin):
     list_display = ['id', 'title', 'active']
     search_fields = ['id', 'title']
     list_filter = ['active']
+
 
 admin.site.register(Prototype, PrototypeSetting)
 admin.site.register(Category, CategoryAdmin)
@@ -270,6 +271,5 @@ admin.site.register(ssoToken)
 admin.site.register(FirebaseSettings)
 admin.site.register(EnterpriseUser, EnterpriseUserSettings)
 admin.site.register(Tasks, TaskSettings)
-admin.site.register(Tutorials)
 admin.site.register(Promocode, PromoSettings)
 admin.site.register(ScreenCategory, ScreenCategorySettings)
