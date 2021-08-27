@@ -26,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_plan(self, obj):
         permission = {
+            "START": 'start',
             "TEAM": 'team',
             "PROFESSIONAL": 'professional',
             "ENTERPRISE": 'enterprise'
