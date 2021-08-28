@@ -7,7 +7,9 @@ SECRET_KEY = config('secret_key')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['sizze.io', 'www.sizze.io', 'lk.sizze.io', 'www.lk.sizze.io', '127.0.0.1', '89.223.122.154']
+ALLOWED_HOSTS = [
+    'sizze.io', 'www.sizze.io', 'lk.sizze.io', 'www.lk.sizze.io', '127.0.0.1', '89.223.122.154', '157.245.83.125'
+]
 
 LOGIN_URL = '/user/login/'
 
