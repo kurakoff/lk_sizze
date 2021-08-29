@@ -8,3 +8,8 @@ db.sqlite3
 /comp
 /DATE
 /content/static/CACHE
+
+google_secret.json
+photoslibrary_v1.token
+gphtospy.log
+/media/email_spam/

@@ -17,8 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from auth_users.auth_helpers.sso import Server
 
-# from api_redactor_app.urls import router
+
+class ServerForMisago(Server):
+    def get_user_data(self, user, *args, **kwargs) -> dict:
+        user_data = super().get_user_data(user, *args, **kwargs)
+        user_data['id'] = user.pk
+        print(user_data)
+        return user_data
+
+    def get_user_extra_data(self, user, consumer, extra_data) -> dict:
+        return {}
+
+
+sso_server = ServerForMisago()
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
@@ -28,4 +41,9 @@ urlpatterns = [
                   path('api/auth/', include('auth_users.urls')),
                   path('nested_admin/', include('nested_admin.urls')),
                   path('tinymce/', include('tinymce.urls')),
+                  path('pay/', include('stripe_pay.urls'))
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    path('server/', include(sso_server.get_urls()))
+]

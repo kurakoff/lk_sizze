@@ -3,7 +3,7 @@ from django.contrib.auth.backends import UserModel
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, LogoutView
 from django.core.mail import send_mail
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template.defaulttags import url
 from django.template.loader import render_to_string
@@ -13,12 +13,13 @@ from django.views.generic import TemplateView
 from django.conf import settings
 
 from auth_users.forms import CreateUserForm, LogInForm, ForgotPasswordForm
+from rest_framework.authtoken.models import Token
 
 
 class CustomPasswordResetView(PasswordResetView):
-    template_name = 'auth/forgot_password.html'
-    email_template_name = 'mail/forgot-password.html'
-    html_email_template_name = 'mail/forgot-password.html'
+    template_name = 'auth/Reset_password.html'
+    email_template_name = 'mail/Reset_password.html'
+    html_email_template_name = 'mail/Reset_password.html'
 
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
@@ -34,11 +35,13 @@ class CustomLogoutView(LogoutView):
 
 
 class LoginView(TemplateView):
-    template_name = 'auth/login.html'
+    template_name = 'auth/index.html'
     form_class = LogInForm
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form': self.form_class})
+        response = render(request, self.template_name, {'form': self.form_class})
+        response.set_cookie('test', 'test', httponly=True, samesite='strict')
+        return response
 
     def post(self, request, *args, **kwargs):
         response = {}
@@ -46,9 +49,12 @@ class LoginView(TemplateView):
         password = request.POST['password']
         user = authenticate(username=email, password=password)
         if user:
-            login(request, user)
+            login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
-            response['redirect_url'] = '/'
+            if request.POST.get('next'):
+                return redirect(request.POST.get('next'))
+            else:
+                return redirect('/')
         else:
             response['result'] = False
             response['errors'] = {'password': 'username or the password is incorrect',
@@ -74,11 +80,11 @@ class CreateAccount(View):
             user = User.objects.create_user(username=request.POST['username'],
                                             email=request.POST['email'],
                                             password=request.POST['password'])
-            login(request, user)
+            login(request, user, backend='auth_users.auth_helpers.helpers.EmailBackend')
             response['result'] = True
             response['redirect_url'] = '/'
 
-            msg_html = render_to_string('mail/signing_up.html', {'username': user.username})
+            msg_html = render_to_string('mail/Welcome.html', {'username': user.username})
             send_mail(
                 f"Какой то загаловок",
                 msg_html,

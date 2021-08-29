@@ -1,0 +1,40 @@
+{% extends 'content/layout.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %}
+    Email spammer
+{% endblock %}
+{% block content %}
+    <div class="cd-demo cd-demo-container cd-demo-max-width-xs cd-demo-padding-y-xl js-cd-demo lk_block step_1">
+        <div class="block_close position_relative">
+            <h1 class="create_prject_title">Email spammer
+                <a href="{% url 'index' %}">
+                    <button class="close_btn btn btn--primary btn--preserve-width">
+                    </button>
+                </a>
+            </h1>
+        </div>
+        <div class="input_title">
+            <div class="m-10 search-input search-input--icon-right">
+                <form enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <h4>Html шаблон</h4>
+                    {{ form.html|add_classes:'form-control width-100% height-100%' }}
+                    <h4>Тема сообщения</h4>
+                    {{ form.theme|add_classes:'form-control width-100% height-100%'  }}
+                    <h4>Получатель</h4>
+                    {{ form.to|add_classes:'form-control width-100% height-100%'  }}
+                    <h4>Для супер юзеров</h4>
+                    {{ form.super_user }}
+                    <div class="confirm">
+                        <button type="submit" class="confirm_btn btn btn--primary btn--preserve-width">
+                            Post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
