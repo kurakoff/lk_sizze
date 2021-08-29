@@ -57,7 +57,7 @@ class UserSerializer(serializers.ModelSerializer):
             for i in range(0, num_chars):
                 slice_start = random.randint(0, len(code_chars) - 1)
                 code += code_chars[slice_start: slice_start + 1]
-            check = models.Promocode.objects.filter(promo=code)
+            check = models.Promocode.objects.filter(promocode=code)
             if len(check) == 0:
                 uniq = True
         return code
