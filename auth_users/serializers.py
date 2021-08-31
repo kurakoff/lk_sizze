@@ -1,5 +1,4 @@
-import datetime
-import random
+import random, datetime, logging, stripe
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from django.template.loader import render_to_string
@@ -8,6 +7,10 @@ from .social import google
 from sizzy_lk import settings
 from content import models
 from django.contrib.auth.models import User
+
+logger = logging.getLogger('django')
+auth = logging.getLogger('auth')
+figma = logging.getLogger('figma')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -81,6 +84,62 @@ class UserSerializer(serializers.ModelSerializer):
                        sender=f'Sizze.io <{getattr(settings, "EMAIL_HOST_USER")}>', recipient_list=[user.email])
         return user
 
+    def update(self, instance, validated_data):
+        permission = models.UserPermission.objects.get(user=instance)
+
+        instance.username = validated_data.get('name', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        if validated_data.get('old_password'):
+            self.set_password(instance, validated_data['old_password'],
+                              validated_data['password_1'], validated_data['password_2'])
+
+        permission.downloadCount = validated_data.get('downloadCount', permission.downloadCount)
+        permission.isVideoExamplesDisabled = validated_data.get('isVideoExamplesDisabled',
+                                                                permission.isVideoExamplesDisabled)
+        permission.copyCount = validated_data.get('copyCount', permission.copyCount)
+        if validated_data.get('activate'):
+            self.set_password(instance, validated_data['activate'])
+        instance.save()
+        permission.save()
+        return instance
+
+    def set_password(self, user, old_password, password_1, password_2):
+        if user.check_password(old_password) and password_1 == password_2:
+            user.set_password(password_1)
+            auth.info("user {} change password".format(user))
+            return True
+        raise serializers.ValidationError("Name already exist")
+
+    def set_activate(self, user, activate):
+        try:
+            promo = models.Promocode.objects.get(user=user)
+            promo_count = models.Promocode.objects.get(promocode=activate)
+            if promo.activate is None:
+                promo_count.activated += 1
+                promo.activate = activate
+                sub = models.Subscription.objects.filter(customer__user=promo.user, status="active", livemode=True)
+                if sub.count() == 1:
+                    sub = sub[0]
+                    if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
+                        sub = stripe.Subscription.retrieve(sub.subscription)
+                        if sub.discount is not None:
+                            customer = sub.customer.client
+                            upcoming_total = stripe.Invoice.upcoming(customer=customer)
+                            upcoming_total = upcoming_total['total']
+                            discount = (int(upcoming_total) / 100) * 30
+                            stripe.InvoiceItem.create(customer=customer, amount=-int(discount), currency="usd")
+                if promo_count.activated >= 5:
+                    perm = models.UserPermission.objects.get(user=promo_count.user)
+                    if perm.permission != 'TEAM' or perm.permission != 'ENTERPRISE':
+                        promo_count.free_month = True
+                        promo_count.start_date = datetime.date.today(),
+                        promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
+                        perm.permission = 'TEAM'
+                        perm.save()
+                promo.save()
+                promo_count.save()
+        except Exception as e:
+            raise serializers.ValidationError("Promocode error")
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
@@ -117,6 +176,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
 
     def validate_auth_token(self, auth_token):
         user_data = google.Google.validate(auth_token)
+
         try:
             user_data['sub']
         except:
@@ -128,11 +188,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
 
             raise AuthenticationFailed('oops, who are you?')
 
-        user_id = user_data['sub']
-        email = user_data['email']
-        name = user_data['name']
-
-        return {'user_id': user_id, 'email': email, 'name': name}
+        return {'user_id': user_data['sub'], 'email': user_data['email'], 'name': user_data['name']}
 
 
 class EmailLoginSerializer(serializers.Serializer):

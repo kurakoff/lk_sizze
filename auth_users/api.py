@@ -22,7 +22,22 @@ auth = logging.getLogger('auth')
 figma = logging.getLogger('figma')
 
 
-class ApiLoginView(APIView):
+class BaseAuthClass:
+
+    def generate_cookie(self, token):
+        response = Response()
+        response.set_cookie(key='access_token', value=token, httponly=True)
+        response.data = {"result": True, "token": token}
+        return response
+
+    def delete_cookie(self):
+        response = Response()
+        response.delete_cookie("access_token")
+        response.status_code = status.HTTP_200_OK
+        return response
+
+
+class ApiLoginView(APIView, BaseAuthClass):
     permission_classes = [AllowAny]
     authentication_classes = []
 
@@ -36,21 +51,17 @@ class ApiLoginView(APIView):
             except User.auth_token.RelatedObjectDoesNotExist as e:
                 pass
             Token.objects.create(user=user)
-            response = Response()
-            response.set_cookie(key='access_token', value=user.auth_token.key, httponly=True)
-            response.data = {"result": True, "token": user.auth_token.key}
+            response = self.generate_cookie(user.auth_token.key)
             auth.info("user {} login".format(user))
             return response
         else:
             return JsonResponse({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class Logout(APIView):
+class Logout(APIView, BaseAuthClass):
     def post(self, request):
         request.user.auth_token.delete()
-        response = Response()
-        response.delete_cookie("access_token")
-        response.status_code = status.HTTP_200_OK
+        response = self.delete_cookie()
         return response
 
 
@@ -67,73 +78,12 @@ class UserCreate(generics.CreateAPIView):
 class UserUpdate(APIView):
 
     def put(self, request):
-        print(request.COOKIES)
-        payload = json.loads(request.body)
         user = request.user
-        perm = models.UserPermission.objects.get(user=user)
-
-        name = payload.get("username")
-        email = payload.get("email")
-
-        password_1 = payload.get("password_1")
-        password_2 = payload.get("password_2")
-        old_password = payload.get("old_password")
-
-        if name:
-            user.username = name
-            auth.info("user {} change name {}".format(user, name))
-        if email:
-            user.email = email
-            auth.info("user {} change email {}".format(user, email))
-
-        if old_password:
-            if user.check_password(old_password) and password_1 == password_2:
-                user.set_password(password_1)
-                auth.info("user {} change password".format(user))
-            else:
-                return JsonResponse({"result": False, 'message': 'Data error'})
-
-        if request.data.get("downloadCount"):
-            perm.downloadCount = request.data.get("downloadCount")
-        if request.data.get("isVideoExamplesDisabled") or request.data.get("isVideoExamplesDisabled") is False:
-            perm.isVideoExamplesDisabled = request.data.get("isVideoExamplesDisabled")
-        if request.data.get('copyCount'):
-            perm.copyCount = request.data.get('copyCount')
-        if request.data.get('activate'):
-            try:
-                promo = models.Promocode.objects.get(user=request.user)
-                promo_count = models.Promocode.objects.get(promocode=request.data['activate'])
-                if promo.activate is None:
-                    promo_count.activated += 1
-                    promo.activate = request.data['activate']
-                    sub = models.Subscription.objects.filter(customer__user=promo.user, status="active", livemode=True)
-                    if len(sub) == 1:
-                        sub = sub[0]
-                        if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
-                            sub = stripe.Subscription.retrieve(sub.subscription)
-                            if sub.discount is not None:
-                                customer = sub.customer.client
-                                upcoming_total = stripe.Invoice.upcoming(customer=customer)
-                                upcoming_total = upcoming_total['total']
-                                discount = (int(upcoming_total) / 100) * 30
-                                stripe.InvoiceItem.create(customer=customer, amount=-int(discount), currency="usd")
-                    if promo_count.activated >= 5:
-                        perm = models.UserPermission.objects.get(user=promo_count.user)
-                        if perm.permission != 'TEAM' or perm.permission != 'ENTERPRISE':
-                            promo_count.free_month = True
-                            promo_count.start_date = datetime.date.today(),
-                            promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
-                            perm.permission = 'TEAM'
-                            perm.save()
-                    promo.save()
-                    promo_count.save()
-            except Exception as e:
-                print(e)
-                return JsonResponse({'result': False, "error": "Promo not found"}, status=status.HTTP_400_BAD_REQUEST)
-        perm.save()
-        user.save()
-        serialize = UserSerializer(user)
-        return JsonResponse({"result": True, 'user': serialize.data})
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({"result": True, 'user': serializer.data})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfile(APIView):
