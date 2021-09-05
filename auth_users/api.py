@@ -79,17 +79,67 @@ class UserUpdate(APIView):
 
     def put(self, request):
         user = request.user
-        serializer = UserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({"result": True, 'user': serializer.data})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        permission = models.UserPermission.objects.get(user=user)
+
+        user.username = request.data.get('name', user.username)
+        user.email = request.data.get('email', user.email)
+        if request.data.get('old_password'):
+            self.set_password(user, request.data['old_password'],
+                              request.data.get['password_1'], request.data.get['password_2'])
+
+        permission.downloadCount = request.data.get('downloadCount', permission.downloadCount)
+        permission.isVideoExamplesDisabled = request.data.get('isVideoExamplesDisabled',
+                                                              permission.isVideoExamplesDisabled)
+        permission.copyCount = request.data.get('copyCount', permission.copyCount)
+        if request.data.get('activate'):
+            self.set_password(user, request.data['activate'])
+        user.save()
+        permission.save()
+        serializer = UserSerializer(user)
+        return JsonResponse({"result": True, 'user': serializer.data})
+
+    def set_password(self, user, old_password, password_1, password_2):
+        if user.check_password(old_password) and password_1 == password_2:
+            user.set_password(password_1)
+            auth.info("user {} change password".format(user))
+            return True
+        raise serializers.ValidationError("password error")
+
+    def set_activate(self, user, activate):
+        try:
+            promo = models.Promocode.objects.get(user=user)
+            promo_count = models.Promocode.objects.get(promocode=activate)
+            if promo.activate is None:
+                promo_count.activated += 1
+                promo.activate = activate
+                sub = models.Subscription.objects.filter(customer__user=promo.user, status="active", livemode=True)
+                if sub.count() == 1:
+                    sub = sub[0]
+                    if sub.plan.product != "prod_JxSPOj7Blartnr" and promo.discount is False:
+                        sub = stripe.Subscription.retrieve(sub.subscription)
+                        if sub.discount is not None:
+                            customer = sub.customer.client
+                            upcoming_total = stripe.Invoice.upcoming(customer=customer)
+                            upcoming_total = upcoming_total['total']
+                            discount = (int(upcoming_total) / 100) * 30
+                            stripe.InvoiceItem.create(customer=customer, amount=-int(discount), currency="usd")
+                if promo_count.activated >= 5:
+                    perm = models.UserPermission.objects.get(user=promo_count.user)
+                    if perm.permission != 'TEAM' or perm.permission != 'ENTERPRISE':
+                        promo_count.free_month = True
+                        promo_count.start_date = datetime.date.today(),
+                        promo_count.end_date = datetime.date.today() + datetime.timedelta(days=30)
+                        perm.permission = 'TEAM'
+                        perm.save()
+                promo.save()
+                promo_count.save()
+        except Exception as e:
+            raise serializers.ValidationError("Promocode error")
 
 
 class UserProfile(APIView):
 
     def get(self, request):
-        print(request.COOKIES)
         user = request.user
         serialize = UserSerializer(user)
         return JsonResponse({"result": True, 'user': serialize.data})
@@ -97,24 +147,19 @@ class UserProfile(APIView):
 
 class ChangePassword(APIView):
 
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-
     def put(self, request):
-        print(request.COOKIES)
-        self.object = self.get_object()
+        user = request.user
         serializer = ChangePasswordSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
-        if not self.object.check_password(serializer.data.get("old_password")):
+        if not user.check_password(serializer.data.get("old_password")):
             return JsonResponse({"result": False, "message": "Old password is not correct"},
                                 status=status.HTTP_400_BAD_REQUEST)
         if serializer.data.get("new_password_1") != serializer.data.get("new_password_2"):
             return JsonResponse({"result": False, "message": "Password mismatch"},
                                 status=status.HTTP_400_BAD_REQUEST)
-        self.object.set_password(serializer.data.get("new_password_1"))
-        self.object.save()
+        user.set_password(serializer.data.get("new_password_1"))
+        user.save()
         auth.info("user {} change password".format(request.user))
         response = {
             "result": True,

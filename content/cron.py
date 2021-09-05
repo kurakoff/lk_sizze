@@ -37,6 +37,7 @@ def create_backup():
     today = datetime.datetime.today()
     print("Начато создание backup базы данных ", today)
     os.system(f"mkdir /var/www/html/lk_sizze/backup/{today.month}-{today.year}")
+    os.system(f"echo K5xv2Ak763 | sudo -S chmod 777 /var/www/html/lk_sizze/backup/{today.month}-{today.year}")
     os.system(f'pg_dump -F c -p 5432 lk_sizze > /var/www/html/lk_sizze/backup/{today.month}-{today.year}/db_{datetime.date.today()}.sql')
     return print("Создание backup оконченно")
 
@@ -51,5 +52,18 @@ def stop_free_moth():
     return print("Бесплатные подписки отменены")
 
 
+def update_test_bd():
+    print("Начато обновление бд тестового сервера")
+    today = datetime.datetime.today()
+    os.system(f"cd /var/www/html/lk_sizze/backup")
+    os.system(f"sshpass -p 'K5xv2Ak763' scp sergey@89.223.122.154:/var/www/html/lk_sizze/backup/{today.month}-{today.year}"
+              f"/db_{datetime.date.today() - datetime.timedelta(days=1)}.sql /var/www/html/lk_sizze/backup")
+    os.system(f"PGPASSWORD=K5xv2Ak763 dropdb --username postgres 'lk_sizze'")
+    os.system(f"echo K5xv2Ak763 | sudo -S -u postgres PGPASSWORD=K5xv2Ak763 psql -c 'create database lk_sizze;'")
+    os.system(f"echo K5xv2Ak763 | sudo -S -u postgres PGPASSWORD=K5xv2Ak763 psql -c 'grant all privileges on database lk_sizze to sergey;'")
+    os.system(f"PGPASSWORD=K5xv2Ak763 pg_restore -d lk_sizze -U sergey -C db_{datetime.date.today() - datetime.timedelta(days=1)}.sql")
+    print("Закончато обновление бд тестового сервера")
+
+
 if __name__ == "__main__":
-    create_backup()
+    update_test_bd()
