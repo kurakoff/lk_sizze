@@ -570,7 +570,7 @@ class ProjectCopyView(APIView):
                     base=screen.base
                 )
                 copy_screen.save()
-                if screen['id'] == project['previewScreenId']:
+                if screen.id == project['previewScreenId']:
                     copy.previewScreenId = copy_screen
                     copy.save()
             copy_screens = Screen.objects.filter(project_id=copy.id)
@@ -855,7 +855,7 @@ class ScreenVersion(APIView):
                 styles=screen['styles'],
                 base=screen['base']
             )
-            if screen['id'] == previewScreenId:
+            if screen.id == previewScreenId:
                 new_project.previewScreenId = new_screen
                 new_project.save()
 
