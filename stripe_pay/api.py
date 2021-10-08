@@ -238,15 +238,19 @@ class StripeWebhook(APIView):
             if customer.email == "etuyhai@gmail.com":
                 stripe.api_key = config("old_stripe")
                 stripe.Subscription.delete('sub_K2LoHR8K5XGCjA')
+                stripe.api_key = config("stripe_secret")
             if customer.email == "goupce@gmail.com":
                 stripe.api_key = config("old_stripe")
                 stripe.Subscription.delete("sub_K1uwIB4bVupC9g")
+                stripe.api_key = config("stripe_secret")
             if customer.email == "kabiljanz0301@gmail.com":
                 stripe.api_key = config("old_stripe")
                 stripe.Subscription.delete("sub_Jyk5wPYluo7SPJ")
+                stripe.api_key = config("stripe_secret")
             if customer.email == "julian.jung2829@gmail.com":
                 stripe.api_key = config("old_stripe")
                 stripe.Subscription.delete("sub_JykHvLLBd4uExQ")
+                stripe.api_key = config("stripe_secret")
             permission = UserPermission.objects.get(user=customer)
             permission.permission = 'START'
             permission.save()
