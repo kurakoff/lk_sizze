@@ -51,6 +51,20 @@ def make_icon_arrow(modeladmin, request, queryset):
 make_icon_arrow.short_description = "Make icon arrow"
 
 
+class SharePageFilter(admin.SimpleListFilter):
+    title = _("share to all")
+    parameter_name = 'decade'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('all', _("share to all")),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'all':
+            return queryset.filter(project__share_project__all_users=True)
+
+
 class ElementSetting(admin.ModelAdmin):
     actions_selection_counter = True
     list_display = ['title', 'category_prototype', 'light_image', 'dark_image', 'active']
@@ -162,7 +176,7 @@ class ScreenSetting(admin.ModelAdmin):
     actions_selection_counter = True
     list_display = ['id', 'title', 'project', 'width', 'height', 'background_color', 'position', 'styles']
     list_display_links = ('id', 'title')
-    list_filter = ('width', 'height')
+    list_filter = (SharePageFilter,)
     preserve_filters = False
     save_as = True
     search_fields = ['id', 'title', 'project__id', 'project__name', 'width', 'height', 'styles']
