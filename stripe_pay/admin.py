@@ -3,7 +3,7 @@ from content.models import ClientStrip
 
 
 class StripeSettings(admin.ModelAdmin):
-    list_display = ['client']
+    list_display = ['user', 'client']
 
 
 admin.site.register(ClientStrip, StripeSettings)
