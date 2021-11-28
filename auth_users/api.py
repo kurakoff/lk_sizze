@@ -93,6 +93,8 @@ class UserUpdate(APIView):
             else:
                 return JsonResponse({"result": False, 'message': 'Data error'})
 
+        if request.data.get("stripeCount"):
+            perm.stripeCount = request.data.get("stripeCount")
         if request.data.get("downloadCount"):
             perm.downloadCount = request.data.get("downloadCount")
         if request.data.get("isVideoExamplesDisabled") or request.data.get("isVideoExamplesDisabled") is False:

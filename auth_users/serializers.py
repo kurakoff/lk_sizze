@@ -17,11 +17,12 @@ class UserSerializer(serializers.ModelSerializer):
     isVideoExamplesDisabled = serializers.SerializerMethodField()
     promo = serializers.SerializerMethodField()
     copyCount = serializers.SerializerMethodField()
+    stripeCount = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'is_staff', 'plan', 'downloadCount', 'isVideoExamplesDisabled',
-                  'promo', 'copyCount')
+                  'promo', 'copyCount', 'stripeCount')
         extra_kwargs = {'password': {'write_only': True}, 'is_staff': {'read_only': True}}
 
     def get_plan(self, obj):
@@ -32,6 +33,9 @@ class UserSerializer(serializers.ModelSerializer):
             "ENTERPRISE": 'enterprise'
             }
         return permission[obj.userpermission.permission]
+
+    def get_stripeCount(self, obj):
+        return obj.userpermission.stripeCount
 
     def get_copyCount(self, obj):
         return obj.userpermission.copyCount
