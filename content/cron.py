@@ -36,7 +36,10 @@ def delete_past_tokens():
 def create_backup():
     today = datetime.datetime.today()
     print("Начато создание backup базы данных ", today)
-    os.system(f"mkdir /var/www/html/lk_sizze/backup/{today.month}-{today.year}")
+    directory = f"/var/www/html/lk_sizze/backup/{today.month}-{today.year}"
+    if os.path.exists(directory) is False:
+        os.system(f"mkdir {directory}")
+    os.system(f"echo K5xv2Ak763 | sudo -S chmod 777 /var/www/html/lk_sizze/backup/{today.month}-{today.year}")
     os.system(f'pg_dump -F c -p 5432 lk_sizze > /var/www/html/lk_sizze/backup/{today.month}-{today.year}/db_{datetime.date.today()}.sql')
     return print("Создание backup оконченно")
 

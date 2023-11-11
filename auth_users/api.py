@@ -93,6 +93,8 @@ class UserUpdate(APIView):
             else:
                 return JsonResponse({"result": False, 'message': 'Data error'})
 
+        if request.data.get("stripeCount"):
+            perm.stripeCount = request.data.get("stripeCount")
         if request.data.get("downloadCount"):
             perm.downloadCount = request.data.get("downloadCount")
         if request.data.get("isVideoExamplesDisabled") or request.data.get("isVideoExamplesDisabled") is False:
@@ -287,12 +289,10 @@ class GoogleSocialAuthView(generics.GenericAPIView):
         data = (serializer.validated_data['auth_token'])
         email = data['email']
         name = data['name']
-        full_name = name.split()
         queryset = User.objects.filter(email=email)
         new_user = False
         if queryset.exists() is False:
-            user = User.objects.create_user(email=email, username=self.generate_username(email),
-                                            first_name=full_name[0], last_name=full_name[1])
+            user = User.objects.create_user(email=email, username=self.generate_username(email))
             user.save()
             models.SocialUser.objects.create(user=user, provider='google')
             user.set_unusable_password()

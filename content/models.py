@@ -275,6 +275,7 @@ class UserPermission(models.Model):
     downloadCount = models.IntegerField(default=0)
     isVideoExamplesDisabled = models.BooleanField(default=False)
     copyCount = models.IntegerField(default=0)
+    stripeCount = models.SmallIntegerField(default=0)
 
     class Meta:
         verbose_name = 'user permission'
